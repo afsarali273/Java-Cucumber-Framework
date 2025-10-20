@@ -2,26 +2,44 @@ package com.automation.core.config;
 
 public class FrameworkConfig {
     private final String frameworkType;
+    private final String executionType;
     private final String browser;
     private final boolean headless;
     private final String environment;
-    private final int waitTimeout;
+    private final int implicitWait;
+    private final int explicitWait;
+    private final int pageLoadTimeout;
     private final int maxRetryCount;
-    private final int apiTimeout;
+    private final int threadCount;
+    private final boolean parallelExecution;
+    private final boolean screenshotOnFailure;
+    private final String reportPath;
 
-    public FrameworkConfig(String frameworkType, String browser, boolean headless, 
-                          String environment, int waitTimeout, int maxRetryCount, int apiTimeout) {
+    public FrameworkConfig(String frameworkType, String executionType, String browser, boolean headless,
+                          String environment, int implicitWait, int explicitWait, int pageLoadTimeout,
+                          int maxRetryCount, int threadCount, boolean parallelExecution,
+                          boolean screenshotOnFailure, String reportPath) {
         this.frameworkType = frameworkType;
+        this.executionType = executionType;
         this.browser = browser;
         this.headless = headless;
         this.environment = environment;
-        this.waitTimeout = waitTimeout;
+        this.implicitWait = implicitWait;
+        this.explicitWait = explicitWait;
+        this.pageLoadTimeout = pageLoadTimeout;
         this.maxRetryCount = maxRetryCount;
-        this.apiTimeout = apiTimeout;
+        this.threadCount = threadCount;
+        this.parallelExecution = parallelExecution;
+        this.screenshotOnFailure = screenshotOnFailure;
+        this.reportPath = reportPath;
     }
 
     public String getFrameworkType() {
         return frameworkType;
+    }
+
+    public String getExecutionType() {
+        return executionType;
     }
 
     public String getBrowser() {
@@ -36,16 +54,36 @@ public class FrameworkConfig {
         return environment;
     }
 
-    public int getWaitTimeout() {
-        return waitTimeout;
+    public int getImplicitWait() {
+        return implicitWait;
+    }
+
+    public int getExplicitWait() {
+        return explicitWait;
+    }
+
+    public int getPageLoadTimeout() {
+        return pageLoadTimeout;
     }
 
     public int getMaxRetryCount() {
         return maxRetryCount;
     }
 
-    public int getApiTimeout() {
-        return apiTimeout;
+    public int getThreadCount() {
+        return threadCount;
+    }
+
+    public boolean isParallelExecution() {
+        return parallelExecution;
+    }
+
+    public boolean isScreenshotOnFailure() {
+        return screenshotOnFailure;
+    }
+
+    public String getReportPath() {
+        return reportPath;
     }
 
     public boolean isSelenium() {
@@ -60,16 +98,50 @@ public class FrameworkConfig {
         return "api".equalsIgnoreCase(frameworkType);
     }
 
+    public boolean isDesktop() {
+        return "desktop".equalsIgnoreCase(frameworkType) || "windows".equalsIgnoreCase(frameworkType);
+    }
+
+    public boolean isMobile() {
+        return "mobile".equalsIgnoreCase(frameworkType) || "appium".equalsIgnoreCase(frameworkType);
+    }
+
+    public boolean isCucumber() {
+        return "cucumber".equalsIgnoreCase(executionType);
+    }
+
+    public boolean isTestNG() {
+        return "testng".equalsIgnoreCase(executionType);
+    }
+
+    public boolean isModular() {
+        return "modular".equalsIgnoreCase(executionType);
+    }
+
     @Override
     public String toString() {
         return "FrameworkConfig{" +
                 "frameworkType='" + frameworkType + '\'' +
+                ", executionType='" + executionType + '\'' +
                 ", browser='" + browser + '\'' +
                 ", headless=" + headless +
                 ", environment='" + environment + '\'' +
-                ", waitTimeout=" + waitTimeout +
+                ", implicitWait=" + implicitWait +
+                ", explicitWait=" + explicitWait +
+                ", pageLoadTimeout=" + pageLoadTimeout +
                 ", maxRetryCount=" + maxRetryCount +
-                ", apiTimeout=" + apiTimeout +
+                ", threadCount=" + threadCount +
+                ", parallelExecution=" + parallelExecution +
+                ", screenshotOnFailure=" + screenshotOnFailure +
+                ", reportPath='" + reportPath + '\'' +
+                ", isSelenium=" + isSelenium() +
+                ", isPlaywright=" + isPlaywright() +
+                ", isAPI=" + isAPI() +
+                ", isDesktop=" + isDesktop() +
+                ", isMobile=" + isMobile() +
+                ", isCucumber=" + isCucumber() +
+                ", isTestNG=" + isTestNG() +
+                ", isModular=" + isModular() +
                 '}';
     }
 }

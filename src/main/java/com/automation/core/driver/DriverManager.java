@@ -6,6 +6,7 @@ import com.microsoft.playwright.*;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.windows.WindowsDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -23,6 +24,7 @@ public class DriverManager {
     private static final ThreadLocal<BrowserContext> playwrightContext = new ThreadLocal<>();
     private static final ThreadLocal<Page> playwrightPage = new ThreadLocal<>();
     private static final ThreadLocal<AppiumDriver> appiumDriver = new ThreadLocal<>();
+    private static final ThreadLocal<WindowsDriver> windowsDriver = new ThreadLocal<>();
 
     public static void initializeDriver() {
         if (ConfigManager.isAPI()) {
@@ -36,6 +38,8 @@ public class DriverManager {
             initializePlaywrightDriver();
         } else if (ConfigManager.isMobile()) {
             initializeAppiumDriver();
+        } else if (ConfigManager.isDesktop()) {
+            initializeWindowsDriver();
         }
     }
 
@@ -159,6 +163,10 @@ public class DriverManager {
         return appiumDriver.get();
     }
 
+    public static WindowsDriver getWindowsDriver() {
+        return windowsDriver.get();
+    }
+
     public static void quitDriver() {
         if (ConfigManager.isAPI()) {
             return;
@@ -186,6 +194,8 @@ public class DriverManager {
             }
         } else if (ConfigManager.isMobile()) {
             quitAppiumDriver();
+        } else if (ConfigManager.isDesktop()) {
+            quitWindowsDriver();
         }
     }
 
@@ -198,6 +208,39 @@ public class DriverManager {
                 LogManager.error("Error closing AppiumDriver: " + e.getMessage());
             }
             appiumDriver.remove();
+        }
+    }
+
+    private static void initializeWindowsDriver() {
+        ConfigManager config = ConfigManager.getInstance();
+        String winAppDriverUrl = config.getProperty("desktop.winAppDriverUrl", "http://127.0.0.1:4723");
+        String app = config.getProperty("desktop.app", "C:\\\\Windows\\\\System32\\\\calc.exe");
+        
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("app", app);
+        capabilities.setCapability("platformName", config.getProperty("desktop.platformName", "Windows"));
+        capabilities.setCapability("deviceName", config.getProperty("desktop.deviceName", "WindowsPC"));
+        
+        try {
+            WindowsDriver driver = new WindowsDriver(new URL(winAppDriverUrl), capabilities);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(config.getImplicitWait()));
+            windowsDriver.set(driver);
+            LogManager.info("WindowsDriver initialized for app: " + app);
+        } catch (Exception e) {
+            LogManager.error("Error initializing WindowsDriver: " + e.getMessage());
+            throw new RuntimeException("Failed to initialize Windows driver", e);
+        }
+    }
+
+    public static void quitWindowsDriver() {
+        if (windowsDriver.get() != null) {
+            try {
+                windowsDriver.get().quit();
+                LogManager.info("WindowsDriver closed");
+            } catch (Exception e) {
+                LogManager.error("Error closing WindowsDriver: " + e.getMessage());
+            }
+            windowsDriver.remove();
         }
     }
 

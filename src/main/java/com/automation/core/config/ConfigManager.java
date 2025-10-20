@@ -14,11 +14,15 @@ public class ConfigManager {
     // Global static final variables for easy access
     public static final String ENVIRONMENT;
     public static final String FRAMEWORK_TYPE;
+    public static final String EXECUTION_TYPE;
     public static final String BROWSER;
     public static final boolean IS_HEADLESS;
-    public static final int WAIT_TIMEOUT;
+    public static final int IMPLICIT_WAIT;
+    public static final int EXPLICIT_WAIT;
+    public static final int PAGE_LOAD_TIMEOUT;
     public static final int MAX_RETRY_COUNT;
-    public static final int API_TIMEOUT;
+    public static final int THREAD_COUNT;
+    public static final boolean PARALLEL_EXECUTION;
     public static final String API_BASE_URL;
     public static final String API_CONTENT_TYPE;
     public static final boolean API_LOG_REQUEST;
@@ -28,11 +32,15 @@ public class ConfigManager {
         ConfigManager manager = getInstance();
         ENVIRONMENT = manager.getEnvironment();
         FRAMEWORK_TYPE = manager.getFrameworkType();
+        EXECUTION_TYPE = manager.getExecutionType();
         BROWSER = manager.getBrowser();
         IS_HEADLESS = manager.isHeadless();
-        WAIT_TIMEOUT = manager.getWaitTimeout();
-        MAX_RETRY_COUNT = manager.getMaxRetryCount();
-        API_TIMEOUT = manager.getApiTimeout();
+        IMPLICIT_WAIT = manager.getIntProperty("implicit.wait", 10);
+        EXPLICIT_WAIT = manager.getIntProperty("explicit.wait", 20);
+        PAGE_LOAD_TIMEOUT = manager.getIntProperty("page.load.timeout", 30);
+        MAX_RETRY_COUNT = manager.getIntProperty("max.retry.count", 2);
+        THREAD_COUNT = manager.getIntProperty("thread.count", 3);
+        PARALLEL_EXECUTION = manager.getBooleanProperty("parallel.execution", true);
         API_BASE_URL = manager.getApiBaseUrl();
         API_CONTENT_TYPE = manager.getProperty("api.content.type", "application/json");
         API_LOG_REQUEST = manager.getBooleanProperty("api.log.request", true);
@@ -61,12 +69,18 @@ public class ConfigManager {
     private void initializeFrameworkConfig() {
         frameworkConfig = new FrameworkConfig(
             getGlobalProperty("framework.type", "selenium"),
+            getGlobalProperty("executionType", "cucumber"),
             getGlobalProperty("browser", "chrome"),
             getGlobalBooleanProperty("headless", false),
             getGlobalProperty("environment", "qa"),
-            getEnvIntProperty("wait.timeout", 10),
-            getEnvIntProperty("max.retry.count", 2),
-            getEnvIntProperty("api.timeout", 30)
+            getIntProperty("implicit.wait", 10),
+            getIntProperty("explicit.wait", 20),
+            getIntProperty("page.load.timeout", 30),
+            getIntProperty("max.retry.count", 2),
+            getIntProperty("thread.count", 3),
+            getBooleanProperty("parallel.execution", true),
+            getBooleanProperty("screenshot.on.failure", true),
+            getProperty("report.path", "test-output/reports")
         );
     }
 
@@ -153,6 +167,10 @@ public class ConfigManager {
         return getGlobalProperty("framework.type", "selenium");
     }
 
+    public String getExecutionType() {
+        return getGlobalProperty("executionType", "cucumber");
+    }
+
     public String getBrowser() {
         return getGlobalProperty("browser", "chrome");
     }
@@ -179,7 +197,7 @@ public class ConfigManager {
     }
 
     public int getApiTimeout() {
-        return getEnvIntProperty("api.timeout", 30);
+        return getIntProperty("api.timeout", 30000);
     }
 
     public String getDbUrl() {
@@ -206,8 +224,24 @@ public class ConfigManager {
         return getEnvIntProperty("max.retry.count", 2);
     }
 
-    public int getWaitTimeout() {
-        return getEnvIntProperty("wait.timeout", 10);
+    public int getImplicitWait() {
+        return getIntProperty("implicit.wait", 10);
+    }
+
+    public int getExplicitWait() {
+        return getIntProperty("explicit.wait", 20);
+    }
+
+    public int getPageLoadTimeout() {
+        return getIntProperty("page.load.timeout", 30);
+    }
+
+    public int getThreadCount() {
+        return getIntProperty("thread.count", 3);
+    }
+
+    public boolean isParallelExecution() {
+        return getBooleanProperty("parallel.execution", true);
     }
 
     public String getEnvironment() {
@@ -259,6 +293,22 @@ public class ConfigManager {
     }
 
     public static boolean isMobile() {
-        return "mobile".equalsIgnoreCase(getInstance().getFrameworkType());
+        return "mobile".equalsIgnoreCase(FRAMEWORK_TYPE) || "appium".equalsIgnoreCase(FRAMEWORK_TYPE);
+    }
+
+    public static boolean isDesktop() {
+        return "desktop".equalsIgnoreCase(FRAMEWORK_TYPE) || "windows".equalsIgnoreCase(FRAMEWORK_TYPE);
+    }
+
+    public static boolean isCucumber() {
+        return "cucumber".equalsIgnoreCase(EXECUTION_TYPE);
+    }
+
+    public static boolean isTestNG() {
+        return "testng".equalsIgnoreCase(EXECUTION_TYPE);
+    }
+
+    public static boolean isModular() {
+        return "modular".equalsIgnoreCase(EXECUTION_TYPE);
     }
 }
