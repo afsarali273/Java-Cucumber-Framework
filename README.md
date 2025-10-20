@@ -47,6 +47,7 @@ framework.type=selenium    # selenium or playwright
 browser=chrome            # chrome, firefox, webkit
 headless=false
 environment=qa            # qa or prod
+executionType=cucumber    # cucumber or testng
 ```
 
 ### Environment Configuration (qa.properties, prod.properties)
@@ -82,6 +83,7 @@ HTML report generator with:
 ### 6. Reusable Classes
 - **SeleniumReusable**: Common Selenium operations
 - **PlaywrightReusable**: Common Playwright operations
+- **MobileReusable**: Common Mobile (Appium) operations
 
 ## Usage
 
@@ -159,6 +161,12 @@ Response response = APIClient.get("/posts/1");
 AssertUtils.assertEquals(response.getStatusCode(), 200, "Status code check");
 ```
 
+### YAML Utility
+
+```java
+String host = YamlUtils.getStringByPath("config.yaml", "database.host");
+```
+
 ## Packaging as JAR
 
 To package the core framework as a reusable JAR:
@@ -208,3 +216,109 @@ All core components are thread-safe using ThreadLocal:
 ## Support
 
 For issues or questions, refer to the inline documentation in each class.
+
+# SandsAutoFramework Documentation
+
+## Last Updated: 2025-10-20
+
+---
+
+## Overview
+SandsAutoFramework is a unified automation framework supporting both Cucumber (BDD) and TestNG/Modular execution types. It enables robust automation for Web, Mobile (Appium), and API testing, with flexible configuration via properties and YAML files.
+
+---
+
+## Key Enhancements (2025-10-20)
+- **Dual Execution Support:**
+  - `executionType` property allows switching between Cucumber and TestNG/Modular execution.
+  - ModularTestConfig and ModularTestLifecycle enable standardized lifecycle management for TestNG tests.
+- **Mobile Automation:**
+  - Appium driver support added to DriverManager and ConfigManager.
+  - Mobile configuration properties in `config.properties`.
+  - MobileReusable class updated for AppiumBy and W3C Actions API.
+- **YAML Configuration:**
+  - YamlUtils utility for reading YAML files as Map, POJO, or by key path.
+- **Framework Type Detection:**
+  - FrameworkConfig and ConfigManager support: selenium, playwright, api, mobile, modular, testng.
+  - Helper methods: isSelenium(), isPlaywright(), isAPI(), isMobile(), isModular(), isTestNG().
+- **Cucumber Hooks:**
+  - Tag-based driver initialization for @UI, @Mobile, @API.
+- **TestNG Modular Support:**
+  - ModularTestConfig provides DataProviders and lifecycle hooks for browser, mobile, and API tests.
+- **API Automation:**
+  - APIKeywords class for reusable API test steps in both Cucumber and TestNG.
+
+---
+
+## Configuration
+- `config.properties` now supports mobile and executionType properties.
+- YAML files can be used for advanced configuration and test data.
+
+---
+
+## Usage Examples
+### Cucumber
+```gherkin
+Feature: Mobile App Login
+  @Mobile
+  Scenario: User logs in on mobile
+    Given the app is launched
+    When the user enters valid credentials
+    Then the user should see the home screen
+```
+
+### TestNG Modular
+```java
+@Test(dataProvider = "ChromeBrowser", dataProviderClass = ModularTestConfig.class)
+public void webTest(String instance) {
+    WebDriver driver = DriverManager.getSeleniumDriver();
+    driver.get("https://example.com");
+}
+
+@Test(dataProvider = "MobileAndroid", dataProviderClass = ModularTestConfig.class)
+public void mobileTest(String instance) {
+    AppiumDriver driver = DriverManager.getAppiumDriver();
+    // ...mobile test steps...
+}
+
+@Test(dataProvider = "API", dataProviderClass = ModularTestConfig.class)
+public void apiTest(String instance) {
+    // Use APIKeywords for API tests
+}
+```
+
+### YAML Utility
+```java
+String host = YamlUtils.getStringByPath("config.yaml", "database.host");
+```
+
+---
+
+## Extensibility
+- Easily add new drivers, execution modes, and configuration sources.
+- Modular design for maintainability and scalability.
+
+---
+
+## References
+- **ConfigManager**: Loads configuration from properties/YAML.
+- **DriverManager**: Manages driver lifecycle for all supported types.
+- **ModularTestConfig & ModularTestLifecycle**: TestNG modular execution.
+- **MobileReusable**: Mobile automation utilities.
+- **YamlUtils**: YAML file reading utilities.
+- **APIKeywords**: Reusable API automation steps.
+
+---
+
+## License
+Licensed under the Apache License, Version 2.0.
+
+---
+
+## Authors & Contributors
+- Framework maintained by Afsar Ali.
+
+---
+
+## Change Log
+- See above for 2025-10-20 enhancements.

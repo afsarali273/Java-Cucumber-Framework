@@ -1,4 +1,4 @@
-package utils;
+package com.automation.core.utils;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
