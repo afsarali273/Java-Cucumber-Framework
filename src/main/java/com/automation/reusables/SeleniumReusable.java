@@ -3,7 +3,7 @@ package com.automation.reusables;
 import com.automation.core.assertions.AssertUtils;
 import com.automation.core.driver.DriverManager;
 import com.automation.core.interfaces.WebActions;
-import com.automation.core.logging.LogManager;
+import com.automation.core.logging.UnifiedLogger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.locators.RelativeLocator;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -28,7 +28,7 @@ public class SeleniumReusable implements WebActions<By> {
 
     public void navigateTo(String url) {
         driver.get(url);
-        LogManager.info("Navigated to: " + url);
+        UnifiedLogger.info("Navigated to: " + url);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SeleniumReusable implements WebActions<By> {
         By by = locator;
         waitForElementToBeClickable(by);
         driver.findElement(by).click();
-        LogManager.info("Clicked on element: " + by);
+        UnifiedLogger.action("Click", by);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SeleniumReusable implements WebActions<By> {
         WebElement element = driver.findElement(by);
         element.clear();
         element.sendKeys(text);
-        LogManager.info("Typed '" + text + "' into element: " + by);
+        UnifiedLogger.action("Type", by + " | Text: " + text);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SeleniumReusable implements WebActions<By> {
         By by = locator;
         type(by, text);
         driver.findElement(by).sendKeys(Keys.ENTER);
-        LogManager.info("Pressed ENTER after typing");
+        UnifiedLogger.action("Type and Enter", by);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class SeleniumReusable implements WebActions<By> {
         By by = locator;
         waitForElementToBeVisible(by);
         String text = driver.findElement(by).getText();
-        LogManager.info("Retrieved text: " + text);
+        UnifiedLogger.action("Get Text", by + " | Text: " + text);
         return text;
     }
 
@@ -79,7 +79,7 @@ public class SeleniumReusable implements WebActions<By> {
     public void selectDropdownByText(By locator, String text) {
         Select select = new Select(driver.findElement(locator));
         select.selectByVisibleText(text);
-        LogManager.info("Selected dropdown option: " + text);
+        UnifiedLogger.action("Select Dropdown", locator + " | Text: " + text);
     }
 
     @Override
@@ -109,14 +109,14 @@ public class SeleniumReusable implements WebActions<By> {
     public void scrollToElement(By locator) {
         WebElement element = driver.findElement(locator);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
-        LogManager.info("Scrolled to element: " + locator);
+        UnifiedLogger.action("Scroll to Element", locator);
     }
 
     @Override
     public void jsClick(By locator) {
         WebElement element = driver.findElement(locator);
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
-        LogManager.info("JavaScript clicked on element: " + locator);
+        UnifiedLogger.action("JS Click", locator);
     }
 
     // --- Advanced Selenium 4 and Web Automation Utilities ---
@@ -141,20 +141,20 @@ public class SeleniumReusable implements WebActions<By> {
     // 2. Window/Tab Management
     public void switchToWindow(String windowHandle) {
         driver.switchTo().window(windowHandle);
-        LogManager.info("Switched to window: " + windowHandle);
+        UnifiedLogger.action("Switch to Window", windowHandle);
     }
     public void closeCurrentWindow() {
         driver.close();
-        LogManager.info("Closed current window/tab");
+        UnifiedLogger.info("Closed current window/tab");
     }
     public void openNewTab() {
         ((JavascriptExecutor) driver).executeScript("window.open()", "_blank");
-        LogManager.info("Opened new tab");
+        UnifiedLogger.info("Opened new tab");
     }
     public void switchToLatestTab() {
         List<String> handles = driver.getWindowHandles().stream().collect(Collectors.toList());
         driver.switchTo().window(handles.get(handles.size() - 1));
-        LogManager.info("Switched to latest tab");
+        UnifiedLogger.info("Switched to latest tab");
     }
 
     // 3. Screenshot Functionality
@@ -163,9 +163,9 @@ public class SeleniumReusable implements WebActions<By> {
         File src = element.getScreenshotAs(OutputType.FILE);
         try {
             Files.move(src.toPath(), new File(filePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
-            LogManager.info("Element screenshot saved: " + filePath);
+            UnifiedLogger.info("Element screenshot saved: " + filePath);
         } catch (Exception e) {
-            LogManager.info("Element screenshot failed: " + e.getMessage());
+            UnifiedLogger.error("Element screenshot failed", e);
         }
     }
 
@@ -185,20 +185,20 @@ public class SeleniumReusable implements WebActions<By> {
     public void mouseHover(By locator) {
         WebElement element = driver.findElement(locator);
         new org.openqa.selenium.interactions.Actions(driver).moveToElement(element).perform();
-        LogManager.info("Mouse hovered on: " + locator);
+        UnifiedLogger.action("Mouse Hover", locator);
     }
     @Override
     public void dragAndDrop(By source, By target) {
         WebElement src = driver.findElement(source);
         WebElement tgt = driver.findElement(target);
         new org.openqa.selenium.interactions.Actions(driver).dragAndDrop(src, tgt).perform();
-        LogManager.info("Dragged element: " + source + " to " + target);
+        UnifiedLogger.action("Drag and Drop", "From: " + source + " To: " + target);
     }
     @Override
     public void doubleClick(By locator) {
         WebElement element = driver.findElement(locator);
         new org.openqa.selenium.interactions.Actions(driver).doubleClick(element).perform();
-        LogManager.info("Double clicked on: " + locator);
+        UnifiedLogger.action("Double Click", locator);
     }
 
     // 7. Get Element Rect (Selenium 4)
@@ -210,17 +210,17 @@ public class SeleniumReusable implements WebActions<By> {
     @Override
     public void navigateBack() {
         driver.navigate().back();
-        LogManager.info("Navigated back");
+        UnifiedLogger.info("Navigated back");
     }
     @Override
     public void navigateForward() {
         driver.navigate().forward();
-        LogManager.info("Navigated forward");
+        UnifiedLogger.info("Navigated forward");
     }
     @Override
     public void refreshPage() {
         driver.navigate().refresh();
-        LogManager.info("Page refreshed");
+        UnifiedLogger.info("Page refreshed");
     }
 
     // 10. Shadow DOM Support (Selenium 4)
@@ -234,20 +234,20 @@ public class SeleniumReusable implements WebActions<By> {
     public void selectDropdownByValue(By locator, String value) {
         Select select = new Select(driver.findElement(locator));
         select.selectByValue(value);
-        LogManager.info("Selected dropdown value: " + value);
+        UnifiedLogger.action("Select Dropdown by Value", locator + " | Value: " + value);
     }
 
     @Override
     public void selectDropdownByIndex(By locator, int index) {
         Select select = new Select(driver.findElement(locator));
         select.selectByIndex(index);
-        LogManager.info("Selected dropdown index: " + index);
+        UnifiedLogger.action("Select Dropdown by Index", locator + " | Index: " + index);
     }
 
     @Override
     public void clear(By locator) {
         driver.findElement(locator).clear();
-        LogManager.info("Cleared element: " + locator);
+        UnifiedLogger.action("Clear", locator);
     }
 
     @Override
@@ -256,7 +256,7 @@ public class SeleniumReusable implements WebActions<By> {
         if (!element.isSelected()) {
             element.click();
         }
-        LogManager.info("Checked element: " + locator);
+        UnifiedLogger.action("Check", locator);
     }
 
     @Override
@@ -265,7 +265,7 @@ public class SeleniumReusable implements WebActions<By> {
         if (element.isSelected()) {
             element.click();
         }
-        LogManager.info("Unchecked element: " + locator);
+        UnifiedLogger.action("Uncheck", locator);
     }
 
     @Override
@@ -291,13 +291,13 @@ public class SeleniumReusable implements WebActions<By> {
     @Override
     public void scrollToTop() {
         ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, 0);");
-        LogManager.info("Scrolled to top");
+        UnifiedLogger.info("Scrolled to top");
     }
 
     @Override
     public void scrollToBottom() {
         ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
-        LogManager.info("Scrolled to bottom");
+        UnifiedLogger.info("Scrolled to bottom");
     }
 
     @Override
@@ -306,16 +306,16 @@ public class SeleniumReusable implements WebActions<By> {
         File src = ts.getScreenshotAs(OutputType.FILE);
         try {
             Files.move(src.toPath(), new File(filePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
-            LogManager.info("Screenshot saved: " + filePath);
+            UnifiedLogger.info("Screenshot saved: " + filePath);
         } catch (Exception e) {
-            LogManager.error("Screenshot failed: " + e.getMessage());
+            UnifiedLogger.error("Screenshot failed", e);
         }
     }
 
     @Override
     public void uploadFile(By locator, String filePath) {
         driver.findElement(locator).sendKeys(filePath);
-        LogManager.info("File uploaded: " + filePath);
+        UnifiedLogger.action("Upload File", locator + " | File: " + filePath);
     }
 
     @Override

@@ -2,7 +2,8 @@ package com.automation.reusables;
 
 import com.automation.core.api.APIClient;
 import com.automation.core.assertions.AssertUtils;
-import com.automation.core.logging.LogManager;
+//import com.automation.core.logging.LogManager;
+import com.automation.core.logging.UnifiedLogger;
 import io.restassured.response.Response;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -18,35 +19,33 @@ public class APIReusable {
 
 
     protected Response sendGetRequest(String endpoint) {
-        LogManager.info("Sending GET request to: " + endpoint);
+        UnifiedLogger.action("GET Request", endpoint);
         response = currentService != null ? APIClient.withBaseUrl(currentService).getRequest(endpoint) : APIClient.get(endpoint);
-        LogManager.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
+        UnifiedLogger.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
         currentService = null;
         return response;
     }
 
     protected Response sendPostRequest(String endpoint, String body) {
-        LogManager.info("Sending POST request to: " + endpoint);
-        LogManager.info("Request Body: " + body);
+        UnifiedLogger.action("POST Request", endpoint + " | Body: " + body);
         response = currentService != null ? APIClient.withBaseUrl(currentService).postRequest(endpoint, body) : APIClient.post(endpoint, body);
-        LogManager.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
+        UnifiedLogger.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
         currentService = null;
         return response;
     }
 
     protected Response sendPutRequest(String endpoint, String body) {
-        LogManager.info("Sending PUT request to: " + endpoint);
-        LogManager.info("Request Body: " + body);
+        UnifiedLogger.action("PUT Request", endpoint + " | Body: " + body);
         response = currentService != null ? APIClient.withBaseUrl(currentService).putRequest(endpoint, body) : APIClient.put(endpoint, body);
-        LogManager.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
+        UnifiedLogger.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
         currentService = null;
         return response;
     }
 
     protected Response sendDeleteRequest(String endpoint) {
-        LogManager.info("Sending DELETE request to: " + endpoint);
+        UnifiedLogger.action("DELETE Request", endpoint);
         response = currentService != null ? APIClient.withBaseUrl(currentService).deleteRequest(endpoint) : APIClient.delete(endpoint);
-        LogManager.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
+        UnifiedLogger.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
         currentService = null;
         return response;
     }
@@ -57,7 +56,7 @@ public class APIReusable {
         json.put("body", body);
         json.put("userId", userId);
         requestBody = json.toString();
-        LogManager.info("Created JSON body: " + requestBody);
+        UnifiedLogger.info("Created JSON body: " + requestBody);
         return requestBody;
     }
 
@@ -92,13 +91,13 @@ public class APIReusable {
     // ========== JSON PATH VALIDATIONS ==========
     
     protected void validateJsonPath(String jsonPath, Object expectedValue) {
-        LogManager.info("Validating JSON path: " + jsonPath + " = " + expectedValue);
+        UnifiedLogger.action("Validate JSON Path", jsonPath + " = " + expectedValue);
         Object actualValue = response.jsonPath().get(jsonPath);
         assertEquals(actualValue, expectedValue, "JsonPath '" + jsonPath + "' validation");
     }
 
     protected void validateJsonPathContains(String jsonPath, String expectedText) {
-        LogManager.info("Validating JSON path '" + jsonPath + "' contains: " + expectedText);
+        UnifiedLogger.action("Validate JSON Path Contains", jsonPath + " contains: " + expectedText);
         String actualValue = response.jsonPath().getString(jsonPath);
         assertContains(actualValue, expectedText, "JsonPath '" + jsonPath + "' contains validation");
     }
@@ -114,7 +113,7 @@ public class APIReusable {
     }
 
     protected void validateArraySize(String jsonPath, int expectedSize) {
-        LogManager.info("Validating array size for '" + jsonPath + "' = " + expectedSize);
+        UnifiedLogger.action("Validate Array Size", jsonPath + " = " + expectedSize);
         List<Object> array = response.jsonPath().getList(jsonPath);
         assertEquals(array.size(), expectedSize, "Array size validation for '" + jsonPath + "'");
     }
@@ -138,7 +137,7 @@ public class APIReusable {
     
     protected void validateResponseTime(long maxTimeInMs) {
         long responseTime = response.getTime();
-        LogManager.info("Validating response time: " + responseTime + "ms < " + maxTimeInMs + "ms");
+        UnifiedLogger.action("Validate Response Time", responseTime + "ms < " + maxTimeInMs + "ms");
         assertLessThan((int) responseTime, (int) maxTimeInMs, "Response time should be less than " + maxTimeInMs + "ms");
     }
 
@@ -148,7 +147,7 @@ public class APIReusable {
     }
 
     protected void validateHeader(String headerName, String expectedValue) {
-        LogManager.info("Validating header '" + headerName + "' = " + expectedValue);
+        UnifiedLogger.action("Validate Header", headerName + " = " + expectedValue);
         String actualValue = response.getHeader(headerName);
         assertEquals(actualValue, expectedValue, "Header '" + headerName + "' validation");
     }
@@ -173,7 +172,7 @@ public class APIReusable {
     protected String createJsonBody(Map<String, Object> data) {
         JSONObject json = new JSONObject(data);
         requestBody = json.toString();
-        LogManager.info("Created JSON body: " + requestBody);
+        UnifiedLogger.info("Created JSON body: " + requestBody);
         return requestBody;
     }
 
@@ -183,12 +182,12 @@ public class APIReusable {
             jsonArray.put(new JSONObject(data));
         }
         requestBody = jsonArray.toString();
-        LogManager.info("Created JSON array body: " + requestBody);
+        UnifiedLogger.info("Created JSON array body: " + requestBody);
         return requestBody;
     }
 
     protected Response sendRequestWithHeaders(String method, String endpoint, Map<String, String> headers) {
-        LogManager.info("Sending " + method + " request to: " + endpoint + " with headers: " + headers);
+        UnifiedLogger.action(method + " Request with Headers", endpoint + " | Headers: " + headers);
         if (currentService != null) {
             APIClient.withBaseUrl(currentService, headers);
         } else {
@@ -208,15 +207,15 @@ public class APIReusable {
                 response = currentService != null ? APIClient.withBaseUrl(currentService, headers).deleteRequest(endpoint) : APIClient.delete(endpoint);
                 break;
         }
-        LogManager.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
+        UnifiedLogger.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
         currentService = null;
         return response;
     }
 
     protected Response sendGetWithQueryParams(String endpoint, Map<String, String> queryParams) {
-        LogManager.info("Sending GET request to: " + endpoint + " with query params: " + queryParams);
+        UnifiedLogger.info("Sending GET request to: " + endpoint + " with query params: " + queryParams);
         response = currentService != null ? APIClient.withBaseUrl(currentService).getRequest(endpoint, queryParams) : APIClient.get(endpoint, queryParams);
-        LogManager.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
+        UnifiedLogger.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
         currentService = null;
         return response;
     }
@@ -233,7 +232,7 @@ public class APIReusable {
                 .append("</soap:Body>")
                 .append("</soap:Envelope>");
         requestBody = envelope.toString();
-        LogManager.info("Created SOAP envelope for action: " + soapAction);
+        UnifiedLogger.info("Created SOAP envelope for action: " + soapAction);
         return requestBody;
     }
 
@@ -241,11 +240,11 @@ public class APIReusable {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "text/xml; charset=utf-8");
         headers.put("SOAPAction", soapAction);
-        LogManager.info("Sending SOAP request to: " + endpoint + " with action: " + soapAction);
-        LogManager.info("SOAP Request Body: " + requestBody);
+        UnifiedLogger.info("Sending SOAP request to: " + endpoint + " with action: " + soapAction);
+        UnifiedLogger.info("SOAP Request Body: " + requestBody);
         APIClient.setHeaders(headers);
         response = APIClient.post(endpoint, requestBody);
-        LogManager.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
+        UnifiedLogger.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
         return response;
     }
 
@@ -322,7 +321,7 @@ public class APIReusable {
     
     protected Object getJsonPathValue(String jsonPath) {
         Object value = response.jsonPath().get(jsonPath);
-        LogManager.info("Extracted JSON path '" + jsonPath + "' value: " + value);
+        UnifiedLogger.info("Extracted JSON path '" + jsonPath + "' value: " + value);
         return value;
     }
 
@@ -343,18 +342,18 @@ public class APIReusable {
     }
 
     protected void logResponse() {
-        LogManager.info("Response Status: " + response.getStatusCode());
-        LogManager.info("Response Time: " + response.getTime() + "ms");
-        LogManager.info("Response Body: " + response.getBody().asString());
+        UnifiedLogger.info("Response Status: " + response.getStatusCode());
+        UnifiedLogger.info("Response Time: " + response.getTime() + "ms");
+        UnifiedLogger.info("Response Body: " + response.getBody().asString());
     }
 
     protected void switchToService(String serviceName) {
         currentService = serviceName;
-        LogManager.info("Switched to API service: " + serviceName);
+        UnifiedLogger.info("Switched to API service: " + serviceName);
     }
 
     protected void useCustomBaseUrl(String customUrl) {
         APIClient.withCustomBaseUrl(customUrl);
-        LogManager.info("Using custom base URL: " + customUrl);
+        UnifiedLogger.info("Using custom base URL: " + customUrl);
     }
 }

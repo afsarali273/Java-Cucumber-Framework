@@ -1,5 +1,6 @@
 package com.automation.reusables;
 
+import com.automation.core.logging.UnifiedLogger;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
@@ -27,8 +28,10 @@ public class MobileReusable {
     public void launchApp(URL appiumServerUrl, DesiredCapabilities capabilities, boolean isAndroid) {
         if (isAndroid) {
             driver = new AndroidDriver(appiumServerUrl, capabilities);
+            UnifiedLogger.info("Android app launched successfully");
         } else {
             driver = new IOSDriver(appiumServerUrl, capabilities);
+            UnifiedLogger.info("iOS app launched successfully");
         }
     }
 
@@ -38,6 +41,7 @@ public class MobileReusable {
     public void closeApp() {
         if (driver != null) {
             driver.quit();
+            UnifiedLogger.info("Mobile app closed");
         }
     }
 
@@ -60,6 +64,7 @@ public class MobileReusable {
      */
     public void click(By locator) {
         findElement(locator).click();
+        UnifiedLogger.action("Click", locator);
     }
 
     /**
@@ -69,6 +74,7 @@ public class MobileReusable {
         WebElement el = findElement(locator);
         el.clear();
         el.sendKeys(text);
+        UnifiedLogger.action("Type", locator + " | Text: " + text);
     }
 
     /**
@@ -85,6 +91,7 @@ public class MobileReusable {
         File srcFile = driver.getScreenshotAs(OutputType.FILE);
         File destFile = new File(fileName);
         srcFile.renameTo(destFile);
+        UnifiedLogger.info("Screenshot captured: " + fileName);
         return destFile;
     }
 
@@ -99,6 +106,7 @@ public class MobileReusable {
         swipe.addAction(finger.createPointerMove(Duration.ofMillis(durationMs), PointerInput.Origin.viewport(), endX, endY));
         swipe.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
         driver.perform(Arrays.asList(swipe));
+        UnifiedLogger.action("Swipe", String.format("From (%d,%d) to (%d,%d)", startX, startY, endX, endY));
     }
 
     /**
@@ -111,6 +119,7 @@ public class MobileReusable {
         tap.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
         tap.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
         driver.perform(Arrays.asList(tap));
+        UnifiedLogger.action("Tap", String.format("At (%d,%d)", x, y));
     }
 
     /**
@@ -139,6 +148,7 @@ public class MobileReusable {
         dragDrop.addAction(finger.createPointerMove(Duration.ofMillis(500), PointerInput.Origin.viewport(), tgt.getLocation().getX(), tgt.getLocation().getY()));
         dragDrop.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
         driver.perform(Arrays.asList(dragDrop));
+        UnifiedLogger.action("Drag and Drop", "From: " + source + " To: " + target);
     }
 
     // ================= ANDROID SPECIFIC =================

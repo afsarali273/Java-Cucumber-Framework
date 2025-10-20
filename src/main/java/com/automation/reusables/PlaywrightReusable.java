@@ -3,7 +3,7 @@ package com.automation.reusables;
 import com.automation.core.assertions.AssertUtils;
 import com.automation.core.driver.DriverManager;
 import com.automation.core.interfaces.WebActions;
-import com.automation.core.logging.LogManager;
+import com.automation.core.logging.UnifiedLogger;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
 
@@ -20,32 +20,32 @@ public class PlaywrightReusable implements WebActions<Locator> {
     @Override
     public void navigateTo(String url) {
         page.navigate(url);
-        LogManager.info("Navigated to: " + url);
+        UnifiedLogger.info("Navigated to: " + url);
     }
 
     @Override
     public void click(Locator locator) {
         locator.click();
-        LogManager.info("Clicked on element");
+        UnifiedLogger.action("Click", locator.toString());
     }
 
     @Override
     public void type(Locator locator, String text) {
         locator.fill(text);
-        LogManager.info("Typed '" + text + "' into element");
+        UnifiedLogger.action("Type", locator + " | Text: " + text);
     }
 
     @Override
     public void typeAndEnter(Locator locator, String text) {
         locator.fill(text);
         locator.press("Enter");
-        LogManager.info("Pressed ENTER after typing");
+        UnifiedLogger.action("Type and Enter", locator.toString());
     }
 
     @Override
     public String getText(Locator locator) {
         String text = locator.textContent();
-        LogManager.info("Retrieved text: " + text);
+        UnifiedLogger.action("Get Text", locator + " | Text: " + text);
         return text;
     }
 
@@ -57,7 +57,7 @@ public class PlaywrightReusable implements WebActions<Locator> {
     @Override
     public void selectDropdownByText(Locator locator, String text) {
         locator.selectOption(text);
-        LogManager.info("Selected dropdown option: " + text);
+        UnifiedLogger.action("Select Dropdown", locator + " | Text: " + text);
     }
 
     @Override
@@ -109,49 +109,49 @@ public class PlaywrightReusable implements WebActions<Locator> {
     @Override
     public void scrollToElement(Locator locator) {
         locator.scrollIntoViewIfNeeded();
-        LogManager.info("Scrolled to element");
+        UnifiedLogger.action("Scroll to Element", locator.toString());
     }
 
     @Override
     public void doubleClick(Locator locator) {
         locator.dblclick();
-        LogManager.info("Double clicked");
+        UnifiedLogger.action("Double Click", locator.toString());
     }
 
     @Override
     public void jsClick(Locator locator) {
         locator.evaluate("element => element.click()");
-        LogManager.info("JavaScript clicked");
+        UnifiedLogger.action("JS Click", locator.toString());
     }
 
     @Override
     public void clear(Locator locator) {
         locator.fill("");
-        LogManager.info("Cleared element");
+        UnifiedLogger.action("Clear", locator.toString());
     }
 
     @Override
     public void selectDropdownByValue(Locator locator, String value) {
         locator.selectOption(value);
-        LogManager.info("Selected dropdown value: " + value);
+        UnifiedLogger.action("Select Dropdown by Value", locator + " | Value: " + value);
     }
 
     @Override
     public void selectDropdownByIndex(Locator locator, int index) {
         locator.selectOption(String.valueOf(index));
-        LogManager.info("Selected dropdown index: " + index);
+        UnifiedLogger.action("Select Dropdown by Index", locator + " | Index: " + index);
     }
 
     @Override
     public void check(Locator locator) {
         locator.check();
-        LogManager.info("Checked element");
+        UnifiedLogger.action("Check", locator.toString());
     }
 
     @Override
     public void uncheck(Locator locator) {
         locator.uncheck();
-        LogManager.info("Unchecked element");
+        UnifiedLogger.action("Uncheck", locator.toString());
     }
 
     @Override
@@ -162,13 +162,13 @@ public class PlaywrightReusable implements WebActions<Locator> {
     @Override
     public void mouseHover(Locator locator) {
         locator.hover();
-        LogManager.info("Mouse hovered");
+        UnifiedLogger.action("Mouse Hover", locator.toString());
     }
 
     @Override
     public void dragAndDrop(Locator source, Locator target) {
         source.dragTo(target);
-        LogManager.info("Dragged element");
+        UnifiedLogger.action("Drag and Drop", "From: " + source + " To: " + target);
     }
 
     @Override
@@ -194,43 +194,43 @@ public class PlaywrightReusable implements WebActions<Locator> {
     @Override
     public void scrollToTop() {
         page.evaluate("window.scrollTo(0, 0)");
-        LogManager.info("Scrolled to top");
+        UnifiedLogger.info("Scrolled to top");
     }
 
     @Override
     public void scrollToBottom() {
         page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
-        LogManager.info("Scrolled to bottom");
+        UnifiedLogger.info("Scrolled to bottom");
     }
 
     @Override
     public void takeScreenshot(String filePath) {
         page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get(filePath)));
-        LogManager.info("Screenshot saved: " + filePath);
+        UnifiedLogger.info("Screenshot saved: " + filePath);
     }
 
     @Override
     public void uploadFile(Locator locator, String filePath) {
         locator.setInputFiles(Paths.get(filePath));
-        LogManager.info("File uploaded: " + filePath);
+        UnifiedLogger.action("Upload File", locator + " | File: " + filePath);
     }
 
     @Override
     public void navigateBack() {
         page.goBack();
-        LogManager.info("Navigated back");
+        UnifiedLogger.info("Navigated back");
     }
 
     @Override
     public void navigateForward() {
         page.goForward();
-        LogManager.info("Navigated forward");
+        UnifiedLogger.info("Navigated forward");
     }
 
     @Override
     public void refreshPage() {
         page.reload();
-        LogManager.info("Page refreshed");
+        UnifiedLogger.info("Page refreshed");
     }
 
     @Override

@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Base64;
+import java.nio.file.Files;
 
 public class CustomReporter {
     private static final Map<String, TestResult> testResults = new ConcurrentHashMap<>();
@@ -123,7 +125,21 @@ public class CustomReporter {
             }
 
             for (String screenshot : result.getScreenshots()) {
-                html.append("<p><a href='").append(screenshot).append("' target='_blank'>View Screenshot</a></p>");
+                try {
+                    // Embed screenshot as base64
+                    java.io.File imgFile = new java.io.File(screenshot);
+                    if (imgFile.exists()) {
+                        byte[] fileContent = java.nio.file.Files.readAllBytes(imgFile.toPath());
+                        String base64 = java.util.Base64.getEncoder().encodeToString(fileContent);
+                        html.append("<div style='margin:10px 0'><img src='data:image/png;base64,")
+                            .append(base64)
+                            .append("' style='max-width:100%;border:1px solid #ddd;border-radius:5px'/></div>");
+                    } else {
+                        html.append("<p style='color:#e74c3c'>Screenshot not found: ").append(screenshot).append("</p>");
+                    }
+                } catch (Exception e) {
+                    html.append("<p style='color:#e74c3c'>Error loading screenshot: ").append(e.getMessage()).append("</p>");
+                }
             }
             html.append("</div>");
         }

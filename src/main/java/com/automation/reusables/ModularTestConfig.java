@@ -1,5 +1,6 @@
 package com.automation.reusables;
 
+import com.automation.core.config.ConfigManager;
 import com.automation.core.interfaces.ModularTestLifecycle;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.AfterSuite;
@@ -16,6 +17,7 @@ public class ModularTestConfig implements ModularTestLifecycle {
 
     @BeforeSuite
     public void setUpSuite() {
+        ConfigManager.getInstance();
         DriverManager.initializeDriver();
     }
 

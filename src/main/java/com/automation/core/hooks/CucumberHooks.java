@@ -4,7 +4,9 @@ import com.automation.core.api.APIClient;
 import com.automation.core.config.ConfigManager;
 import com.automation.core.driver.DriverManager;
 import com.automation.core.logging.LogManager;
+import com.automation.core.logging.UnifiedLogger;
 import com.automation.core.reporting.CustomReporter;
+import com.automation.core.reporting.ExtentReporter;
 import com.automation.core.reporting.ScreenshotUtil;
 import io.cucumber.java.*;
 
@@ -16,14 +18,28 @@ public class CucumberHooks {
 
     @BeforeAll
     public static void beforeAll() {
-        LogManager.info("=== Test Suite Started ===");
+        ExtentReporter.initReports();
+        UnifiedLogger.info("=== Test Suite Started ===");
         ConfigManager.getInstance();
     }
 
     @Before
     public void beforeScenario(Scenario scenario) {
-        LogManager.info("Starting Scenario: " + scenario.getName());
+        ExtentReporter.startTest(scenario.getName());
         CustomReporter.startTest(scenario.getName());
+        
+        // Assign categories based on tags
+        if (scenario.getSourceTagNames().contains("@UI")) {
+            ExtentReporter.assignCategory("UI");
+        }
+        if (scenario.getSourceTagNames().contains("@API")) {
+            ExtentReporter.assignCategory("API");
+        }
+        if (scenario.getSourceTagNames().contains("@Mobile")) {
+            ExtentReporter.assignCategory("Mobile");
+        }
+        
+        UnifiedLogger.info("Starting Scenario: " + scenario.getName());
         
         if (scenario.getSourceTagNames().contains("@UI")) {
             DriverManager.initializeDriver();
@@ -41,9 +57,9 @@ public class CucumberHooks {
     @After
     public void afterScenario(Scenario scenario) throws IOException {
         try {
-            if (scenario.isFailed()) {
+            if (scenario.isFailed() ) {
                 ConfigManager config = ConfigManager.getInstance();
-                if (config.getBooleanProperty("screenshot.on.failure", true)) {
+                if (config.getBooleanProperty("screenshot.on.failure", true) && !scenario.getSourceTagNames().contains("@API")) {
                     String screenshotPath = ScreenshotUtil.captureScreenshot(scenario.getName());
                     if (screenshotPath != null) {
                         byte[] screenshot = Files.readAllBytes(Paths.get(screenshotPath));
@@ -52,16 +68,22 @@ public class CucumberHooks {
                         // Attach to Allure report
                         io.qameta.allure.Allure.addAttachment("Screenshot on Failure", "image/png", 
                             new java.io.ByteArrayInputStream(screenshot), "png");
+                        // Attach to ExtentReports
+                        ExtentReporter.attachScreenshot(screenshotPath);
                     }
                 }
+                UnifiedLogger.fail(scenario.getName() +" - Failed");
+            }else {
+                UnifiedLogger.pass(scenario.getName() +" - Passed");
             }
         } catch (Exception e) {
-            LogManager.error("Error capturing screenshot: " + e.getMessage());
+            UnifiedLogger.fail("Error capturing screenshot: " + e.getMessage());
         } finally {
+            ExtentReporter.endTest();
             CustomReporter.endTest();
             DriverManager.quitDriver();
             APIClient.clearRequestSpec();
-            LogManager.info("Completed Scenario: " + scenario.getName() + " | Status: " + scenario.getStatus());
+            UnifiedLogger.info("Completed Scenario: " + scenario.getName() + " | Status: " + scenario.getStatus());
         }
     }
 
@@ -72,17 +94,18 @@ public class CucumberHooks {
                 DriverManager.closePlaywright();
             }
         } catch (Exception e) {
-            LogManager.error("Error closing Playwright: " + e.getMessage());
+            UnifiedLogger.error("Error closing Playwright: " , e);
         } finally {
+            ExtentReporter.flushReports();
             CustomReporter.generateReport();
             generateAllureReport();
-            LogManager.info("=== Test Suite Completed ===");
+            UnifiedLogger.info("=== Test Suite Completed ===");
         }
     }
 
     private static void generateAllureReport() {
         try {
-            LogManager.info("Generating Allure report...");
+            UnifiedLogger.info("Generating Allure report...");
             ProcessBuilder pb = new ProcessBuilder("mvn", "allure:report");
             pb.directory(new java.io.File(System.getProperty("user.dir")));
             pb.redirectErrorStream(true);
@@ -93,17 +116,17 @@ public class CucumberHooks {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains("BUILD SUCCESS") || line.contains("Report successfully generated")) {
-                    LogManager.info(line);
+                    UnifiedLogger.info(line);
                 }
             }
             
             int exitCode = process.waitFor();
             if (exitCode == 0) {
-                LogManager.info("Allure report generated at: test-output/allure");
-                LogManager.info("To view report run: mvn allure:serve");
+                UnifiedLogger.info("Allure report generated at: test-output/allure");
+                UnifiedLogger.info("To view report run: mvn allure:serve");
             }
         } catch (Exception e) {
-            LogManager.warn("Allure report generation skipped: " + e.getMessage());
+            UnifiedLogger.warn("Allure report generation skipped: " + e.getMessage());
         }
     }
 }
