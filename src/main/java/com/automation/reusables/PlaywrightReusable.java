@@ -2,12 +2,12 @@ package com.automation.reusables;
 
 import com.automation.core.assertions.AssertUtils;
 import com.automation.core.driver.DriverManager;
+import com.automation.core.interfaces.WebActions;
 import com.automation.core.logging.LogManager;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.AriaRole;
 
 import java.nio.file.Paths;
-import java.util.List;
 
 public class PlaywrightReusable implements WebActions<Locator> {
     protected Page page;

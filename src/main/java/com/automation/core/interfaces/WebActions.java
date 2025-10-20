@@ -1,4 +1,4 @@
-package com.automation.reusables;
+package com.automation.core.interfaces;
 
 public interface WebActions<T> {
     

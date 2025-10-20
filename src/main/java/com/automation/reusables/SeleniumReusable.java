@@ -2,6 +2,7 @@ package com.automation.reusables;
 
 import com.automation.core.assertions.AssertUtils;
 import com.automation.core.driver.DriverManager;
+import com.automation.core.interfaces.WebActions;
 import com.automation.core.logging.LogManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.locators.RelativeLocator;
