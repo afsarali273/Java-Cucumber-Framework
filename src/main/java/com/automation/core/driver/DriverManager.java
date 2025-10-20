@@ -3,12 +3,17 @@ package com.automation.core.driver;
 import com.automation.core.config.ConfigManager;
 import com.automation.core.logging.LogManager;
 import com.microsoft.playwright.*;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.net.URL;
 import java.time.Duration;
 
 public class DriverManager {
@@ -17,6 +22,7 @@ public class DriverManager {
     private static final ThreadLocal<Browser> playwrightBrowser = new ThreadLocal<>();
     private static final ThreadLocal<BrowserContext> playwrightContext = new ThreadLocal<>();
     private static final ThreadLocal<Page> playwrightPage = new ThreadLocal<>();
+    private static final ThreadLocal<AppiumDriver> appiumDriver = new ThreadLocal<>();
 
     public static void initializeDriver() {
         if (ConfigManager.isAPI()) {
@@ -28,6 +34,8 @@ public class DriverManager {
             initializeSeleniumDriver();
         } else if (ConfigManager.isPlaywright()) {
             initializePlaywrightDriver();
+        } else if (ConfigManager.isMobile()) {
+            initializeAppiumDriver();
         }
     }
 
@@ -104,6 +112,37 @@ public class DriverManager {
         }
     }
 
+    private static void initializeAppiumDriver() {
+        ConfigManager config = ConfigManager.getInstance();
+        String platformName = config.getGlobalProperty("mobile.platformName", "Android");
+        String deviceName = config.getGlobalProperty("mobile.deviceName", "emulator-5554");
+        String appiumServerUrl = config.getGlobalProperty("mobile.appiumServerUrl", "http://127.0.0.1:4723/wd/hub");
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("platformName", platformName);
+        capabilities.setCapability("deviceName", deviceName);
+        if (platformName.equalsIgnoreCase("Android")) {
+            capabilities.setCapability("appPackage", config.getGlobalProperty("mobile.appPackage", ""));
+            capabilities.setCapability("appActivity", config.getGlobalProperty("mobile.appActivity", ""));
+            capabilities.setCapability("app", config.getGlobalProperty("mobile.appPath", ""));
+        } else if (platformName.equalsIgnoreCase("iOS")) {
+            capabilities.setCapability("bundleId", config.getGlobalProperty("mobile.bundleId", ""));
+            capabilities.setCapability("app", config.getGlobalProperty("mobile.appPath", ""));
+        }
+        try {
+            AppiumDriver driver;
+            if (platformName.equalsIgnoreCase("Android")) {
+                driver = new AndroidDriver(new URL(appiumServerUrl), capabilities);
+            } else {
+                driver = new IOSDriver(new URL(appiumServerUrl), capabilities);
+            }
+            appiumDriver.set(driver);
+            LogManager.info("AppiumDriver initialized for platform: " + platformName);
+        } catch (Exception e) {
+            LogManager.error("Error initializing AppiumDriver: " + e.getMessage());
+            throw new RuntimeException("Failed to initialize Appium driver", e);
+        }
+    }
+
     public static WebDriver getSeleniumDriver() {
         return seleniumDriver.get();
     }
@@ -114,6 +153,10 @@ public class DriverManager {
     
     public static void setPlaywrightPage(Page page) {
         playwrightPage.set(page);
+    }
+
+    public static AppiumDriver getAppiumDriver() {
+        return appiumDriver.get();
     }
 
     public static void quitDriver() {
@@ -141,6 +184,20 @@ public class DriverManager {
                 }
                 playwrightContext.remove();
             }
+        } else if (ConfigManager.isMobile()) {
+            quitAppiumDriver();
+        }
+    }
+
+    public static void quitAppiumDriver() {
+        if (appiumDriver.get() != null) {
+            try {
+                appiumDriver.get().quit();
+                LogManager.info("AppiumDriver closed");
+            } catch (Exception e) {
+                LogManager.error("Error closing AppiumDriver: " + e.getMessage());
+            }
+            appiumDriver.remove();
         }
     }
 

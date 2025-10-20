@@ -257,4 +257,8 @@ public class ConfigManager {
     public static boolean isAPI() {
         return "api".equalsIgnoreCase(FRAMEWORK_TYPE);
     }
+
+    public static boolean isMobile() {
+        return "mobile".equalsIgnoreCase(getInstance().getFrameworkType());
+    }
 }

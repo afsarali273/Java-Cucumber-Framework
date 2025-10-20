@@ -28,7 +28,11 @@ public class CucumberHooks {
         if (scenario.getSourceTagNames().contains("@UI")) {
             DriverManager.initializeDriver();
         }
-        
+
+        if (scenario.getSourceTagNames().contains("@Mobile")) {
+            DriverManager.initializeDriver();
+        }
+
         if (scenario.getSourceTagNames().contains("@API")) {
             APIClient.initializeAPIClient();
         }

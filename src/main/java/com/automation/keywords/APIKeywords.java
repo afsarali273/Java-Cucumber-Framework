@@ -72,4 +72,25 @@ public class APIKeywords {
         LogManager.info("Response contains '" + text + "': " + contains);
         return contains;
     }
+
+    /**
+     * Sample usage for TestNG/Modular execution:
+     *
+     * In your test class, you can use APIKeywords for API automation:
+     *
+     * import com.automation.keywords.APIKeywords;
+     *
+     * @Test(dataProvider = "API", dataProviderClass = TestNgModularConfig.class)
+     * public void apiTest() {
+     *     APIKeywords.initializeAPI();
+     *     APIKeywords.addHeader("Authorization", "Bearer token");
+     *     APIKeywords.sendPOSTRequest("/users", "{\"name\":\"John\"}");
+     *     int status = APIKeywords.getResponseStatusCode();
+     *     String body = APIKeywords.getResponseBody();
+     *     assert status == 201;
+     *     assert APIKeywords.responseContains("John");
+     * }
+     *
+     * The APIKeywords class provides simple, reusable methods for API testing in both Cucumber and TestNG/Modular execution modes.
+     */
 }
