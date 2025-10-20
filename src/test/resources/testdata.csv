@@ -1,0 +1,3 @@
+tc_id,url,headers,method,payload,code
+DummyGetEmployee,/api/v1/employee/1,NA,GET,,200
+DummyAddEmployee,/api/v1/create,NA,POST,"{\"name\":\"John Doe\",\"salary\":\"123\",\"age\":\"23\"}",200
