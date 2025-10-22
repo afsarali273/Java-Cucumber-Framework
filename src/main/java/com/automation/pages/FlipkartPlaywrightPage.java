@@ -10,7 +10,7 @@ public class FlipkartPlaywrightPage extends PlaywrightReusable {
     
     private Locator searchBox() { return locator("input[name='q']"); }
     private Locator searchButton() { return locator("button[type='submit']"); }
-    private Locator firstProduct() { return locator("div[data-id] a"); }
+    private Locator firstProduct() { return locator("div[data-id] a").first(); }
     private Locator addToCartButton() { return locator("button:has-text('Add to cart')"); }
     private Locator cartIcon() { return locator("a[href='/viewcart']"); }
     private Locator closeLoginPopup() { return locator("button._2KpZ6l._2doB4z"); }

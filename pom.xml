@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <selenium.version>4.15.0</selenium.version>
+        <selenium.version>4.37.0</selenium.version>
         <playwright.version>1.56.0</playwright.version>
         <cucumber.version>7.14.0</cucumber.version>
         <testng.version>7.8.0</testng.version>

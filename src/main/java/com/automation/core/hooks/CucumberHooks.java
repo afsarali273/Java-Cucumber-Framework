@@ -3,6 +3,7 @@ package com.automation.core.hooks;
 import com.automation.core.api.APIClient;
 import com.automation.core.config.ConfigManager;
 import com.automation.core.driver.DriverManager;
+import com.automation.core.logging.ColoredLogger;
 import com.automation.core.logging.UnifiedLogger;
 import com.automation.core.reporting.CustomReporter;
 import com.automation.core.reporting.ExtentReporter;
@@ -25,7 +26,8 @@ public class CucumberHooks {
     @BeforeAll
     public static void beforeAll() {
         ExtentReporter.initReports();
-        UnifiedLogger.info("=== Test Suite Started ===");
+        ColoredLogger.header("TEST SUITE STARTED");
+        UnifiedLogger.info("Initializing framework configuration...");
         ConfigManager.getInstance(); // Initialize configuration
     }
 
@@ -78,6 +80,10 @@ public class CucumberHooks {
             CustomReporter.endTest();
             DriverManager.quitDriver();
             APIClient.clearRequestSpec();
+            
+            // Clear scenario context to prevent memory leaks
+            com.automation.core.context.ScenarioContext.reset();
+            
             UnifiedLogger.info("Completed Scenario: " + scenarioName + " | Status: " + scenario.getStatus());
         }
     }
@@ -123,7 +129,7 @@ public class CucumberHooks {
             ExtentReporter.flushReports();
             CustomReporter.generateReport();
             generateAllureReport();
-            UnifiedLogger.info("=== Test Suite Completed ===");
+            ColoredLogger.header("TEST SUITE COMPLETED");
         }
     }
 

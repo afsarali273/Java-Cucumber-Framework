@@ -1,6 +1,7 @@
 package com.automation.stepdefinitions;
 
 import com.automation.core.config.ConfigManager;
+import com.automation.core.context.ScenarioContext;
 import com.automation.core.logging.LogManager;
 import com.automation.pages.FlipkartPlaywrightPage;
 import com.automation.pages.FlipkartSeleniumPage;
@@ -32,6 +33,10 @@ public class FlipkartSteps {
     @When("user searches for {string}")
     public void userSearchesFor(String productName) {
         LogManager.info("Searching for product: " + productName);
+        
+        // Store product name in context for later use
+        ScenarioContext.set("productName", productName);
+        
         if (ConfigManager.isSelenium()) {
             seleniumPage.searchProduct(productName);
         } else if (ConfigManager.isPlaywright()) {
@@ -42,6 +47,10 @@ public class FlipkartSteps {
     @When("user clicks on first product")
     public void userClicksOnFirstProduct() {
         LogManager.info("Clicking on first product");
+        
+        // Store product clicked flag
+        ScenarioContext.set("productClicked", true);
+        
         if (ConfigManager.isSelenium()) {
             seleniumPage.clickFirstProduct();
         } else if (ConfigManager.isPlaywright()) {
@@ -51,16 +60,30 @@ public class FlipkartSteps {
 
     @When("user adds product to cart")
     public void userAddsProductToCart() {
-        LogManager.info("Adding product to cart");
+        // Retrieve product name from context
+        String productName = ScenarioContext.get("productName", String.class);
+        LogManager.info("Adding product to cart: " + productName);
+        
         if (ConfigManager.isSelenium()) {
             seleniumPage.addToCart();
         } else if (ConfigManager.isPlaywright()) {
             playwrightPage.addToCart();
         }
+        
+        // Store cart status
+        ScenarioContext.putIfAbsent("addedToCart", true);
+        ScenarioContext.set("cartItemCount", 1);
     }
 
     @Then("product should be added to cart successfully")
     public void productShouldBeAddedToCartSuccessfully() {
+        // Verify using context data
+        String productName = ScenarioContext.getString("productName");
+        Boolean addedToCart = ScenarioContext.getBoolean("addedToCart"); // may be null
+        boolean isAdded = Boolean.TRUE.equals(addedToCart); // null-safe
+
+        LogManager.info("Verifying product in cart: " + productName + ", Added: " + isAdded);
+
         if (ConfigManager.isSelenium()) {
             seleniumPage.assertTrue(seleniumPage.isProductInCart(), "Product should be in cart");
         } else if (ConfigManager.isPlaywright()) {

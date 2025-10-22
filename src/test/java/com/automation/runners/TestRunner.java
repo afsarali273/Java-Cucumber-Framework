@@ -13,7 +13,7 @@ import org.testng.annotations.DataProvider;
                 "json:test-output/cucumber-reports/cucumber.json",
                 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
         },
-        tags = "@API",
+        tags = "@UI",
         monochrome = true,
         dryRun = false
 )

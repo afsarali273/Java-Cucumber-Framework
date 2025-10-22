@@ -1,5 +1,7 @@
 package com.automation.examples;
 
+import com.automation.core.exceptions.APIException;
+import com.automation.core.exceptions.TestDataNotFoundException;
 import com.automation.core.utils.DataDrivenUtils;
 import com.automation.reusables.APIReusable;
 import io.restassured.response.Response;
@@ -15,7 +17,7 @@ public class DataDrivenApiExample extends APIReusable {
         // Fetch test data row by tc_id from CSV
         Map<String, String> testData = DataDrivenUtils.getTestDataByTcId(filePath, tcId);
         if (testData == null) {
-            throw new RuntimeException("Test data not found for tc_id: " + tcId);
+            throw new TestDataNotFoundException("tc_id: " + tcId + " in file: " + filePath);
         }
         String url = testData.get("url");
         String method = testData.get("method");
@@ -33,7 +35,7 @@ public class DataDrivenApiExample extends APIReusable {
 
         // Example assertion
         if (response.getStatusCode() != Integer.parseInt(code)) {
-            throw new AssertionError("Expected status code " + code + ", got " + response.getStatusCode());
+            throw new APIException("Expected status code " + code + ", got " + response.getStatusCode(), response.getStatusCode());
         }
         System.out.println("Test for tc_id " + tcId + " passed with status code " + code);
     }
@@ -42,7 +44,7 @@ public class DataDrivenApiExample extends APIReusable {
         // Fetch test data row by tc_id from Excel
         Map<String, String> testData = DataDrivenUtils.getTestDataByTcId(filePath, tcId);
         if (testData == null) {
-            throw new RuntimeException("Test data not found for tc_id: " + tcId);
+            throw new TestDataNotFoundException("tc_id: " + tcId + " in file: " + filePath);
         }
         String url = testData.get("url");
         String method = testData.get("method");
@@ -60,7 +62,7 @@ public class DataDrivenApiExample extends APIReusable {
 
         // Example assertion
         if (response.getStatusCode() != Integer.parseInt(code)) {
-            throw new AssertionError("Expected status code " + code + ", got " + response.getStatusCode());
+            throw new APIException("Expected status code " + code + ", got " + response.getStatusCode(), response.getStatusCode());
         }
         System.out.println("Test for tc_id " + tcId + " passed with status code " + code);
     }

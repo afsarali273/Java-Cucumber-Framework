@@ -1,0 +1,20 @@
+package com.automation.core.exceptions;
+
+/**
+ * Base exception for Sands Automation Framework.
+ * All custom framework exceptions extend this class.
+ */
+public class FrameworkException extends RuntimeException {
+    
+    public FrameworkException(String message) {
+        super(message);
+    }
+    
+    public FrameworkException(String message, Throwable cause) {
+        super(message, cause);
+    }
+    
+    public FrameworkException(Throwable cause) {
+        super(cause);
+    }
+}
