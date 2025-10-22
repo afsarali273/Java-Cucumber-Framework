@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playwright Reference - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+          <li class="nav-item"><a href="examples.html" class="nav-link"><i class="fas fa-code-branch"></i>Examples</a></li>
+          <li class="nav-item"><a href="api-reference.html" class="nav-link"><i class="fas fa-book"></i>API Reference</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Playwright Complete Reference</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>PlaywrightReusable - All Methods</h2>
+        <p>Complete reference of all methods available in <code>PlaywrightReusable</code> class.</p>
+        
+        <div class="alert alert-info">
+          <strong>Usage:</strong> Extend PlaywrightReusable in your Page Object classes to access all these methods.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Locator Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>locator()</code></td>
+              <td>String selector</td>
+              <td>Create locator from CSS/XPath selector</td>
+            </tr>
+            <tr>
+              <td><code>getByRole()</code></td>
+              <td>AriaRole role</td>
+              <td>Locate by ARIA role</td>
+            </tr>
+            <tr>
+              <td><code>getByText()</code></td>
+              <td>String text</td>
+              <td>Locate by text content</td>
+            </tr>
+            <tr>
+              <td><code>getByTestId()</code></td>
+              <td>String testId</td>
+              <td>Locate by test ID attribute</td>
+            </tr>
+            <tr>
+              <td><code>getByPlaceholder()</code></td>
+              <td>String placeholder</td>
+              <td>Locate by placeholder text</td>
+            </tr>
+            <tr>
+              <td><code>getByLabel()</code></td>
+              <td>String label</td>
+              <td>Locate by label text</td>
+            </tr>
+            <tr>
+              <td><code>getByTitle()</code></td>
+              <td>String title</td>
+              <td>Locate by title attribute</td>
+            </tr>
+            <tr>
+              <td><code>getByAltText()</code></td>
+              <td>String altText</td>
+              <td>Locate by alt text (images)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Navigation Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>navigateTo()</code></td>
+              <td>String url</td>
+              <td>Navigate to specified URL</td>
+            </tr>
+            <tr>
+              <td><code>navigateBack()</code></td>
+              <td>-</td>
+              <td>Navigate back in browser history</td>
+            </tr>
+            <tr>
+              <td><code>navigateForward()</code></td>
+              <td>-</td>
+              <td>Navigate forward in browser history</td>
+            </tr>
+            <tr>
+              <td><code>refreshPage()</code></td>
+              <td>-</td>
+              <td>Refresh current page</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Element Interaction Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>click()</code></td>
+              <td>Locator locator</td>
+              <td>Click on element</td>
+            </tr>
+            <tr>
+              <td><code>type()</code></td>
+              <td>Locator locator, String text</td>
+              <td>Fill text into element</td>
+            </tr>
+            <tr>
+              <td><code>typeAndEnter()</code></td>
+              <td>Locator locator, String text</td>
+              <td>Type text and press Enter</td>
+            </tr>
+            <tr>
+              <td><code>clear()</code></td>
+              <td>Locator locator</td>
+              <td>Clear element text</td>
+            </tr>
+            <tr>
+              <td><code>getText()</code></td>
+              <td>Locator locator</td>
+              <td>Get element text content</td>
+            </tr>
+            <tr>
+              <td><code>getAttribute()</code></td>
+              <td>Locator locator, String attribute</td>
+              <td>Get element attribute value</td>
+            </tr>
+            <tr>
+              <td><code>getCssValue()</code></td>
+              <td>Locator locator, String property</td>
+              <td>Get CSS property value</td>
+            </tr>
+            <tr>
+              <td><code>jsClick()</code></td>
+              <td>Locator locator</td>
+              <td>Click using JavaScript</td>
+            </tr>
+            <tr>
+              <td><code>doubleClick()</code></td>
+              <td>Locator locator</td>
+              <td>Double click on element</td>
+            </tr>
+            <tr>
+              <td><code>mouseHover()</code></td>
+              <td>Locator locator</td>
+              <td>Hover mouse over element</td>
+            </tr>
+            <tr>
+              <td><code>dragAndDrop()</code></td>
+              <td>Locator source, Locator target</td>
+              <td>Drag source to target</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Dropdown Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>selectDropdownByText()</code></td>
+              <td>Locator locator, String text</td>
+              <td>Select option by visible text</td>
+            </tr>
+            <tr>
+              <td><code>selectDropdownByValue()</code></td>
+              <td>Locator locator, String value</td>
+              <td>Select option by value attribute</td>
+            </tr>
+            <tr>
+              <td><code>selectDropdownByIndex()</code></td>
+              <td>Locator locator, int index</td>
+              <td>Select option by index</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Checkbox & Radio Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>check()</code></td>
+              <td>Locator locator</td>
+              <td>Check checkbox</td>
+            </tr>
+            <tr>
+              <td><code>uncheck()</code></td>
+              <td>Locator locator</td>
+              <td>Uncheck checkbox</td>
+            </tr>
+            <tr>
+              <td><code>isChecked()</code></td>
+              <td>Locator locator</td>
+              <td>Returns true if checkbox is checked</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Wait Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>waitForElementToBeVisible()</code></td>
+              <td>Locator locator</td>
+              <td>Wait until element is visible</td>
+            </tr>
+            <tr>
+              <td><code>waitForElementToBeClickable()</code></td>
+              <td>Locator locator</td>
+              <td>Wait until element is clickable</td>
+            </tr>
+            <tr>
+              <td><code>waitForSeconds()</code></td>
+              <td>int seconds</td>
+              <td>Wait for specified seconds</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Scroll Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>scrollToElement()</code></td>
+              <td>Locator locator</td>
+              <td>Scroll to bring element into view</td>
+            </tr>
+            <tr>
+              <td><code>scrollToTop()</code></td>
+              <td>-</td>
+              <td>Scroll to top of page</td>
+            </tr>
+            <tr>
+              <td><code>scrollToBottom()</code></td>
+              <td>-</td>
+              <td>Scroll to bottom of page</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Screenshot Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>takeScreenshot()</code></td>
+              <td>String filePath</td>
+              <td>Capture full page screenshot</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Utility Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>isDisplayed()</code></td>
+              <td>Locator locator</td>
+              <td>Check if element is visible</td>
+            </tr>
+            <tr>
+              <td><code>isEnabled()</code></td>
+              <td>Locator locator</td>
+              <td>Check if element is enabled</td>
+            </tr>
+            <tr>
+              <td><code>uploadFile()</code></td>
+              <td>Locator locator, String filePath</td>
+              <td>Upload file to input element</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Playwright Native Assertions</h2>
+        <p>Powerful built-in assertions with auto-wait and retry logic.</p>
+        
+        <h3>Element State Assertions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>assertVisible()</code></td>
+              <td>Locator locator</td>
+              <td>Assert element is visible</td>
+            </tr>
+            <tr>
+              <td><code>assertHidden()</code></td>
+              <td>Locator locator</td>
+              <td>Assert element is hidden</td>
+            </tr>
+            <tr>
+              <td><code>assertEnabled()</code></td>
+              <td>Locator locator</td>
+              <td>Assert element is enabled</td>
+            </tr>
+            <tr>
+              <td><code>assertDisabled()</code></td>
+              <td>Locator locator</td>
+              <td>Assert element is disabled</td>
+            </tr>
+            <tr>
+              <td><code>assertChecked()</code></td>
+              <td>Locator locator</td>
+              <td>Assert checkbox is checked</td>
+            </tr>
+            <tr>
+              <td><code>assertEditable()</code></td>
+              <td>Locator locator</td>
+              <td>Assert element is editable</td>
+            </tr>
+            <tr>
+              <td><code>assertFocused()</code></td>
+              <td>Locator locator</td>
+              <td>Assert element is focused</td>
+            </tr>
+            <tr>
+              <td><code>assertAttached()</code></td>
+              <td>Locator locator</td>
+              <td>Assert element is attached to DOM</td>
+            </tr>
+            <tr>
+              <td><code>assertInViewport()</code></td>
+              <td>Locator locator</td>
+              <td>Assert element is in viewport</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Text Assertions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>assertContainsText()</code></td>
+              <td>Locator locator, String text</td>
+              <td>Assert element contains text</td>
+            </tr>
+            <tr>
+              <td><code>assertHasText()</code></td>
+              <td>Locator locator, String text</td>
+              <td>Assert element has exact text</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Attribute & CSS Assertions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>assertHasAttribute()</code></td>
+              <td>Locator locator, String name, String value</td>
+              <td>Assert element has attribute with value</td>
+            </tr>
+            <tr>
+              <td><code>assertHasClass()</code></td>
+              <td>Locator locator, String className</td>
+              <td>Assert element has CSS class</td>
+            </tr>
+            <tr>
+              <td><code>assertContainsClass()</code></td>
+              <td>Locator locator, String className</td>
+              <td>Assert element contains CSS class</td>
+            </tr>
+            <tr>
+              <td><code>assertHasCSS()</code></td>
+              <td>Locator locator, String name, String value</td>
+              <td>Assert element has CSS property</td>
+            </tr>
+            <tr>
+              <td><code>assertHasId()</code></td>
+              <td>Locator locator, String id</td>
+              <td>Assert element has ID</td>
+            </tr>
+            <tr>
+              <td><code>assertHasValue()</code></td>
+              <td>Locator locator, String value</td>
+              <td>Assert input has value</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Count & Page Assertions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>assertHasCount()</code></td>
+              <td>Locator locator, int count</td>
+              <td>Assert element count</td>
+            </tr>
+            <tr>
+              <td><code>assertPageHasTitle()</code></td>
+              <td>String title</td>
+              <td>Assert page has title</td>
+            </tr>
+            <tr>
+              <td><code>assertPageHasURL()</code></td>
+              <td>String url</td>
+              <td>Assert page has URL</td>
+            </tr>
+            <tr>
+              <td><code>assertPageURLContains()</code></td>
+              <td>String urlPart</td>
+              <td>Assert page URL contains text</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Accessibility Assertions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>assertHasAccessibleName()</code></td>
+              <td>Locator locator, String name</td>
+              <td>Assert element has accessible name</td>
+            </tr>
+            <tr>
+              <td><code>assertHasRole()</code></td>
+              <td>Locator locator, AriaRole role</td>
+              <td>Assert element has ARIA role</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Custom Assertions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>expect()</code></td>
+              <td>Locator locator</td>
+              <td>Get LocatorAssertions for custom assertions</td>
+            </tr>
+            <tr>
+              <td><code>expect()</code></td>
+              <td>Page page</td>
+              <td>Get PageAssertions for custom assertions</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Standard Assertion Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>assertEquals()</code></td>
+              <td>Object actual, Object expected, String message</td>
+              <td>Assert two values are equal</td>
+            </tr>
+            <tr>
+              <td><code>assertNotEquals()</code></td>
+              <td>Object actual, Object expected, String message</td>
+              <td>Assert two values are not equal</td>
+            </tr>
+            <tr>
+              <td><code>assertTrue()</code></td>
+              <td>boolean condition, String message</td>
+              <td>Assert condition is true</td>
+            </tr>
+            <tr>
+              <td><code>assertFalse()</code></td>
+              <td>boolean condition, String message</td>
+              <td>Assert condition is false</td>
+            </tr>
+            <tr>
+              <td><code>assertNull()</code></td>
+              <td>Object object, String message</td>
+              <td>Assert object is null</td>
+            </tr>
+            <tr>
+              <td><code>assertNotNull()</code></td>
+              <td>Object object, String message</td>
+              <td>Assert object is not null</td>
+            </tr>
+            <tr>
+              <td><code>assertContains()</code></td>
+              <td>String actual, String expected, String message</td>
+              <td>Assert string contains substring</td>
+            </tr>
+            <tr>
+              <td><code>enableSoftAssert()</code></td>
+              <td>-</td>
+              <td>Enable soft assertions mode</td>
+            </tr>
+            <tr>
+              <td><code>assertAll()</code></td>
+              <td>-</td>
+              <td>Verify all soft assertions</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Ready-Made Cucumber Steps (UISteps)</h2>
+        <p>Same pre-built step definitions work with Playwright automatically.</p>
+        
+        <div class="alert alert-success">
+          <strong>Note:</strong> All UISteps work seamlessly with Playwright. Just set <code>framework.type=playwright</code> in config.properties.
+        </div>
+
+        <p>See <a href="selenium-reference.html#ready-made-steps">Selenium Reference</a> for complete list of ready-made steps.</p>
+      </section>
+
+      <section class="section">
+        <h2>Playwright-Specific Examples</h2>
+        
+        <h3>Using Locator Methods Pattern</h3>
+        <pre><code>public class LoginPage extends PlaywrightReusable {
+    // Locator methods - always fresh
+    private Locator usernameField() { return locator("#username"); }
+    private Locator passwordField() { return locator("#password"); }
+    private Locator loginButton() { return locator("#loginBtn"); }
+    
+    public void login(String username, String password) {
+        type(usernameField(), username);
+        type(passwordField(), password);
+        click(loginButton());
+        
+        // Use native assertion
+        assertVisible(locator(".dashboard"));
+    }
+}</code></pre>
+
+        <h3>Using getBy Methods</h3>
+        <pre><code>// By role
+click(getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Submit")));
+
+// By text
+click(getByText("Login"));
+
+// By placeholder
+type(getByPlaceholder("Enter email"), "test@example.com");
+
+// By label
+type(getByLabel("Password"), "password123");
+
+// By test ID
+click(getByTestId("submit-button"));</code></pre>
+
+        <h3>Native Assertions</h3>
+        <pre><code>// Element state
+assertVisible(locator("#result"));
+assertEnabled(locator("#submitBtn"));
+assertChecked(locator("#agreeTerms"));
+
+// Text
+assertContainsText(locator(".message"), "Success");
+assertHasText(locator("h1"), "Welcome");
+
+// Attributes
+assertHasAttribute(locator("a"), "href", "/home");
+assertHasClass(locator("div"), "active");
+
+// Page
+assertPageHasTitle("Dashboard");
+assertPageURLContains("/dashboard");</code></pre>
+
+        <h3>Custom Assertions</h3>
+        <pre><code>// Using expect() for custom assertions
+expect(locator("#price")).hasValue("$99.99");
+expect(locator(".error")).not().isVisible();
+expect(page).hasURL("https://example.com/home");</code></pre>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Sands Automation Framework. Created by <a href="#">Afsar Ali</a></p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

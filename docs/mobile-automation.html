@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Automation - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link active"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Mobile Automation (Appium)</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>Mobile automation using Appium for Android and iOS testing with W3C Actions API.</p>
+        
+        <div class="card">
+          <h3>Key Features</h3>
+          <ul>
+            <li>Android and iOS support</li>
+            <li>W3C Actions API for gestures</li>
+            <li>Platform-specific methods</li>
+            <li>Touch gestures (swipe, tap, long press)</li>
+            <li>Native app automation</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Configuration</h2>
+        <div class="code-block">
+          <pre><code># config.properties
+framework.type=mobile
+
+# Android Configuration
+mobile.platformName=Android
+mobile.deviceName=emulator-5554
+mobile.appiumServerUrl=http://127.0.0.1:4723
+mobile.appPackage=com.example.android
+mobile.appActivity=com.example.android.MainActivity
+mobile.automationName=UiAutomator2
+
+# iOS Configuration
+mobile.platformName=iOS
+mobile.deviceName=iPhone 14
+mobile.udid=auto
+mobile.bundleId=com.example.ios
+mobile.automationName=XCUITest</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>MobileReusable Methods</h2>
+        
+        <h3>App Lifecycle</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>launchApp()</code></td>
+              <td>URL, DesiredCapabilities, boolean</td>
+              <td>Launch Android/iOS app</td>
+            </tr>
+            <tr>
+              <td><code>closeApp()</code></td>
+              <td>-</td>
+              <td>Close app and quit driver</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Element Interaction</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>click()</code></td>
+              <td>By locator</td>
+              <td>Click element</td>
+            </tr>
+            <tr>
+              <td><code>type()</code></td>
+              <td>By locator, String text</td>
+              <td>Clear and type text</td>
+            </tr>
+            <tr>
+              <td><code>getText()</code></td>
+              <td>By locator</td>
+              <td>Get element text</td>
+            </tr>
+            <tr>
+              <td><code>findElement()</code></td>
+              <td>By locator</td>
+              <td>Find single element</td>
+            </tr>
+            <tr>
+              <td><code>findElements()</code></td>
+              <td>By locator</td>
+              <td>Find multiple elements</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Touch Gestures (W3C Actions)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>swipe()</code></td>
+              <td>int startX, startY, endX, endY, durationMs</td>
+              <td>Swipe from one point to another</td>
+            </tr>
+            <tr>
+              <td><code>tap()</code></td>
+              <td>int x, y</td>
+              <td>Tap at coordinates</td>
+            </tr>
+            <tr>
+              <td><code>longPress()</code></td>
+              <td>int x, y, int durationMs</td>
+              <td>Long press at coordinates</td>
+            </tr>
+            <tr>
+              <td><code>dragAndDrop()</code></td>
+              <td>By source, By target</td>
+              <td>Drag element to target</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Android-Specific Methods</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>openNotifications()</code></td>
+              <td>Open Android notification panel</td>
+            </tr>
+            <tr>
+              <td><code>pressBack()</code></td>
+              <td>Press back button</td>
+            </tr>
+            <tr>
+              <td><code>pressHome()</code></td>
+              <td>Press home button</td>
+            </tr>
+            <tr>
+              <td><code>setClipboardText()</code></td>
+              <td>Set clipboard text</td>
+            </tr>
+            <tr>
+              <td><code>getClipboardText()</code></td>
+              <td>Get clipboard text</td>
+            </tr>
+            <tr>
+              <td><code>unlockDevice()</code></td>
+              <td>Unlock Android device</td>
+            </tr>
+            <tr>
+              <td><code>isAppInstalledAndroid()</code></td>
+              <td>Check if app installed</td>
+            </tr>
+            <tr>
+              <td><code>backgroundAppAndroid()</code></td>
+              <td>Background app for N seconds</td>
+            </tr>
+            <tr>
+              <td><code>getCurrentActivity()</code></td>
+              <td>Get current activity name</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>iOS-Specific Methods</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>shakeDevice()</code></td>
+              <td>Shake iOS device</td>
+            </tr>
+            <tr>
+              <td><code>lockDeviceIOS()</code></td>
+              <td>Lock iOS device</td>
+            </tr>
+            <tr>
+              <td><code>unlockDeviceIOS()</code></td>
+              <td>Unlock iOS device</td>
+            </tr>
+            <tr>
+              <td><code>installAppIOS()</code></td>
+              <td>Install app by path</td>
+            </tr>
+            <tr>
+              <td><code>removeAppIOS()</code></td>
+              <td>Remove app by bundle ID</td>
+            </tr>
+            <tr>
+              <td><code>isAppInstalledIOS()</code></td>
+              <td>Check if app installed</td>
+            </tr>
+            <tr>
+              <td><code>backgroundAppIOS()</code></td>
+              <td>Background app for N seconds</td>
+            </tr>
+            <tr>
+              <td><code>getDeviceTimeIOS()</code></td>
+              <td>Get device time</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Page Object Example</h2>
+        <div class="code-block">
+          <pre><code>public class LoginPage extends MobileReusable {
+    
+    // Locators
+    By usernameField = By.id("com.example:id/username");
+    By passwordField = By.id("com.example:id/password");
+    By loginButton = By.id("com.example:id/login");
+    By errorMessage = By.id("com.example:id/error");
+    
+    public void login(String username, String password) {
+        type(usernameField, username);
+        type(passwordField, password);
+        click(loginButton);
+        UnifiedLogger.action("Login", username);
+    }
+    
+    public boolean isErrorDisplayed() {
+        return findElement(errorMessage).isDisplayed();
+    }
+    
+    public void swipeToBottom() {
+        swipe(500, 1500, 500, 500, 1000);
+    }
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Feature File Example</h2>
+        <div class="code-block">
+          <pre><code>@Mobile
+Feature: Mobile Login
+
+  Scenario: Successful login on Android
+    Given mobile app is launched
+    When user enters username "testuser"
+    And user enters password "password123"
+    And user taps login button
+    Then home screen should be displayed
+    
+  Scenario: Swipe gesture
+    Given mobile app is launched
+    When user swipes down on screen
+    Then refresh should be triggered</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Step Definitions</h2>
+        <div class="code-block">
+          <pre><code>public class MobileSteps extends MobileReusable {
+    
+    @Given("mobile app is launched")
+    public void mobileAppIsLaunched() {
+        // App launched via hooks
+        UnifiedLogger.info("Mobile app launched");
+    }
+    
+    @When("user enters username {string}")
+    public void userEntersUsername(String username) {
+        type(By.id("username"), username);
+    }
+    
+    @When("user swipes down on screen")
+    public void userSwipesDown() {
+        swipe(500, 500, 500, 1500, 1000);
+    }
+    
+    @When("user taps at coordinates {int} {int}")
+    public void userTapsAt(int x, int y) {
+        tap(x, y);
+    }
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Locator Strategies</h2>
+        <div class="card">
+          <h3>Android</h3>
+          <div class="code-block">
+            <pre><code>// Resource ID
+By.id("com.example:id/button")
+
+// Accessibility ID
+MobileBy.AccessibilityId("Login Button")
+
+// XPath
+By.xpath("//android.widget.Button[@text='Login']")
+
+// UiAutomator
+MobileBy.AndroidUIAutomator("new UiSelector().text(\"Login\")")</code></pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>iOS</h3>
+          <div class="code-block">
+            <pre><code>// Accessibility ID
+MobileBy.AccessibilityId("loginButton")
+
+// iOS Predicate
+MobileBy.iOSNsPredicateString("name == 'Login'")
+
+// iOS Class Chain
+MobileBy.iOSClassChain("**/XCUIElementTypeButton[`name == 'Login'`]")
+
+// XPath
+By.xpath("//XCUIElementTypeButton[@name='Login']")</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Running Mobile Tests</h2>
+        <div class="code-block">
+          <pre><code># Start Appium server
+appium
+
+# Run Android tests
+mvn test -Dcucumber.filter.tags="@Mobile and @Android"
+
+# Run iOS tests
+mvn test -Dcucumber.filter.tags="@Mobile and @iOS"
+
+# Run specific feature
+mvn test -Dcucumber.options="--features src/test/resources/features/mobile_login.feature"</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Best Practices</h2>
+        <div class="alert alert-info">
+          <ul>
+            <li>Use resource IDs for Android (most stable)</li>
+            <li>Use Accessibility IDs for iOS</li>
+            <li>Avoid XPath when possible (slow)</li>
+            <li>Use W3C Actions for gestures</li>
+            <li>Handle platform differences in Page Objects</li>
+            <li>Use explicit waits for dynamic content</li>
+            <li>Test on real devices when possible</li>
+          </ul>
+        </div>
+      </section>
+
+      <button class="back-to-top" id="back-to-top">↑</button>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utilities - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link active"><i class="fas fa-tools"></i>Utilities</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Utilities & Helpers</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>Framework utilities for assertions, context management, and common operations.</p>
+      </section>
+
+      <section class="section">
+        <h2>ScenarioContext</h2>
+        <p>Thread-safe context for sharing data between step definitions.</p>
+        
+        <div class="card">
+          <h3>Key Features</h3>
+          <ul>
+            <li>Thread-safe for parallel execution</li>
+            <li>Type-safe data retrieval</li>
+            <li>Automatic cleanup after scenarios</li>
+            <li>Support for any object type</li>
+          </ul>
+        </div>
+
+        <h3>Basic Usage</h3>
+        <div class="code-block">
+          <pre><code>// Store data
+ScenarioContext.set("username", "testuser");
+ScenarioContext.set("productId", 12345);
+ScenarioContext.set("isLoggedIn", true);
+ScenarioContext.set("productList", Arrays.asList("iPhone", "iPad"));
+
+// Retrieve data with type safety
+String username = ScenarioContext.get("username", String.class);
+Integer productId = ScenarioContext.get("productId", Integer.class);
+Boolean isLoggedIn = ScenarioContext.get("isLoggedIn", Boolean.class);
+List<String> products = ScenarioContext.get("productList", List.class);
+
+// Simple retrieval (returns Object)
+Object value = ScenarioContext.get("username");</code></pre>
+        </div>
+
+        <h3>All ScenarioContext Methods</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>set()</code></td>
+              <td>String key, Object value</td>
+              <td>Store data in context</td>
+            </tr>
+            <tr>
+              <td><code>get()</code></td>
+              <td>String key</td>
+              <td>Retrieve data as Object</td>
+            </tr>
+            <tr>
+              <td><code>get()</code></td>
+              <td>String key, Class&lt;T&gt; type</td>
+              <td>Retrieve with type casting</td>
+            </tr>
+            <tr>
+              <td><code>getString()</code></td>
+              <td>String key</td>
+              <td>Get as String (calls toString())</td>
+            </tr>
+            <tr>
+              <td><code>getBoolean()</code></td>
+              <td>String key</td>
+              <td>Get as Boolean</td>
+            </tr>
+            <tr>
+              <td><code>getBooleanOrDefault()</code></td>
+              <td>String key, boolean default</td>
+              <td>Get boolean with default</td>
+            </tr>
+            <tr>
+              <td><code>contains()</code></td>
+              <td>String key</td>
+              <td>Check if key exists</td>
+            </tr>
+            <tr>
+              <td><code>remove()</code></td>
+              <td>String key</td>
+              <td>Remove specific key</td>
+            </tr>
+            <tr>
+              <td><code>clear()</code></td>
+              <td>-</td>
+              <td>Clear all data</td>
+            </tr>
+            <tr>
+              <td><code>getAll()</code></td>
+              <td>-</td>
+              <td>Get all data as Map</td>
+            </tr>
+            <tr>
+              <td><code>reset()</code></td>
+              <td>-</td>
+              <td>Remove ThreadLocal (cleanup)</td>
+            </tr>
+            <tr>
+              <td><code>putIfAbsent()</code></td>
+              <td>String key, Object value</td>
+              <td>Put only if key absent</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Real-World Example</h3>
+        <div class="code-block">
+          <pre><code>// Step 1: Search for product
+@When("user searches for {string}")
+public void userSearchesFor(String product) {
+    searchPage.search(product);
+    ScenarioContext.set("searchedProduct", product);
+}
+
+// Step 2: Add to cart
+@When("user adds first product to cart")
+public void userAddsToCart() {
+    String productName = productPage.getFirstProductName();
+    double price = productPage.getFirstProductPrice();
+    
+    productPage.addToCart();
+    
+    ScenarioContext.set("cartProductName", productName);
+    ScenarioContext.set("cartProductPrice", price);
+}
+
+// Step 3: Verify cart
+@Then("cart should contain the product")
+public void cartShouldContainProduct() {
+    String expectedProduct = ScenarioContext.get("cartProductName", String.class);
+    Double expectedPrice = ScenarioContext.get("cartProductPrice", Double.class);
+    
+    String actualProduct = cartPage.getProductName();
+    double actualPrice = cartPage.getProductPrice();
+    
+    AssertUtils.assertEquals(actualProduct, expectedProduct, "Product name");
+    AssertUtils.assertEquals(actualPrice, expectedPrice, "Product price");
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>AssertUtils</h2>
+        <p>Enhanced assertions with automatic logging and screenshot capture.</p>
+        
+        <div class="card">
+          <h3>Key Features</h3>
+          <ul>
+            <li>Automatic logging to all reports</li>
+            <li>Screenshot on failure</li>
+            <li>Soft assertions support</li>
+            <li>Rich comparison methods</li>
+          </ul>
+        </div>
+
+        <h3>Assertion Methods</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>assertEquals(actual, expected, message)</code></td>
+              <td>Assert values are equal</td>
+            </tr>
+            <tr>
+              <td><code>assertNotEquals(actual, expected, message)</code></td>
+              <td>Assert values are not equal</td>
+            </tr>
+            <tr>
+              <td><code>assertTrue(condition, message)</code></td>
+              <td>Assert condition is true</td>
+            </tr>
+            <tr>
+              <td><code>assertFalse(condition, message)</code></td>
+              <td>Assert condition is false</td>
+            </tr>
+            <tr>
+              <td><code>assertNull(object, message)</code></td>
+              <td>Assert object is null</td>
+            </tr>
+            <tr>
+              <td><code>assertNotNull(object, message)</code></td>
+              <td>Assert object is not null</td>
+            </tr>
+            <tr>
+              <td><code>assertContains(actual, expected, message)</code></td>
+              <td>Assert string contains substring</td>
+            </tr>
+            <tr>
+              <td><code>assertGreaterThan(actual, expected, message)</code></td>
+              <td>Assert actual > expected</td>
+            </tr>
+            <tr>
+              <td><code>assertLessThan(actual, expected, message)</code></td>
+              <td>Assert actual < expected</td>
+            </tr>
+            <tr>
+              <td><code>assertGreaterThanOrEqual(actual, expected, message)</code></td>
+              <td>Assert actual >= expected</td>
+            </tr>
+            <tr>
+              <td><code>assertLessThanOrEqual(actual, expected, message)</code></td>
+              <td>Assert actual <= expected</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Basic Usage</h3>
+        <div class="code-block">
+          <pre><code>// Equality assertions
+AssertUtils.assertEquals(actualTitle, "Home Page", "Page title validation");
+AssertUtils.assertNotEquals(actualCount, 0, "Product count should not be zero");
+
+// Boolean assertions
+AssertUtils.assertTrue(loginPage.isDisplayed(), "Login page should be visible");
+AssertUtils.assertFalse(errorMessage.isDisplayed(), "Error should not be shown");
+
+// Null checks
+AssertUtils.assertNotNull(user, "User object should not be null");
+AssertUtils.assertNull(errorCode, "Error code should be null");
+
+// String contains
+AssertUtils.assertContains(welcomeMessage, "Welcome", "Welcome message validation");
+
+// Numeric comparisons
+AssertUtils.assertGreaterThan(productCount, 0, "Should have products");
+AssertUtils.assertLessThan(loadTime, 3000, "Page load time");
+AssertUtils.assertGreaterThanOrEqual(rating, 4.0, "Product rating");</code></pre>
+        </div>
+
+        <h3>Soft Assertions</h3>
+        <div class="code-block">
+          <pre><code>// Enable soft assertions
+AssertUtils.enableSoftAssert();
+
+// Multiple assertions (all executed even if some fail)
+AssertUtils.assertEquals(title, "Expected Title", "Title check");
+AssertUtils.assertTrue(logo.isDisplayed(), "Logo check");
+AssertUtils.assertContains(url, "example.com", "URL check");
+AssertUtils.assertEquals(count, 10, "Count check");
+
+// Assert all at once (throws if any failed)
+AssertUtils.assertAll();</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>ScreenshotUtil</h2>
+        <p>Screenshot capture utility for all framework types.</p>
+        
+        <h3>Usage</h3>
+        <div class="code-block">
+          <pre><code>// Capture screenshot with custom name
+String path = ScreenshotUtil.captureScreenshot("login_page");
+
+// Capture with timestamp
+String path = ScreenshotUtil.captureScreenshot("test_" + System.currentTimeMillis());
+
+// Screenshot automatically attached to all reports
+UnifiedLogger.info("Screenshot captured: " + path);</code></pre>
+        </div>
+
+        <h3>Automatic Screenshots</h3>
+        <div class="code-block">
+          <pre><code># config.properties
+screenshot.on.failure=true
+
+# Screenshots automatically captured on:
+# - Test failure (@After hook)
+# - Assertion failure (AssertUtils)
+# - Uncaught exceptions</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>DateTimeUtil</h2>
+        <p>Date and time utilities for test data generation.</p>
+        
+        <div class="code-block">
+          <pre><code>// Current timestamp
+String timestamp = DateTimeUtil.getCurrentTimestamp();
+// Output: 20250121_143022
+
+// Formatted date
+String date = DateTimeUtil.getFormattedDate("yyyy-MM-dd");
+// Output: 2025-01-21
+
+// Date arithmetic
+String futureDate = DateTimeUtil.addDays(7, "yyyy-MM-dd");
+String pastDate = DateTimeUtil.subtractDays(7, "yyyy-MM-dd");
+
+// Time utilities
+String time = DateTimeUtil.getCurrentTime("HH:mm:ss");
+long epochTime = DateTimeUtil.getEpochTime();</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>StringUtil</h2>
+        <p>String manipulation utilities.</p>
+        
+        <div class="code-block">
+          <pre><code>// Random string generation
+String randomString = StringUtil.generateRandomString(10);
+String randomEmail = StringUtil.generateRandomEmail();
+String randomPhone = StringUtil.generateRandomPhone();
+
+// String operations
+String cleaned = StringUtil.removeSpecialChars(input);
+String capitalized = StringUtil.capitalize(input);
+boolean isNumeric = StringUtil.isNumeric(input);
+boolean isEmpty = StringUtil.isNullOrEmpty(input);</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>FileUtil</h2>
+        <p>File operations utilities.</p>
+        
+        <div class="code-block">
+          <pre><code>// Read file
+String content = FileUtil.readFile("path/to/file.txt");
+List<String> lines = FileUtil.readFileLines("path/to/file.txt");
+
+// Write file
+FileUtil.writeFile("path/to/file.txt", content);
+FileUtil.appendToFile("path/to/file.txt", content);
+
+// File operations
+boolean exists = FileUtil.fileExists("path/to/file.txt");
+boolean deleted = FileUtil.deleteFile("path/to/file.txt");
+FileUtil.createDirectory("path/to/dir");
+
+// JSON operations
+JsonObject json = FileUtil.readJsonFile("data.json");
+FileUtil.writeJsonFile("output.json", jsonObject);</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>WaitUtil</h2>
+        <p>Custom wait utilities beyond framework-specific waits.</p>
+        
+        <div class="code-block">
+          <pre><code>// Simple wait
+WaitUtil.sleep(2000); // 2 seconds
+
+// Wait with condition
+WaitUtil.waitUntil(() -> element.isDisplayed(), 10);
+
+// Wait for condition with custom message
+WaitUtil.waitUntil(() -> count > 0, 10, "Waiting for count to be positive");
+
+// Polling wait
+WaitUtil.pollUntil(() -> api.getStatus() == 200, 30, 2);</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>DataGenerator</h2>
+        <p>Test data generation utilities.</p>
+        
+        <div class="code-block">
+          <pre><code>// Personal data
+String firstName = DataGenerator.generateFirstName();
+String lastName = DataGenerator.generateLastName();
+String email = DataGenerator.generateEmail();
+String phone = DataGenerator.generatePhone();
+
+// Address data
+String address = DataGenerator.generateAddress();
+String city = DataGenerator.generateCity();
+String zipCode = DataGenerator.generateZipCode();
+
+// Numeric data
+int randomInt = DataGenerator.generateRandomInt(1, 100);
+double randomDouble = DataGenerator.generateRandomDouble(1.0, 100.0);
+
+// Credit card (test data only)
+String cardNumber = DataGenerator.generateTestCreditCard();
+String cvv = DataGenerator.generateCVV();</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>ExcelUtil</h2>
+        <p>Excel file operations for data-driven testing.</p>
+        
+        <div class="code-block">
+          <pre><code>// Read Excel
+List<Map<String, String>> data = ExcelUtil.readExcel("testdata.xlsx", "Sheet1");
+
+// Iterate through data
+for (Map<String, String> row : data) {
+    String username = row.get("username");
+    String password = row.get("password");
+    // Use in test
+}
+
+// Write to Excel
+ExcelUtil.writeExcel("output.xlsx", "Results", data);
+
+// Update cell
+ExcelUtil.updateCell("testdata.xlsx", "Sheet1", 2, 3, "PASS");</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>DatabaseUtil</h2>
+        <p>Database operations for test data setup and validation.</p>
+        
+        <div class="code-block">
+          <pre><code>// Execute query
+List<Map<String, Object>> results = DatabaseUtil.executeQuery(
+    "SELECT * FROM users WHERE email = ?", 
+    "test@example.com"
+);
+
+// Execute update
+int rowsAffected = DatabaseUtil.executeUpdate(
+    "UPDATE users SET status = ? WHERE id = ?",
+    "active", 123
+);
+
+// Execute script
+DatabaseUtil.executeScript("setup.sql");
+
+// Close connection
+DatabaseUtil.closeConnection();</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Best Practices</h2>
+        <div class="alert alert-info">
+          <ul>
+            <li>Use ScenarioContext for data sharing between steps</li>
+            <li>Always use AssertUtils instead of direct TestNG assertions</li>
+            <li>Clear ScenarioContext after each scenario (done automatically)</li>
+            <li>Use soft assertions for multiple validations</li>
+            <li>Generate test data dynamically using DataGenerator</li>
+            <li>Use meaningful assertion messages</li>
+            <li>Leverage utilities to keep test code clean</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Complete Example</h2>
+        <div class="code-block">
+          <pre><code>@When("user registers with random data")
+public void userRegistersWithRandomData() {
+    // Generate test data
+    String firstName = DataGenerator.generateFirstName();
+    String lastName = DataGenerator.generateLastName();
+    String email = DataGenerator.generateEmail();
+    String phone = DataGenerator.generatePhone();
+    
+    // Store in context
+    ScenarioContext.set("firstName", firstName);
+    ScenarioContext.set("email", email);
+    
+    // Perform registration
+    registrationPage.register(firstName, lastName, email, phone);
+    
+    UnifiedLogger.info("Registered with email: " + email);
+}
+
+@Then("user should be registered successfully")
+public void userShouldBeRegistered() {
+    // Retrieve from context
+    String email = ScenarioContext.get("email", String.class);
+    
+    // Soft assertions
+    AssertUtils.enableSoftAssert();
+    AssertUtils.assertTrue(successPage.isDisplayed(), "Success page displayed");
+    AssertUtils.assertContains(successPage.getMessage(), "Welcome", "Welcome message");
+    AssertUtils.assertEquals(successPage.getEmail(), email, "Email verification");
+    AssertUtils.assertAll();
+    
+    UnifiedLogger.pass("Registration successful for: " + email);
+}</code></pre>
+        </div>
+      </section>
+
+      <button class="back-to-top" id="back-to-top">↑</button>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

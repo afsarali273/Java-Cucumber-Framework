@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+          <li class="nav-item"><a href="examples.html" class="nav-link"><i class="fas fa-code-branch"></i>Examples</a></li>
+          <li class="nav-item"><a href="api-reference.html" class="nav-link"><i class="fas fa-book"></i>API Reference</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Framework Architecture</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Architecture Overview</h2>
+        <p>Sands Automation Framework follows a layered architecture pattern with clear separation of concerns, ensuring maintainability, scalability, and reusability.</p>
+        
+        <pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    Test Layer                                │
+│  (Feature Files, Step Definitions, Test Runners)            │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│                  Page Object Layer                           │
+│  (Page Objects extending Reusable Classes)                   │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│                  Reusable Layer                              │
+│  (SeleniumReusable, PlaywrightReusable, Keywords)           │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│                    Core Layer                                │
+│  (DriverManager, APIClient, ConfigManager, Assertions)       │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│                  Utility Layer                               │
+│  (Logging, Reporting, Screenshots, Utils)                    │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Core Components</h2>
+        
+        <h3>1. Configuration Management</h3>
+        <h4>ConfigManager</h4>
+        <p>Singleton pattern for centralized configuration management.</p>
+        <pre><code>// Load configuration
+ConfigManager.loadConfig();
+
+// Get properties
+String browser = ConfigManager.getProperty("browser");
+int timeout = ConfigManager.getIntProperty("explicit.wait");
+boolean headless = ConfigManager.getBooleanProperty("headless");
+
+// Environment-specific config
+ConfigManager.loadEnvironmentConfig("qa");</code></pre>
+        
+        <h4>FrameworkConfig</h4>
+        <p>DTO pattern for type-safe configuration access.</p>
+        <pre><code>FrameworkConfig config = new FrameworkConfig();
+String frameworkType = config.getFrameworkType();
+String browser = config.getBrowser();
+int threadCount = config.getThreadCount();</code></pre>
+
+        <h3>2. Driver Management</h3>
+        <h4>DriverManager</h4>
+        <p>Thread-safe driver lifecycle management using ThreadLocal pattern.</p>
+        <pre><code>// Selenium WebDriver
+WebDriver driver = DriverManager.getSeleniumDriver();
+
+// Playwright Page
+Page page = DriverManager.getPlaywrightPage();
+
+// Appium Driver
+AppiumDriver mobileDriver = DriverManager.getAppiumDriver();
+
+// Windows Driver
+WindowsDriver desktopDriver = DriverManager.getWindowsDriver();
+
+// Cleanup
+DriverManager.quitDriver();</code></pre>
+
+        <h3>3. API Client</h3>
+        <h4>APIClient</h4>
+        <p>REST API testing with RestAssured.</p>
+        <pre><code>// Initialize
+APIClient.initialize("https://api.example.com");
+
+// Send requests
+Response response = APIClient.get("/users/1");
+Response response = APIClient.post("/users", requestBody);
+
+// Add headers
+APIClient.addHeader("Authorization", "Bearer token");
+
+// Get response data
+int statusCode = APIClient.getStatusCode();
+String body = APIClient.getResponseBody();</code></pre>
+
+        <h4>SOAPClient</h4>
+        <p>SOAP API testing support.</p>
+        <pre><code>Response response = SOAPClient.sendSOAPRequest(
+    "https://soap.example.com",
+    soapEnvelope
+);</code></pre>
+
+        <h3>4. Assertion Framework</h3>
+        <h4>AssertUtils</h4>
+        <p>Centralized assertion management with auto-logging.</p>
+        <pre><code>// Hard assertions (fail immediately)
+AssertUtils.assertEquals(actual, expected, "Values should match");
+AssertUtils.assertTrue(condition, "Condition should be true");
+AssertUtils.assertNotNull(object, "Object should not be null");
+
+// Soft assertions (collect all failures)
+AssertUtils.enableSoftAssert();
+AssertUtils.assertEquals(value1, expected1, "Check 1");
+AssertUtils.assertEquals(value2, expected2, "Check 2");
+AssertUtils.assertAll(); // Fail if any assertion failed</code></pre>
+
+        <h3>5. Unified Logging</h3>
+        <h4>UnifiedLogger</h4>
+        <p>Single logging call logs to all reporting systems.</p>
+        <pre><code>UnifiedLogger.info("Test started");
+UnifiedLogger.action("Click", "Login Button");
+UnifiedLogger.pass("Login successful");
+UnifiedLogger.fail("Expected element not found");
+UnifiedLogger.warning("Slow response time detected");</code></pre>
+        <p>Logs to: LogManager, CustomReporter, ExtentReports, Allure</p>
+
+        <h3>6. ScenarioContext</h3>
+        <h4>Thread-safe Data Sharing</h4>
+        <p>Share data between Cucumber steps.</p>
+        <pre><code>// Store data
+ScenarioContext.set("username", "testuser");
+ScenarioContext.set("cartCount", 5);
+
+// Retrieve data
+String username = ScenarioContext.get("username", String.class);
+Integer count = ScenarioContext.get("cartCount", Integer.class);
+
+// Clear context
+ScenarioContext.clear();</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Design Patterns</h2>
+        
+        <div class="card-grid">
+          <div class="card">
+            <h3>Singleton Pattern</h3>
+            <p>Used in: ConfigManager, DriverManager (Playwright instance)</p>
+            <p>Ensures single instance across the framework</p>
+          </div>
+          
+          <div class="card">
+            <h3>Page Object Model</h3>
+            <p>Separation of page structure from test logic</p>
+            <p>Reusable page methods, framework-specific implementations</p>
+          </div>
+          
+          <div class="card">
+            <h3>Factory Pattern</h3>
+            <p>Driver creation based on configuration</p>
+            <p>Framework selection (Selenium vs Playwright)</p>
+          </div>
+          
+          <div class="card">
+            <h3>ThreadLocal Pattern</h3>
+            <p>Thread-safe driver instances, API clients, assertions</p>
+            <p>Enables parallel test execution</p>
+          </div>
+          
+          <div class="card">
+            <h3>Strategy Pattern</h3>
+            <p>Framework-agnostic keywords</p>
+            <p>Conditional execution based on framework type</p>
+          </div>
+          
+          <div class="card">
+            <h3>Builder Pattern</h3>
+            <p>API request building, Configuration setup</p>
+            <p>Fluent interface for complex object creation</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Thread Safety</h2>
+        <p>All core components use ThreadLocal for parallel execution:</p>
+        <pre><code>// Driver Management
+private static final ThreadLocal&lt;WebDriver&gt; seleniumDriver = new ThreadLocal&lt;&gt;();
+private static final ThreadLocal&lt;Page&gt; playwrightPage = new ThreadLocal&lt;&gt;();
+
+// API Client
+private static final ThreadLocal&lt;RequestSpecification&gt; requestSpec = new ThreadLocal&lt;&gt;();
+
+// Assertions
+private static final ThreadLocal&lt;SoftAssert&gt; softAssert = new ThreadLocal&lt;&gt;();
+
+// Reporting
+private static final ThreadLocal&lt;ExtentTest&gt; extentTest = new ThreadLocal&lt;&gt;();</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Test Execution Flow</h2>
+        <pre><code>TestNG Runner
+    ↓
+Cucumber Feature Files
+    ↓
+@BeforeAll Hook
+    - Suite initialization
+    - Load configuration
+    - Initialize reporters
+    ↓
+@Before Hook (for each scenario)
+    - Initialize driver/API client
+    - Set up scenario context
+    ↓
+Step Definitions
+    - Execute test steps
+    - Call page objects
+    ↓
+Page Objects
+    - Interact with UI/API
+    - Use reusable methods
+    ↓
+Reusable Methods
+    - Common actions
+    - Wait strategies
+    ↓
+Core Components
+    - Driver operations
+    - API calls
+    - Assertions
+    ↓
+@After Hook (for each scenario)
+    - Capture screenshot on failure
+    - Log results
+    - Cleanup driver
+    ↓
+@AfterAll Hook
+    - Generate reports
+    - Cleanup resources
+    - Send notifications</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Reusable Components</h2>
+        
+        <h3>SeleniumReusable</h3>
+        <p>Base class for Selenium page objects.</p>
+        <pre><code>public class LoginPage extends SeleniumReusable {
+    public void login(String username, String password) {
+        type(usernameField, username);
+        type(passwordField, password);
+        click(loginButton);
+    }
+}</code></pre>
+        <p><strong>Methods:</strong> click, type, getText, waitForElement, scrollToElement, selectDropdown, jsClick, etc.</p>
+
+        <h3>PlaywrightReusable</h3>
+        <p>Base class for Playwright page objects.</p>
+        <pre><code>public class LoginPage extends PlaywrightReusable {
+    public void login(String username, String password) {
+        type(locator("#username"), username);
+        type(locator("#password"), password);
+        click(locator("#loginBtn"));
+        assertVisible(locator(".dashboard"));
+    }
+}</code></pre>
+        <p><strong>Methods:</strong> click, type, getText, waitForSelector, clickByText, assertVisible, assertContainsText, etc.</p>
+
+        <h3>UIKeywords</h3>
+        <p>Manual QA-friendly, framework-agnostic methods.</p>
+        <pre><code>UIKeywords.openBrowser();
+UIKeywords.navigateToURL("https://example.com");
+UIKeywords.clickElement("#loginBtn");
+UIKeywords.enterText("#username", "testuser");
+String text = UIKeywords.getTextFromElement(".message");
+UIKeywords.closeBrowser();</code></pre>
+
+        <h3>APIKeywords</h3>
+        <p>Simplified API testing methods.</p>
+        <pre><code>APIKeywords.initializeAPI("https://api.example.com");
+APIKeywords.sendGETRequest("/users/1");
+int status = APIKeywords.getResponseStatusCode();
+String body = APIKeywords.getResponseBody();
+APIKeywords.responseContains("John Doe");</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Configuration Flow</h2>
+        <pre><code>config.properties (Global Settings)
+         ↓
+environment=qa
+         ↓
+qa.properties (Environment-specific)
+         ↓
+ConfigManager merges both
+         ↓
+Available to all components via:
+- ConfigManager.getProperty()
+- FrameworkConfig instance</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Parallel Execution</h2>
+        <p>Configured at multiple levels:</p>
+        
+        <h3>1. TestNG Suite Level (testng.xml)</h3>
+        <pre><code>&lt;suite name="Automation Suite" parallel="methods" thread-count="3"&gt;
+    &lt;test name="All Tests"&gt;
+        &lt;classes&gt;
+            &lt;class name="com.automation.runners.TestRunner"/&gt;
+        &lt;/classes&gt;
+    &lt;/test&gt;
+&lt;/suite&gt;</code></pre>
+
+        <h3>2. Cucumber DataProvider</h3>
+        <pre><code>@DataProvider(parallel = true)
+public Object[][] scenarios() {
+    return super.scenarios();
+}</code></pre>
+
+        <h3>3. Configuration Properties</h3>
+        <pre><code>parallel.execution=true
+thread.count=3
+parallel.mode=methods</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Reporting Architecture</h2>
+        <pre><code>Test Execution
+    ↓
+UnifiedLogger
+    ├─→ LogManager (File Logs)
+    ├─→ CustomReporter (HTML Report)
+    ├─→ ExtentReporter (ExtentReports)
+    └─→ Allure (Allure Reports)
+    ↓
+@After Hook
+    ├─→ Screenshot on Failure
+    └─→ Embed in Reports
+    ↓
+@AfterAll Hook
+    └─→ Generate Final Reports</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Extensibility</h2>
+        
+        <h3>Adding New Framework Support</h3>
+        <ol>
+          <li>Implement driver initialization in DriverManager</li>
+          <li>Create new Reusable class (e.g., CypressReusable)</li>
+          <li>Update UIKeywords to support new framework</li>
+          <li>Add configuration in config.properties</li>
+        </ol>
+
+        <h3>Adding New Assertion Types</h3>
+        <ol>
+          <li>Add method to AssertUtils</li>
+          <li>Implement logging to console, report, and Allure</li>
+          <li>Support both hard and soft assertion modes</li>
+        </ol>
+
+        <h3>Adding New Reporters</h3>
+        <ol>
+          <li>Implement reporter class</li>
+          <li>Integrate with CucumberHooks</li>
+          <li>Add configuration properties</li>
+          <li>Update UnifiedLogger</li>
+        </ol>
+      </section>
+
+      <section class="section">
+        <h2>Best Practices</h2>
+        <ul>
+          <li><strong>Page Objects:</strong> Keep thin, focused on element interactions</li>
+          <li><strong>Step Definitions:</strong> Delegate to page objects, avoid business logic</li>
+          <li><strong>Assertions:</strong> Use meaningful messages for all assertions</li>
+          <li><strong>Logging:</strong> Log all important actions and validations</li>
+          <li><strong>Configuration:</strong> Use properties files for all configurable values</li>
+          <li><strong>Thread Safety:</strong> Always use ThreadLocal for parallel execution</li>
+          <li><strong>Cleanup:</strong> Always cleanup resources in @After hooks</li>
+          <li><strong>Screenshots:</strong> Capture on failure for debugging</li>
+        </ul>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Sands Automation Framework. Created by <a href="#">Afsar Ali</a></p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

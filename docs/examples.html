@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Examples - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .gherkin { background: #1e1e1e; padding: 20px; border-radius: 8px; overflow-x: auto; }
+    .gherkin .keyword { color: #569cd6; font-weight: bold; }
+    .gherkin .tag { color: #4ec9b0; }
+    .gherkin .string { color: #ce9178; }
+    .gherkin .comment { color: #6a9955; font-style: italic; }
+    .gherkin .docstring { color: #d4d4d4; }
+    .gherkin .table-header { color: #dcdcaa; font-weight: bold; }
+    .gherkin .table-cell { color: #d4d4d4; }
+  </style>
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+          <li class="nav-item"><a href="examples.html" class="nav-link active"><i class="fas fa-code-branch"></i>Examples</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Feature File Examples</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>Complete collection of feature files demonstrating UI, API, Mobile, and Desktop automation scenarios.</p>
+      </section>
+
+      <section class="section">
+        <h2>UI Examples - Common Actions</h2>
+        <p><strong>File:</strong> ui_examples.feature</p>
+        <div class="gherkin">
+<pre><span class="tag">@UI</span>
+<span class="keyword">Feature:</span> UI Examples - Common actions for web testing
+  <span class="comment">This feature contains example scenarios that exercise the reusable UI steps
+  provided by the framework. Use these as templates when writing real tests.</span>
+
+  <span class="keyword">Background:</span>
+    <span class="keyword">Given</span> open browser
+
+  <span class="tag">@navigation</span>
+  <span class="keyword">Scenario:</span> Navigate to a site and verify content
+    <span class="keyword">Given</span> navigate to <span class="string">"https://example.com"</span>
+    <span class="keyword">Then</span> page should contain text <span class="string">"Example Domain"</span>
+    <span class="keyword">When</span> take screenshot <span class="string">"target/screenshots/example-home.png"</span>
+
+  <span class="tag">@form @data</span>
+  <span class="keyword">Scenario:</span> Fill a form, save values and assert
+    <span class="keyword">When</span> navigate to <span class="string">"https://www.w3schools.com/howto/howto_css_contact_form.asp"</span>
+    <span class="keyword">When</span> wait for visible <span class="string">"#main"</span> for <span class="string">10</span> seconds
+    <span class="keyword">When</span> type <span class="string">"John"</span> into <span class="string">"#fname"</span>
+    <span class="keyword">When</span> type <span class="string">"Doe"</span> into <span class="string">"#lname"</span>
+    <span class="keyword">When</span> type <span class="string">"john.doe@example.com"</span> into <span class="string">"#email"</span>
+    <span class="keyword">When</span> save text of <span class="string">"#fname"</span> as <span class="string">"firstName"</span>
+    <span class="keyword">Then</span> saved variable <span class="string">"firstName"</span> should not be null
+
+  <span class="tag">@dropdown @assertions</span>
+  <span class="keyword">Scenario:</span> Interact with dropdowns and assert
+    <span class="keyword">Given</span> navigate to <span class="string">"https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_select"</span>
+    <span class="keyword">When</span> wait for visible <span class="string">"#main"</span> for <span class="string">5</span> seconds
+    <span class="keyword">When</span> execute js <span class="string">"document.querySelector('select').value = 'volvo'"</span>
+    <span class="keyword">Then</span> element <span class="string">"select"</span> attribute <span class="string">"value"</span> should be <span class="string">"volvo"</span>
+
+  <span class="tag">@tabs @windows</span>
+  <span class="keyword">Scenario:</span> Open a new tab and switch to it
+    <span class="keyword">Given</span> navigate to <span class="string">"https://example.com"</span>
+    <span class="keyword">When</span> open new tab
+    <span class="keyword">When</span> switch to latest tab
+    <span class="keyword">Then</span> page should contain text <span class="string">"Example Domain"</span>
+
+  <span class="tag">@variables @reuse</span>
+  <span class="keyword">Scenario:</span> Save and reuse variables between steps
+    <span class="keyword">Given</span> navigate to <span class="string">"https://example.com"</span>
+    <span class="keyword">When</span> save text of <span class="string">"h1"</span> as <span class="string">"heading"</span>
+    <span class="keyword">Then</span> saved variable <span class="string">"heading"</span> should be <span class="string">"Example Domain"</span>
+    <span class="keyword">When</span> navigate to <span class="string">"https://example.com#${heading}"</span></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Flipkart Product Search</h2>
+        <p><strong>File:</strong> flipkart.feature</p>
+        <div class="gherkin">
+<pre><span class="tag">@UI</span>
+<span class="keyword">Feature:</span> Flipkart Product Search and Add to Cart
+
+  <span class="keyword">Scenario:</span> Search for a product and add to cart
+    <span class="keyword">Given</span> user opens Flipkart website
+    <span class="keyword">When</span> user searches for <span class="string">"iPhone 15"</span>
+    <span class="keyword">And</span> user clicks on first product
+    <span class="keyword">And</span> user adds product to cart
+    <span class="keyword">Then</span> product should be added to cart successfully</pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>UI Selenium Testing</h2>
+        <p><strong>File:</strong> ui_selenium.feature</p>
+        <div class="gherkin">
+<pre><span class="tag">@UI @Selenium</span>
+<span class="keyword">Feature:</span> UI Testing with Selenium
+
+  <span class="keyword">Scenario:</span> Verify Flipkart search functionality
+    <span class="keyword">Given</span> user opens Flipkart website
+    <span class="keyword">When</span> user searches for <span class="string">"Samsung Galaxy"</span>
+    <span class="keyword">Then</span> product should be added to cart successfully</pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>API Examples - Common Steps</h2>
+        <p><strong>File:</strong> api_examples.feature</p>
+        <div class="gherkin">
+<pre><span class="tag">@API</span>
+<span class="keyword">Feature:</span> API Examples - Common reusable API steps
+
+  <span class="tag">@auth</span>
+  <span class="keyword">Scenario:</span> Obtain bearer token and call protected endpoint
+    <span class="keyword">When</span> user sends POST request to <span class="string">"/auth/login"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+    <span class="keyword">When</span> user sets bearer token from response json <span class="string">"data.token"</span> as header <span class="string">"Authorization"</span>
+    <span class="keyword">When</span> user applies headers
+    <span class="keyword">When</span> user sends GET request to <span class="string">"/users/me"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+    <span class="keyword">Then</span> json path <span class="string">"data.username"</span> should not be null
+
+  <span class="tag">@schema</span>
+  <span class="keyword">Scenario:</span> Validate response against JSON schema
+    <span class="keyword">When</span> user sends GET request to <span class="string">"/users/1"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+    <span class="keyword">Then</span> response should match json schema <span class="string">"schemas/user-response.json"</span>
+
+  <span class="tag">@polling</span>
+  <span class="keyword">Scenario:</span> Poll a job status endpoint until completion
+    <span class="keyword">When</span> user polls <span class="string">"/jobs/123/status"</span> until json path <span class="string">"status"</span> equals <span class="string">"COMPLETED"</span> within <span class="string">120</span> seconds interval <span class="string">5</span> seconds
+    <span class="keyword">Then</span> json path <span class="string">"result.count"</span> should be greater than <span class="string">0</span>
+
+  <span class="tag">@soap</span>
+  <span class="keyword">Scenario:</span> SOAP request example
+    <span class="keyword">When</span> user creates SOAP envelope with action <span class="string">"GetInfo"</span> and body:
+      <span class="docstring">"""
+      &lt;GetInfoRequest&gt;&lt;Id&gt;123&lt;/Id&gt;&lt;/GetInfoRequest&gt;
+      """</span>
+    <span class="keyword">When</span> user sends SOAP request to <span class="string">"/soap"</span> with action <span class="string">"GetInfo"</span>
+    <span class="keyword">Then</span> SOAP xpath <span class="string">"Envelope.Body.GetInfoResponse.Code"</span> should be <span class="string">"200"</span></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Basic API Testing</h2>
+        <p><strong>File:</strong> api.feature</p>
+        <div class="gherkin">
+<pre><span class="tag">@API</span>
+<span class="keyword">Feature:</span> API Testing with JSONPlaceholder
+
+  <span class="keyword">Scenario:</span> Get a post by ID
+    <span class="keyword">When</span> user sends GET request to <span class="string">"/posts/1"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+    <span class="keyword">And</span> response should contain <span class="string">"userId"</span> field
+    <span class="keyword">And</span> response should contain <span class="string">"title"</span> field
+    <span class="keyword">And</span> response <span class="string">"userId"</span> should not be null
+
+  <span class="keyword">Scenario:</span> Create a new post
+    <span class="keyword">When</span> user creates POST request body with title <span class="string">"Test Post"</span> and body <span class="string">"This is a test post"</span>
+    <span class="keyword">And</span> user sends POST request to <span class="string">"/posts"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">201</span>
+    <span class="keyword">And</span> response <span class="string">"title"</span> should be <span class="string">"Test Post"</span>
+    <span class="keyword">And</span> response <span class="string">"body"</span> should be <span class="string">"This is a test post"</span></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Advanced API Testing</h2>
+        <p><strong>File:</strong> api_advanced.feature</p>
+        <div class="gherkin">
+<pre><span class="tag">@API</span>
+<span class="keyword">Feature:</span> Advanced API Testing with Keyword-Driven Steps
+
+  <span class="keyword">Scenario:</span> Get post and save data for later use
+    <span class="keyword">When</span> user sends GET request to <span class="string">"/posts/1"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+    <span class="keyword">And</span> json path <span class="string">"userId"</span> should not be null
+    <span class="keyword">And</span> json path <span class="string">"id"</span> should be <span class="string">"1"</span>
+    <span class="keyword">And</span> response time should be less than <span class="string">2000</span> ms
+    <span class="keyword">When</span> user saves json path <span class="string">"userId"</span> as <span class="string">"savedUserId"</span>
+    <span class="keyword">Then</span> saved variable <span class="string">"savedUserId"</span> should not be null
+
+  <span class="keyword">Scenario:</span> Complete workflow with variable chaining
+    <span class="keyword">When</span> user sends GET request to <span class="string">"/users/1"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+    <span class="keyword">When</span> user saves json path <span class="string">"id"</span> as <span class="string">"userId"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"name"</span> as <span class="string">"userName"</span>
+    <span class="keyword">And</span> user sets request body:
+      <span class="docstring">"""
+      {
+        "title": "Post by ${userName}",
+        "body": "Content",
+        "userId": ${userId}
+      }
+      """</span>
+    <span class="keyword">And</span> user sends POST request to <span class="string">"/posts"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">201</span>
+    <span class="keyword">When</span> user saves json path <span class="string">"id"</span> as <span class="string">"postId"</span>
+    <span class="keyword">When</span> user sends DELETE request to <span class="string">"/posts/${postId}"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Multi-Service API Testing</h2>
+        <p><strong>File:</strong> MultiServiceAPI.feature</p>
+        <div class="gherkin">
+<pre><span class="tag">@API</span>
+<span class="keyword">Feature:</span> Multi-Service API Testing
+
+  <span class="keyword">Scenario:</span> Test multiple API services in single scenario
+    <span class="keyword">Given</span> user switches to <span class="string">"auth"</span> API service
+    <span class="keyword">When</span> user creates POST request body with title <span class="string">"login"</span> and body <span class="string">"credentials"</span>
+    <span class="keyword">And</span> user sends POST request to <span class="string">"/login"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"token"</span> as <span class="string">"authToken"</span>
+
+    <span class="keyword">Given</span> user switches to <span class="string">"user"</span> API service
+    <span class="keyword">When</span> user sets header <span class="string">"Authorization"</span> as <span class="string">"Bearer ${authToken}"</span>
+    <span class="keyword">And</span> user sends GET request to <span class="string">"/profile"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+
+    <span class="keyword">Given</span> user switches to <span class="string">"payment"</span> API service
+    <span class="keyword">When</span> user sends GET request to <span class="string">"/balance"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+    <span class="keyword">And</span> json path <span class="string">"balance"</span> should be greater than <span class="string">0</span></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Data-Driven API Testing</h2>
+        <p><strong>File:</strong> api_data_driven.feature</p>
+        <div class="gherkin">
+<pre><span class="tag">@API</span>
+<span class="keyword">Feature:</span> Data-driven API testing using external test data
+
+  <span class="keyword">Scenario Outline:</span> Verify employee details using GET API
+    <span class="keyword">Given</span> Access <span class="string">"&lt;url&gt;"</span> with <span class="string">"&lt;headers&gt;"</span> for <span class="string">"&lt;tc_id&gt;"</span>
+    <span class="keyword">When</span> Send <span class="string">"&lt;method&gt;"</span>
+    <span class="keyword">Then</span> verify request is success with status <span class="string">"&lt;code&gt;"</span>
+    <span class="keyword">And</span> verify <span class="string">"status"</span> in response body is <span class="string">"success"</span>
+
+    <span class="keyword">Examples:</span>
+      <span class="table-header">| tc_id            | url                        | headers | method | code |</span>
+      <span class="table-cell">| DummyGetEmployee | /api/v1/employee/1         | NA      | GET    | 200  |</span>
+
+  <span class="keyword">Scenario Outline:</span> Add employee using POST API
+    <span class="keyword">Given</span> Access <span class="string">"&lt;url&gt;"</span> with <span class="string">"&lt;headers&gt;"</span> for <span class="string">"&lt;tc_id&gt;"</span>
+    <span class="keyword">When</span> Send <span class="string">"&lt;method&gt;"</span> with request body <span class="string">"&lt;payload&gt;"</span>
+    <span class="keyword">Then</span> verify request is success with status <span class="string">"&lt;code&gt;"</span>
+    <span class="keyword">And</span> verify <span class="string">"data.name"</span> in response body is <span class="string">"John Doe"</span>
+
+    <span class="keyword">Examples:</span>
+      <span class="table-header">| tc_id           | url              | headers | method | payload              | code |</span>
+      <span class="table-cell">| DummyAddEmployee| /api/v1/create   | NA      | POST   | DummyEmployeePayload | 200  |</span></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Running Examples</h2>
+        <div class="code-block">
+          <pre><code># Run all UI tests
+mvn test -Dcucumber.filter.tags="@UI"
+
+# Run specific feature
+mvn test -Dcucumber.options="--features src/test/resources/features/flipkart.feature"
+
+# Run API tests
+mvn test -Dcucumber.filter.tags="@API"
+
+# Run with specific tags
+mvn test -Dcucumber.filter.tags="@auth"
+mvn test -Dcucumber.filter.tags="@navigation"</code></pre>
+        </div>
+      </section>
+
+      <button class="back-to-top" id="back-to-top">↑</button>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Automation - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+          <li class="nav-item"><a href="examples.html" class="nav-link"><i class="fas fa-code-branch"></i>Examples</a></li>
+          <li class="nav-item"><a href="api-reference.html" class="nav-link"><i class="fas fa-book"></i>API Reference</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>API Automation</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>Sands Framework provides comprehensive REST and SOAP API testing capabilities using RestAssured with thread-safe, multi-service support.</p>
+        
+        <div class="card-grid">
+          <div class="card">
+            <h3>REST API Testing</h3>
+            <p>GET, POST, PUT, DELETE, PATCH with full request/response control</p>
+            <span class="badge badge-primary">RestAssured</span>
+          </div>
+          <div class="card">
+            <h3>SOAP API Testing</h3>
+            <p>SOAP envelope creation and execution</p>
+            <span class="badge badge-success">XML Support</span>
+          </div>
+          <div class="card">
+            <h3>Multi-Service Support</h3>
+            <p>Test multiple APIs with different base URLs</p>
+            <span class="badge badge-info">Thread-Safe</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Configuration</h2>
+        
+        <h3>Single API Configuration</h3>
+        <pre><code># config.properties
+api.base.url=https://jsonplaceholder.typicode.com
+api.timeout=30000
+api.log.request=true
+api.log.response=true</code></pre>
+
+        <h3>Multi-Service Configuration</h3>
+        <pre><code># config.properties
+api.user.service.url=https://api.example.com/users
+api.order.service.url=https://api.example.com/orders
+api.payment.service.url=https://api.example.com/payments</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>APIClient Methods</h2>
+        
+        <h3>Initialization</h3>
+        <pre><code>// Initialize with default base URL
+APIClient.initializeAPIClient();
+
+// Switch to different service
+APIClient.withBaseUrl("user.service");
+APIClient.withBaseUrl("order.service");
+
+// Use custom URL
+APIClient.withCustomBaseUrl("https://custom-api.com");</code></pre>
+
+        <h3>GET Requests</h3>
+        <pre><code>// Simple GET
+Response response = APIClient.get("/users/1");
+
+// GET with query parameters
+Map&lt;String, String&gt; params = new HashMap&lt;&gt;();
+params.put("page", "1");
+params.put("limit", "10");
+Response response = APIClient.get("/users", params);</code></pre>
+
+        <h3>POST Requests</h3>
+        <pre><code>// POST with JSON body
+String requestBody = "{ \"name\": \"John\", \"email\": \"john@example.com\" }";
+Response response = APIClient.post("/users", requestBody);
+
+// POST with POJO
+User user = new User("John", "john@example.com");
+Response response = APIClient.post("/users", user);</code></pre>
+
+        <h3>PUT Requests</h3>
+        <pre><code>// Update resource
+String updateBody = "{ \"name\": \"John Updated\" }";
+Response response = APIClient.put("/users/1", updateBody);</code></pre>
+
+        <h3>DELETE Requests</h3>
+        <pre><code>// Delete resource
+Response response = APIClient.delete("/users/1");</code></pre>
+
+        <h3>Headers Management</h3>
+        <pre><code>// Set single header
+APIClient.setHeader("Authorization", "Bearer token123");
+
+// Set multiple headers
+Map&lt;String, String&gt; headers = new HashMap&lt;&gt;();
+headers.put("Authorization", "Bearer token123");
+headers.put("X-Custom-Header", "value");
+APIClient.setHeaders(headers);</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Response Validation</h2>
+        
+        <h3>Status Code Validation</h3>
+        <pre><code>Response response = APIClient.get("/users/1");
+
+// Assert status code
+AssertUtils.assertEquals(response.getStatusCode(), 200, "Status should be 200");
+
+// Or use RestAssured assertions
+response.then().statusCode(200);</code></pre>
+
+        <h3>Response Body Validation</h3>
+        <pre><code>// Get response body
+String body = response.getBody().asString();
+
+// Parse JSON
+JsonPath jsonPath = response.jsonPath();
+String name = jsonPath.getString("name");
+String email = jsonPath.getString("email");
+
+// Assertions
+AssertUtils.assertEquals(name, "John", "Name should match");
+AssertUtils.assertNotNull(email, "Email should not be null");</code></pre>
+
+        <h3>JSON Schema Validation</h3>
+        <pre><code>import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+
+Response response = APIClient.get("/users/1");
+response.then().assertThat()
+    .body(matchesJsonSchemaInClasspath("schemas/user-schema.json"));</code></pre>
+
+        <h3>Response Time Validation</h3>
+        <pre><code>import static org.hamcrest.Matchers.lessThan;
+
+Response response = APIClient.get("/users/1");
+response.then().time(lessThan(2000L)); // Less than 2 seconds</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Feature File Examples</h2>
+        
+        <h3>Basic API Test</h3>
+        <pre><code>@API
+Feature: User API Testing
+
+  Scenario: Get user details
+    Given API client is initialized
+    When user sends GET request to "/users/1"
+    Then response status code should be 200
+    And response body should contain "name"
+    And response body should contain "email"</code></pre>
+
+        <h3>POST Request Test</h3>
+        <pre><code>@API
+Feature: Create User
+
+  Scenario: Create new user
+    Given API client is initialized
+    When user sends POST request to "/users" with body:
+      """
+      {
+        "name": "John Doe",
+        "email": "john@example.com",
+        "username": "johndoe"
+      }
+      """
+    Then response status code should be 201
+    And response body should contain "id"</code></pre>
+
+        <h3>Multi-Service Test</h3>
+        <pre><code>@API
+Feature: Multi-Service API Testing
+
+  Scenario: Test multiple services
+    Given API client is initialized with "user.service"
+    When user sends GET request to "/users/1"
+    Then response status code should be 200
+    
+    When API client switches to "order.service"
+    And user sends GET request to "/orders/1"
+    Then response status code should be 200</code></pre>
+
+        <h3>Data-Driven API Test</h3>
+        <pre><code>@API
+Feature: Data-Driven API Testing
+
+  Scenario Outline: Get multiple users
+    Given API client is initialized
+    When user sends GET request to "/users/&lt;userId&gt;"
+    Then response status code should be &lt;statusCode&gt;
+    And response "name" should be "&lt;expectedName&gt;"
+    
+    Examples:
+      | userId | statusCode | expectedName |
+      | 1      | 200        | Leanne Graham |
+      | 2      | 200        | Ervin Howell  |
+      | 999    | 404        |               |</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Step Definitions</h2>
+        <pre><code>package com.automation.stepdefinitions;
+
+import com.automation.core.api.APIClient;
+import com.automation.core.assertions.AssertUtils;
+import io.cucumber.java.en.*;
+import io.restassured.response.Response;
+
+public class APISteps {
+    private Response response;
+    
+    @Given("API client is initialized")
+    public void apiClientIsInitialized() {
+        APIClient.initializeAPIClient();
+    }
+    
+    @Given("API client is initialized with {string}")
+    public void apiClientIsInitializedWith(String serviceName) {
+        APIClient.withBaseUrl(serviceName);
+    }
+    
+    @When("user sends GET request to {string}")
+    public void userSendsGETRequest(String endpoint) {
+        response = APIClient.get(endpoint);
+    }
+    
+    @When("user sends POST request to {string} with body:")
+    public void userSendsPOSTRequest(String endpoint, String body) {
+        response = APIClient.post(endpoint, body);
+    }
+    
+    @When("user sends PUT request to {string} with body:")
+    public void userSendsPUTRequest(String endpoint, String body) {
+        response = APIClient.put(endpoint, body);
+    }
+    
+    @When("user sends DELETE request to {string}")
+    public void userSendsDELETERequest(String endpoint) {
+        response = APIClient.delete(endpoint);
+    }
+    
+    @Then("response status code should be {int}")
+    public void responseStatusCodeShouldBe(int expectedStatus) {
+        AssertUtils.assertEquals(response.getStatusCode(), expectedStatus,
+            "Status code should be " + expectedStatus);
+    }
+    
+    @Then("response body should contain {string}")
+    public void responseBodyShouldContain(String field) {
+        String body = response.getBody().asString();
+        AssertUtils.assertTrue(body.contains(field),
+            "Response should contain: " + field);
+    }
+    
+    @Then("response {string} should be {string}")
+    public void responseFieldShouldBe(String field, String expectedValue) {
+        String actualValue = response.jsonPath().getString(field);
+        AssertUtils.assertEquals(actualValue, expectedValue,
+            field + " should match");
+    }
+}</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Authentication</h2>
+        
+        <h3>Bearer Token</h3>
+        <pre><code>// Set bearer token
+APIClient.setHeader("Authorization", "Bearer " + token);
+
+// Or in feature file
+Given user sets authorization header with token "abc123"</code></pre>
+
+        <h3>Basic Auth</h3>
+        <pre><code>import static io.restassured.RestAssured.given;
+
+Response response = given()
+    .auth().basic("username", "password")
+    .get("/secure-endpoint");</code></pre>
+
+        <h3>OAuth2</h3>
+        <pre><code>// Get OAuth token first
+Response tokenResponse = APIClient.post("/oauth/token", credentials);
+String accessToken = tokenResponse.jsonPath().getString("access_token");
+
+// Use token in subsequent requests
+APIClient.setHeader("Authorization", "Bearer " + accessToken);</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Advanced Scenarios</h2>
+        
+        <h3>File Upload</h3>
+        <pre><code>import static io.restassured.RestAssured.given;
+
+Response response = given()
+    .multiPart("file", new File("path/to/file.pdf"))
+    .post("/upload");</code></pre>
+
+        <h3>File Download</h3>
+        <pre><code>Response response = APIClient.get("/download/report.pdf");
+byte[] fileBytes = response.asByteArray();
+
+// Save to file
+FileUtils.writeByteArrayToFile(new File("report.pdf"), fileBytes);</code></pre>
+
+        <h3>Request/Response Logging</h3>
+        <pre><code>import static io.restassured.RestAssured.given;
+
+Response response = given()
+    .log().all()  // Log request
+    .get("/users/1")
+    .then()
+    .log().all()  // Log response
+    .extract().response();</code></pre>
+
+        <h3>Custom Timeout</h3>
+        <pre><code>import static io.restassured.RestAssured.given;
+import static io.restassured.config.HttpClientConfig.httpClientConfig;
+
+Response response = given()
+    .config(RestAssured.config()
+        .httpClient(httpClientConfig()
+            .setParam("http.connection.timeout", 5000)
+            .setParam("http.socket.timeout", 5000)))
+    .get("/users/1");</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>SOAP API Testing</h2>
+        
+        <h3>SOAP Request</h3>
+        <pre><code>import com.automation.core.api.SOAPClient;
+
+String soapEnvelope = """
+    &lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+        &lt;soapenv:Header/&gt;
+        &lt;soapenv:Body&gt;
+            &lt;GetUser&gt;
+                &lt;UserId&gt;1&lt;/UserId&gt;
+            &lt;/GetUser&gt;
+        &lt;/soapenv:Body&gt;
+    &lt;/soapenv:Envelope&gt;
+    """;
+
+Response response = SOAPClient.sendSOAPRequest(
+    "https://soap-api.example.com/service",
+    soapEnvelope
+);
+
+// Validate SOAP response
+String userId = response.xmlPath().getString("Envelope.Body.GetUserResponse.UserId");
+AssertUtils.assertEquals(userId, "1", "User ID should match");</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Hooks & Lifecycle</h2>
+        <p>Framework provides comprehensive lifecycle management through Cucumber hooks.</p>
+        
+        <div class="alert alert-info">
+          <strong>Complete Hooks Documentation:</strong> See <a href="hooks.html" style="color: var(--primary); font-weight: bold;">Hooks Page</a> for detailed information on @BeforeAll, @Before, @After, @AfterAll, screenshot capture, and custom hooks.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Best Practices</h2>
+
+        <ul>
+          <li>Use APIClient for thread-safe API testing</li>
+          <li>Validate status codes, response body, and headers</li>
+          <li>Use JSON schema validation for contract testing</li>
+          <li>Store API responses in ScenarioContext for reuse</li>
+          <li>Use data-driven tests for multiple scenarios</li>
+          <li>Log requests and responses for debugging</li>
+          <li>Set appropriate timeouts</li>
+          <li>Use environment-specific base URLs</li>
+          <li>Handle authentication tokens properly</li>
+          <li>Validate response time for performance testing</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>Complete Example</h2>
+        <pre><code>@API @Smoke
+Feature: Complete API Testing Example
+
+  Background:
+    Given API client is initialized
+    And user sets authorization header with token "test-token-123"
+
+  Scenario: Create, Read, Update, Delete User
+    # Create
+    When user sends POST request to "/users" with body:
+      """
+      {
+        "name": "Test User",
+        "email": "test@example.com",
+        "username": "testuser"
+      }
+      """
+    Then response status code should be 201
+    And response body should contain "id"
+    And user saves "id" from response
+    
+    # Read
+    When user sends GET request to "/users/{id}"
+    Then response status code should be 200
+    And response "name" should be "Test User"
+    
+    # Update
+    When user sends PUT request to "/users/{id}" with body:
+      """
+      {
+        "name": "Updated User"
+      }
+      """
+    Then response status code should be 200
+    And response "name" should be "Updated User"
+    
+    # Delete
+    When user sends DELETE request to "/users/{id}"
+    Then response status code should be 204</code></pre>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Sands Automation Framework. Created by <a href="#">Afsar Ali</a></p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

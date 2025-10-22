@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuration - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link active"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Configuration Management</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>ConfigManager provides centralized configuration management with environment-specific overrides.</p>
+        
+        <div class="card">
+          <h3>Configuration Hierarchy</h3>
+          <ol>
+            <li><strong>config.properties</strong> - Global configuration</li>
+            <li><strong>{environment}.properties</strong> - Environment-specific (qa.properties, uat.properties, prod.properties)</li>
+            <li><strong>System Properties</strong> - Runtime overrides via -D flags</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Global Configuration (config.properties)</h2>
+        <div class="code-block">
+          <pre><code># Framework Type: selenium | playwright | api | mobile | desktop
+framework.type=playwright
+
+# Execution Type: cucumber | testng | modular
+executionType=cucumber
+
+# Browser: chrome | firefox | edge | safari | webkit
+browser=chrome
+
+# Headless Mode
+headless=false
+
+# Environment: qa | uat | staging | prod
+environment=qa
+
+# Parallel Execution
+parallel.execution=true
+thread.count=3
+parallel.mode=methods
+
+# Timeouts (seconds)
+implicit.wait=10
+explicit.wait=20
+page.load.timeout=30
+
+# Retry Configuration
+retry.failed.tests=true
+max.retry.count=2
+
+# Reporting
+screenshot.on.failure=true
+report.path=test-output/reports
+video.recording=false
+video.path=test-output/videos
+
+# Logging
+log.level=INFO
+log.path=test-output/logs</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Environment-Specific Configuration</h2>
+        
+        <h3>qa.properties</h3>
+        <div class="code-block">
+          <pre><code># Application URLs
+app.url=https://qa.example.com
+api.base.url=https://api-qa.example.com
+
+# Database
+db.url=jdbc:mysql://qa-db.example.com:3306/testdb
+db.username=qa_user
+db.password=qa_password
+
+# Test Users
+test.user.email=testuser@example.com
+test.user.password=Test@123
+
+# API Configuration
+api.timeout=30
+api.content.type=application/json
+api.log.request=true
+api.log.response=true</code></pre>
+        </div>
+
+        <h3>uat.properties</h3>
+        <div class="code-block">
+          <pre><code>app.url=https://uat.example.com
+api.base.url=https://api-uat.example.com
+db.url=jdbc:mysql://uat-db.example.com:3306/testdb
+test.user.email=uatuser@example.com</code></pre>
+        </div>
+
+        <h3>prod.properties</h3>
+        <div class="code-block">
+          <pre><code>app.url=https://www.example.com
+api.base.url=https://api.example.com
+# Production-specific settings</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>ConfigManager API</h2>
+        
+        <h3>Basic Usage</h3>
+        <div class="code-block">
+          <pre><code>// Get instance
+ConfigManager config = ConfigManager.getInstance();
+
+// Get properties
+String browser = config.getBrowser();
+String appUrl = config.getAppUrl();
+String apiUrl = config.getApiBaseUrl();
+int timeout = config.getImplicitWait();
+boolean headless = config.isHeadless();
+
+// Get with default value
+String value = config.getProperty("custom.key", "defaultValue");
+int intValue = config.getIntProperty("custom.timeout", 30);
+boolean boolValue = config.getBooleanProperty("custom.flag", false);</code></pre>
+        </div>
+
+        <h3>Static Access</h3>
+        <div class="code-block">
+          <pre><code>// Static constants for quick access
+String env = ConfigManager.ENVIRONMENT;
+String framework = ConfigManager.FRAMEWORK_TYPE;
+String browser = ConfigManager.BROWSER;
+boolean headless = ConfigManager.IS_HEADLESS;
+int implicitWait = ConfigManager.IMPLICIT_WAIT;
+int explicitWait = ConfigManager.EXPLICIT_WAIT;
+
+// Framework type checks
+if (ConfigManager.isSelenium()) { }
+if (ConfigManager.isPlaywright()) { }
+if (ConfigManager.isAPI()) { }
+if (ConfigManager.isMobile()) { }
+if (ConfigManager.isDesktop()) { }
+
+// Execution type checks
+if (ConfigManager.isCucumber()) { }
+if (ConfigManager.isTestNG()) { }</code></pre>
+        </div>
+
+        <h3>All ConfigManager Methods</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Returns</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>getInstance()</code></td>
+              <td>ConfigManager</td>
+              <td>Get singleton instance</td>
+            </tr>
+            <tr>
+              <td><code>getProperty(key)</code></td>
+              <td>String</td>
+              <td>Get property (env overrides global)</td>
+            </tr>
+            <tr>
+              <td><code>getProperty(key, default)</code></td>
+              <td>String</td>
+              <td>Get property with default</td>
+            </tr>
+            <tr>
+              <td><code>getGlobalProperty(key)</code></td>
+              <td>String</td>
+              <td>Get from config.properties only</td>
+            </tr>
+            <tr>
+              <td><code>getEnvProperty(key)</code></td>
+              <td>String</td>
+              <td>Get from environment file only</td>
+            </tr>
+            <tr>
+              <td><code>getIntProperty(key, default)</code></td>
+              <td>int</td>
+              <td>Get integer property</td>
+            </tr>
+            <tr>
+              <td><code>getBooleanProperty(key, default)</code></td>
+              <td>boolean</td>
+              <td>Get boolean property</td>
+            </tr>
+            <tr>
+              <td><code>getFrameworkType()</code></td>
+              <td>String</td>
+              <td>Get framework type</td>
+            </tr>
+            <tr>
+              <td><code>getExecutionType()</code></td>
+              <td>String</td>
+              <td>Get execution type</td>
+            </tr>
+            <tr>
+              <td><code>getBrowser()</code></td>
+              <td>String</td>
+              <td>Get browser name</td>
+            </tr>
+            <tr>
+              <td><code>isHeadless()</code></td>
+              <td>boolean</td>
+              <td>Check if headless mode</td>
+            </tr>
+            <tr>
+              <td><code>getEnvironment()</code></td>
+              <td>String</td>
+              <td>Get current environment</td>
+            </tr>
+            <tr>
+              <td><code>getAppUrl()</code></td>
+              <td>String</td>
+              <td>Get application URL</td>
+            </tr>
+            <tr>
+              <td><code>getApiBaseUrl()</code></td>
+              <td>String</td>
+              <td>Get API base URL</td>
+            </tr>
+            <tr>
+              <td><code>getApiBaseUrl(serviceName)</code></td>
+              <td>String</td>
+              <td>Get service-specific API URL</td>
+            </tr>
+            <tr>
+              <td><code>getApiTimeout()</code></td>
+              <td>int</td>
+              <td>Get API timeout</td>
+            </tr>
+            <tr>
+              <td><code>getDbUrl()</code></td>
+              <td>String</td>
+              <td>Get database URL</td>
+            </tr>
+            <tr>
+              <td><code>getDbUsername()</code></td>
+              <td>String</td>
+              <td>Get DB username</td>
+            </tr>
+            <tr>
+              <td><code>getDbPassword()</code></td>
+              <td>String</td>
+              <td>Get DB password</td>
+            </tr>
+            <tr>
+              <td><code>getTestUserEmail()</code></td>
+              <td>String</td>
+              <td>Get test user email</td>
+            </tr>
+            <tr>
+              <td><code>getTestUserPassword()</code></td>
+              <td>String</td>
+              <td>Get test user password</td>
+            </tr>
+            <tr>
+              <td><code>getImplicitWait()</code></td>
+              <td>int</td>
+              <td>Get implicit wait timeout</td>
+            </tr>
+            <tr>
+              <td><code>getExplicitWait()</code></td>
+              <td>int</td>
+              <td>Get explicit wait timeout</td>
+            </tr>
+            <tr>
+              <td><code>getPageLoadTimeout()</code></td>
+              <td>int</td>
+              <td>Get page load timeout</td>
+            </tr>
+            <tr>
+              <td><code>getMaxRetryCount()</code></td>
+              <td>int</td>
+              <td>Get max retry count</td>
+            </tr>
+            <tr>
+              <td><code>getThreadCount()</code></td>
+              <td>int</td>
+              <td>Get parallel thread count</td>
+            </tr>
+            <tr>
+              <td><code>isParallelExecution()</code></td>
+              <td>boolean</td>
+              <td>Check if parallel enabled</td>
+            </tr>
+            <tr>
+              <td><code>hasProperty(key)</code></td>
+              <td>boolean</td>
+              <td>Check if property exists</td>
+            </tr>
+            <tr>
+              <td><code>getAllGlobalProperties()</code></td>
+              <td>Properties</td>
+              <td>Get all global properties</td>
+            </tr>
+            <tr>
+              <td><code>getAllEnvProperties()</code></td>
+              <td>Properties</td>
+              <td>Get all env properties</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Runtime Overrides</h2>
+        <div class="code-block">
+          <pre><code># Override via Maven command line
+mvn test -Dbrowser=firefox
+mvn test -Denvironment=uat
+mvn test -Dheadless=true
+mvn test -Dframework.type=selenium
+mvn test -Dthread.count=5
+
+# Multiple overrides
+mvn test -Dbrowser=chrome -Denvironment=prod -Dheadless=true
+
+# Override in IDE (IntelliJ Run Configuration)
+VM Options: -Dbrowser=firefox -Denvironment=qa</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Mobile Configuration</h2>
+        <div class="code-block">
+          <pre><code># Android
+mobile.platformName=Android
+mobile.deviceName=emulator-5554
+mobile.appiumServerUrl=http://127.0.0.1:4723
+mobile.appPackage=com.example.android
+mobile.appActivity=com.example.android.MainActivity
+mobile.automationName=UiAutomator2
+mobile.app=/path/to/app.apk
+
+# iOS
+mobile.platformName=iOS
+mobile.deviceName=iPhone 14
+mobile.udid=auto
+mobile.bundleId=com.example.ios
+mobile.automationName=XCUITest
+mobile.app=/path/to/app.ipa</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Desktop Configuration</h2>
+        <div class="code-block">
+          <pre><code># Windows Desktop
+desktop.winAppDriverUrl=http://127.0.0.1:4723
+desktop.app=C:\\Windows\\System32\\calc.exe
+desktop.platformName=Windows
+desktop.deviceName=WindowsPC
+
+# Or attach to existing app
+desktop.appTopLevelWindow=0x12345678</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>API Configuration</h2>
+        <div class="code-block">
+          <pre><code># Single API
+api.base.url=https://api.example.com
+api.timeout=30
+api.content.type=application/json
+api.log.request=true
+api.log.response=true
+
+# Multiple APIs (Microservices)
+api.base.url.users=https://users-api.example.com
+api.base.url.orders=https://orders-api.example.com
+api.base.url.payments=https://payments-api.example.com
+
+# Usage in code
+String usersUrl = config.getApiBaseUrl("users");
+String ordersUrl = config.getApiBaseUrl("orders");</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Best Practices</h2>
+        <div class="alert alert-info">
+          <ul>
+            <li>Keep sensitive data in environment-specific files</li>
+            <li>Use meaningful property names</li>
+            <li>Provide default values for optional properties</li>
+            <li>Document custom properties</li>
+            <li>Use static constants for frequently accessed values</li>
+            <li>Never commit passwords or secrets to version control</li>
+            <li>Use environment variables for CI/CD pipelines</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Example Usage in Tests</h2>
+        <div class="code-block">
+          <pre><code>public class LoginTest {
+    
+    @Test
+    public void testLogin() {
+        // Get configuration
+        String appUrl = ConfigManager.getInstance().getAppUrl();
+        String email = ConfigManager.getInstance().getTestUserEmail();
+        String password = ConfigManager.getInstance().getTestUserPassword();
+        
+        // Use in test
+        driver.get(appUrl);
+        loginPage.login(email, password);
+        
+        // Or use static access
+        if (ConfigManager.IS_HEADLESS) {
+            // Headless-specific logic
+        }
+    }
+}</code></pre>
+        </div>
+      </section>
+
+      <button class="back-to-top" id="back-to-top">↑</button>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

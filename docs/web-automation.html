@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Automation - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+          <li class="nav-item"><a href="examples.html" class="nav-link"><i class="fas fa-code-branch"></i>Examples</a></li>
+          <li class="nav-item"><a href="api-reference.html" class="nav-link"><i class="fas fa-book"></i>API Reference</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Web Automation</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>Sands Framework supports both Selenium and Playwright for web automation. Switch between them with a simple configuration change.</p>
+        
+        <div class="card-grid">
+          <div class="card">
+            <h3>📘 Selenium Reference</h3>
+            <p>Complete API reference with all methods and ready-made steps</p>
+            <a href="selenium-reference.html" style="color: var(--primary); font-weight: bold;">View Selenium Reference →</a>
+          </div>
+          <div class="card">
+            <h3>📗 Playwright Reference</h3>
+            <p>Complete API reference with native assertions and locator methods</p>
+            <a href="playwright-reference.html" style="color: var(--primary); font-weight: bold;">View Playwright Reference →</a>
+          </div>
+        </div>
+        
+        <div class="card-grid">
+          <div class="card">
+            <h3>Selenium WebDriver</h3>
+            <p>Industry standard, mature, wide browser support</p>
+            <span class="badge badge-primary">Chrome</span>
+            <span class="badge badge-primary">Firefox</span>
+            <span class="badge badge-primary">Edge</span>
+            <span class="badge badge-primary">Safari</span>
+          </div>
+          <div class="card">
+            <h3>Playwright</h3>
+            <p>Modern, fast, auto-wait, native assertions</p>
+            <span class="badge badge-success">Chromium</span>
+            <span class="badge badge-success">Firefox</span>
+            <span class="badge badge-success">WebKit</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Configuration</h2>
+        <h3>Selenium Configuration</h3>
+        <pre><code>framework.type=selenium
+browser=chrome
+headless=false</code></pre>
+
+        <h3>Playwright Configuration</h3>
+        <pre><code>framework.type=playwright
+browser=chromium
+headless=false
+video.recording=true</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>SeleniumReusable Methods</h2>
+        
+        <h3>Navigation</h3>
+        <pre><code>// Navigate to URL
+navigateTo("https://example.com");
+
+// Refresh page
+refreshPage();
+
+// Go back/forward
+navigateBack();
+navigateForward();</code></pre>
+
+        <h3>Element Interactions</h3>
+        <pre><code>// Click
+click(By.id("loginBtn"));
+
+// Type text
+type(By.id("username"), "testuser");
+
+// Clear and type
+clearAndType(By.id("search"), "keyword");
+
+// Get text
+String text = getText(By.className("message"));
+
+// Get attribute
+String href = getAttribute(By.id("link"), "href");</code></pre>
+
+        <h3>Wait Strategies</h3>
+        <pre><code>// Wait for element to be visible
+waitForElementToBeVisible(By.id("result"));
+
+// Wait for element to be clickable
+waitForElementToBeClickable(By.id("submit"));
+
+// Wait for element to disappear
+waitForElementToDisappear(By.className("loader"));
+
+// Custom wait
+waitForCondition(ExpectedConditions.titleContains("Dashboard"));</code></pre>
+
+        <h3>Dropdown Handling</h3>
+        <pre><code>// Select by visible text
+selectDropdownByText(By.id("country"), "United States");
+
+// Select by value
+selectDropdownByValue(By.id("state"), "CA");
+
+// Select by index
+selectDropdownByIndex(By.id("city"), 2);</code></pre>
+
+        <h3>JavaScript Execution</h3>
+        <pre><code>// Execute JavaScript
+executeJavaScript("window.scrollTo(0, document.body.scrollHeight)");
+
+// Click using JavaScript
+jsClick(By.id("hiddenButton"));
+
+// Scroll to element
+scrollToElement(By.id("footer"));</code></pre>
+
+        <h3>Window/Tab Management</h3>
+        <pre><code>// Switch to new window
+switchToNewWindow();
+
+// Switch to window by title
+switchToWindowByTitle("New Tab");
+
+// Close current window
+closeCurrentWindow();
+
+// Get window handles
+Set&lt;String&gt; handles = getWindowHandles();</code></pre>
+
+        <h3>iFrame Handling</h3>
+        <pre><code>// Switch to iframe by index
+switchToFrame(0);
+
+// Switch to iframe by name
+switchToFrame("frameName");
+
+// Switch to iframe by element
+switchToFrame(By.id("iframe1"));
+
+// Switch back to main content
+switchToDefaultContent();</code></pre>
+
+        <h3>Alert Handling</h3>
+        <pre><code>// Accept alert
+acceptAlert();
+
+// Dismiss alert
+dismissAlert();
+
+// Get alert text
+String alertText = getAlertText();
+
+// Type in alert
+sendKeysToAlert("text");</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>PlaywrightReusable Methods</h2>
+        
+        <h3>Navigation</h3>
+        <pre><code>// Navigate to URL
+navigateTo("https://example.com");
+
+// Reload page
+reloadPage();
+
+// Go back/forward
+goBack();
+goForward();</code></pre>
+
+        <h3>Element Interactions</h3>
+        <pre><code>// Click
+click(locator("#loginBtn"));
+
+// Type text
+type(locator("#username"), "testuser");
+
+// Fill (faster than type)
+fill(locator("#password"), "pass123");
+
+// Get text
+String text = getText(locator(".message"));
+
+// Get attribute
+String href = getAttribute(locator("a"), "href");</code></pre>
+
+        <h3>Advanced Selectors</h3>
+        <pre><code>// Click by text
+clickByText("Login");
+
+// Click by role
+clickByRole("button", "Submit");
+
+// Click by placeholder
+clickByPlaceholder("Enter email");
+
+// Type by label
+typeByLabel("Username", "testuser");</code></pre>
+
+        <h3>Native Assertions</h3>
+        <pre><code>// Element state
+assertVisible(locator("#result"));
+assertEnabled(locator("#submit"));
+assertChecked(locator("#agree"));
+
+// Text assertions
+assertContainsText(locator(".message"), "Success");
+assertHasText(locator("h1"), "Welcome");
+
+// Attribute assertions
+assertHasAttribute(locator("a"), "href", "/home");
+assertHasClass(locator("div"), "active");
+
+// Page assertions
+assertPageHasTitle("Dashboard");
+assertPageURLContains("/dashboard");</code></pre>
+
+        <h3>Wait Strategies</h3>
+        <pre><code>// Wait for selector
+waitForSelector("#result");
+
+// Wait for load state
+waitForLoadState("networkidle");
+
+// Wait for timeout
+waitFor(2000);
+
+// Wait for element to be visible
+waitForElementVisible(locator("#modal"));</code></pre>
+
+        <h3>File Upload</h3>
+        <pre><code>// Upload single file
+uploadFile(locator("#fileInput"), "/path/to/file.pdf");
+
+// Upload multiple files
+uploadFiles(locator("#multiFile"), 
+    Arrays.asList("/file1.pdf", "/file2.pdf"));</code></pre>
+
+        <h3>Screenshots</h3>
+        <pre><code>// Full page screenshot
+takeScreenshot("homepage");
+
+// Element screenshot
+takeElementScreenshot(locator("#chart"), "chart");</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>UIKeywords (Framework-Agnostic)</h2>
+        <p>Use the same methods regardless of Selenium or Playwright:</p>
+        <pre><code>// Initialize browser
+UIKeywords.openBrowser();
+
+// Navigate
+UIKeywords.navigateToURL("https://example.com");
+
+// Interactions
+UIKeywords.clickElement("#loginBtn");
+UIKeywords.enterText("#username", "testuser");
+String text = UIKeywords.getTextFromElement(".message");
+
+// Validations
+UIKeywords.verifyElementVisible("#dashboard");
+UIKeywords.verifyTextPresent("Welcome");
+
+// Cleanup
+UIKeywords.closeBrowser();</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Page Object Example</h2>
+        
+        <h3>Selenium Page Object</h3>
+        <pre><code>package com.automation.pages;
+
+import com.automation.reusables.SeleniumReusable;
+import org.openqa.selenium.By;
+
+public class LoginPage extends SeleniumReusable {
+    
+    // Locators
+    private By usernameField = By.id("username");
+    private By passwordField = By.id("password");
+    private By loginButton = By.id("loginBtn");
+    private By errorMessage = By.className("error");
+    
+    // Methods
+    public void openLoginPage() {
+        navigateTo(ConfigManager.getProperty("app.url") + "/login");
+    }
+    
+    public void login(String username, String password) {
+        type(usernameField, username);
+        type(passwordField, password);
+        click(loginButton);
+    }
+    
+    public boolean isErrorDisplayed() {
+        return isElementDisplayed(errorMessage);
+    }
+    
+    public String getErrorMessage() {
+        return getText(errorMessage);
+    }
+}</code></pre>
+
+        <h3>Playwright Page Object (Modern Pattern)</h3>
+        <pre><code>package com.automation.pages;
+
+import com.automation.core.config.ConfigManager;
+import com.automation.reusables.PlaywrightReusable;
+import com.microsoft.playwright.Locator;
+
+public class LoginPage extends PlaywrightReusable {
+    
+    // Locator methods (recommended pattern)
+    private Locator usernameField() { return locator("#username"); }
+    private Locator passwordField() { return locator("#password"); }
+    private Locator loginButton() { return locator("#loginBtn"); }
+    private Locator errorMessage() { return locator(".error"); }
+    private Locator dashboard() { return locator(".dashboard"); }
+    
+    // Methods
+    public void openLoginPage() {
+        navigateTo(ConfigManager.getProperty("app.url") + "/login");
+    }
+    
+    public void login(String username, String password) {
+        type(usernameField(), username);
+        type(passwordField(), password);
+        click(loginButton());
+        
+        // Use native assertion
+        assertVisible(dashboard());
+    }
+    
+    public String getErrorMessage() {
+        return getText(errorMessage());
+    }
+}</code></pre>
+        
+        <div class="alert alert-info">
+          <strong>Best Practice:</strong> Use locator methods instead of string variables. This ensures fresh locators on each call, preventing stale element issues.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Feature File Example</h2>
+        <pre><code>@UI @Smoke
+Feature: Login Functionality
+
+  Background:
+    Given user opens the login page
+
+  Scenario: Successful login with valid credentials
+    When user enters username "testuser" and password "Test@123"
+    And user clicks on login button
+    Then user should see the dashboard
+    And user should see welcome message "Welcome, Test User"
+
+  Scenario: Login with invalid credentials
+    When user enters username "invalid" and password "wrong"
+    And user clicks on login button
+    Then user should see error message "Invalid credentials"
+    And user should remain on login page
+
+  Scenario Outline: Login with multiple users
+    When user enters username "&lt;username&gt;" and password "&lt;password&gt;"
+    And user clicks on login button
+    Then user should see "&lt;result&gt;"
+    
+    Examples:
+      | username | password | result    |
+      | admin    | admin123 | Dashboard |
+      | user1    | pass123  | Dashboard |
+      | invalid  | wrong    | Error     |</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Advanced Playwright Patterns</h2>
+        
+        <h3>Playwright Locator Strategies (Priority Order)</h3>
+        <p>Playwright provides multiple locator strategies. Use them in this priority order for better maintainability and resilience:</p>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Priority</th>
+              <th>Strategy</th>
+              <th>When to Use</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1️⃣</td>
+              <td><code>getByRole()</code></td>
+              <td>Semantic HTML elements (buttons, links, inputs)</td>
+              <td><code>getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Submit"))</code></td>
+            </tr>
+            <tr>
+              <td>2️⃣</td>
+              <td><code>getByLabel()</code></td>
+              <td>Form inputs with labels</td>
+              <td><code>getByLabel("Email Address")</code></td>
+            </tr>
+            <tr>
+              <td>3️⃣</td>
+              <td><code>getByPlaceholder()</code></td>
+              <td>Inputs with placeholder text</td>
+              <td><code>getByPlaceholder("Enter your email")</code></td>
+            </tr>
+            <tr>
+              <td>4️⃣</td>
+              <td><code>getByText()</code></td>
+              <td>Elements with unique text content</td>
+              <td><code>getByText("Login")</code></td>
+            </tr>
+            <tr>
+              <td>5️⃣</td>
+              <td><code>getByTestId()</code></td>
+              <td>Elements with data-testid attribute</td>
+              <td><code>getByTestId("submit-button")</code></td>
+            </tr>
+            <tr>
+              <td>6️⃣</td>
+              <td><code>getByTitle()</code></td>
+              <td>Elements with title attribute</td>
+              <td><code>getByTitle("Close")</code></td>
+            </tr>
+            <tr>
+              <td>7️⃣</td>
+              <td><code>getByAltText()</code></td>
+              <td>Images with alt text</td>
+              <td><code>getByAltText("Company Logo")</code></td>
+            </tr>
+            <tr>
+              <td>8️⃣</td>
+              <td><code>locator()</code></td>
+              <td>Fallback for complex selectors</td>
+              <td><code>locator("button._2KpZ6l")</code></td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h3>Locator Methods Pattern (Recommended)</h3>
+        <p>Use methods that return Locator objects instead of storing selectors as strings. This prevents stale element issues.</p>
+        
+<pre><code>// ❌ Not Recommended - CSS selectors with string variables
+private String searchBox = "input[name='q']";
+private String searchButton = "button[type='submit']";
+
+public void search(String text) {
+    type(locator(searchBox), text);
+    click(locator(searchButton));
+}
+
+// ⚠️ Better - Locator methods with CSS
+private Locator searchBox() { return locator("input[name='q']"); }
+private Locator searchButton() { return locator("button[type='submit']"); }
+
+public void search(String text) {
+    type(searchBox(), text);
+    click(searchButton());
+}
+
+// ✅ Best - Built-in locator strategies
+private Locator searchBox() { return getByPlaceholder("Search for products"); }
+private Locator searchButton() { return getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Search")); }
+
+public void search(String text) {
+    type(searchBox(), text);
+    click(searchButton());
+}</code></pre>
+
+        <div class="alert alert-success">
+          <strong>Why Built-in Locators?</strong>
+          <ul>
+            <li>✅ More resilient to UI changes</li>
+            <li>✅ Better accessibility compliance</li>
+            <li>✅ Self-documenting code</li>
+            <li>✅ Follows Playwright best practices</li>
+            <li>✅ Works better with dynamic content</li>
+          </ul>
+        </div>
+
+        <h3>Handling New Windows/Tabs</h3>
+        <p>Playwright provides elegant handling for new pages opened by user actions:</p>
+        
+        <pre><code>public void clickProductAndSwitchToNewPage() {
+    // Wait for new page to open and capture it
+    Page newPage = page.context().waitForPage(() -> {
+        click(productLink());
+    });
+    
+    // Switch to new page and update DriverManager
+    page = newPage;
+    DriverManager.setPlaywrightPage(newPage);
+    
+    // Continue working on new page
+    assertVisible(productDetails());
+}</code></pre>
+
+        <h3>Complete E-commerce Example (Best Practices)</h3>
+        <pre><code>package com.automation.pages;
+
+import com.automation.core.config.ConfigManager;
+import com.automation.core.driver.DriverManager;
+import com.automation.reusables.PlaywrightReusable;
+import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
+
+public class FlipkartPage extends PlaywrightReusable {
+    
+    // ✅ Recommended: Use Playwright's built-in locator strategies
+    private Locator searchBox() { return getByPlaceholder("Search for Products, Brands and More"); }
+    private Locator searchButton() { return getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Search")); }
+    private Locator firstProduct() { return getByRole(AriaRole.LINK).first(); }
+    private Locator addToCartButton() { return getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Add to cart")); }
+    private Locator cartIcon() { return getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Cart")); }
+    private Locator closeLoginPopup() { return getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("✕")); }
+    
+    // Alternative: Mix strategies based on what's available
+    // private Locator searchBox() { return getByPlaceholder("Search"); }
+    // private Locator searchButton() { return getByRole(AriaRole.BUTTON).filter(new Locator.FilterOptions().setHasText("Search")); }
+    // private Locator cartIcon() { return getByTestId("cart-icon"); }  // If test-id is available
+    // private Locator closeLoginPopup() { return locator("button._2KpZ6l._2doB4z"); }  // Fallback to CSS when needed
+
+    public void openFlipkart() {
+        navigateTo(ConfigManager.getInstance().getAppUrl());
+        
+        // Handle optional login popup
+        try {
+            if (isDisplayed(closeLoginPopup())) {
+                click(closeLoginPopup());
+            }
+        } catch (Exception e) {
+            // Popup not displayed, continue
+        }
+    }
+
+    public void searchProduct(String productName) {
+        type(searchBox(), productName);
+        click(searchButton());
+        waitForSeconds(2);
+    }
+
+    public void clickFirstProduct() {
+        scrollToElement(firstProduct());
+        
+        // Handle new page opening
+        Page newPage = page.context().waitForPage(() -> {
+            click(firstProduct());
+        });
+        
+        // Switch to new page
+        page = newPage;
+        DriverManager.setPlaywrightPage(newPage);
+        waitForSeconds(2);
+    }
+
+    public void addToCart() {
+        waitForSeconds(2);
+        try {
+            if (isDisplayed(addToCartButton())) {
+                click(addToCartButton());
+            }
+        } catch (Exception e) {
+            // Button might not be visible
+        }
+    }
+
+    public boolean isProductInCart() {
+        try {
+            return isDisplayed(cartIcon());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Real-World Locator Examples</h2>
+        
+        <h3>Login Form</h3>
+        <pre><code>public class LoginPage extends PlaywrightReusable {
+    // ✅ Use getByLabel for form inputs
+    private Locator emailField() { return getByLabel("Email"); }
+    private Locator passwordField() { return getByLabel("Password"); }
+    
+    // ✅ Use getByRole for buttons
+    private Locator loginButton() { return getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login")); }
+    
+    // ✅ Use getByText for links
+    private Locator forgotPasswordLink() { return getByText("Forgot Password?"); }
+    
+    public void login(String email, String password) {
+        type(emailField(), email);
+        type(passwordField(), password);
+        click(loginButton());
+    }
+}</code></pre>
+
+        <h3>E-commerce Product Page</h3>
+        <pre><code>public class ProductPage extends PlaywrightReusable {
+    // ✅ Use getByRole for semantic elements
+    private Locator addToCartButton() { return getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Add to Cart")); }
+    private Locator buyNowButton() { return getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Buy Now")); }
+    
+    // ✅ Use getByAltText for images
+    private Locator productImage() { return getByAltText("Product Image"); }
+    
+    // ✅ Use getByTestId for complex elements (if available)
+    private Locator priceSection() { return getByTestId("product-price"); }
+    
+    // ✅ Use getByText for headings
+    private Locator productTitle() { return getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName("iPhone 15 Pro")); }
+    
+    // ⚠️ Fallback to CSS when needed
+    private Locator ratingStars() { return locator(".rating-stars"); }
+}</code></pre>
+
+        <h3>Navigation Menu</h3>
+        <pre><code>public class NavigationMenu extends PlaywrightReusable {
+    // ✅ Use getByRole for navigation links
+    private Locator homeLink() { return getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Home")); }
+    private Locator productsLink() { return getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Products")); }
+    private Locator aboutLink() { return getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("About Us")); }
+    
+    // ✅ Use getByPlaceholder for search
+    private Locator searchBox() { return getByPlaceholder("Search products..."); }
+    
+    public void navigateToProducts() {
+        click(productsLink());
+    }
+}</code></pre>
+
+        <h3>Form with Multiple Fields</h3>
+        <pre><code>public class RegistrationPage extends PlaywrightReusable {
+    // ✅ Use getByLabel for all form fields
+    private Locator firstNameField() { return getByLabel("First Name"); }
+    private Locator lastNameField() { return getByLabel("Last Name"); }
+    private Locator emailField() { return getByLabel("Email Address"); }
+    private Locator phoneField() { return getByLabel("Phone Number"); }
+    
+    // ✅ Use getByRole for checkboxes
+    private Locator agreeTermsCheckbox() { return getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("I agree to terms")); }
+    
+    // ✅ Use getByRole for submit button
+    private Locator submitButton() { return getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Register")); }
+    
+    public void register(User user) {
+        type(firstNameField(), user.getFirstName());
+        type(lastNameField(), user.getLastName());
+        type(emailField(), user.getEmail());
+        type(phoneField(), user.getPhone());
+        check(agreeTermsCheckbox());
+        click(submitButton());
+    }
+}</code></pre>
+
+        <h3>Combining Locators</h3>
+        <pre><code>public class ProductListPage extends PlaywrightReusable {
+    // ✅ Combine locators for specific elements
+    private Locator productCard(String productName) {
+        return getByRole(AriaRole.ARTICLE)
+            .filter(new Locator.FilterOptions().setHasText(productName));
+    }
+    
+    private Locator addToCartInProduct(String productName) {
+        return productCard(productName)
+            .getByRole(AriaRole.BUTTON, new Locator.GetByRoleOptions().setName("Add to Cart"));
+    }
+    
+    public void addProductToCart(String productName) {
+        click(addToCartInProduct(productName));
+    }
+}</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Common Scenarios</h2>
+        
+        <h3>Form Submission</h3>
+        <pre><code>public void fillRegistrationForm(User user) {
+    type(locator("#firstName"), user.getFirstName());
+    type(locator("#lastName"), user.getLastName());
+    type(locator("#email"), user.getEmail());
+    selectDropdownByText(locator("#country"), user.getCountry());
+    click(locator("#agreeTerms"));
+    click(locator("#submitBtn"));
+    
+    assertVisible(locator(".success-message"));
+}</code></pre>
+
+        <h3>Table Handling</h3>
+        <pre><code>public List&lt;String&gt; getTableData(String columnName) {
+    List&lt;String&gt; data = new ArrayList&lt;&gt;();
+    List&lt;WebElement&gt; rows = findElements(By.cssSelector("table tbody tr"));
+    
+    for (WebElement row : rows) {
+        String cellData = row.findElement(
+            By.cssSelector("td[data-column='" + columnName + "']")
+        ).getText();
+        data.add(cellData);
+    }
+    return data;
+}</code></pre>
+
+        <h3>Dynamic Element Handling</h3>
+        <pre><code>public void clickDynamicElement(String text) {
+    By dynamicLocator = By.xpath("//button[text()='" + text + "']");
+    waitForElementToBeClickable(dynamicLocator);
+    click(dynamicLocator);
+}</code></pre>
+
+        <h3>File Download</h3>
+        <pre><code>public void downloadFile() {
+    click(locator("#downloadBtn"));
+    waitFor(3000); // Wait for download
+    
+    String downloadPath = System.getProperty("user.home") + "/Downloads";
+    File file = new File(downloadPath + "/report.pdf");
+    AssertUtils.assertTrue(file.exists(), "File should be downloaded");
+}</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Playwright Design Patterns Comparison</h2>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Pattern</th>
+              <th>String Selectors</th>
+              <th>Locator Methods (Recommended)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Declaration</strong></td>
+              <td><code>private String btn = "#submit";</code></td>
+              <td><code>private Locator btn() { return locator("#submit"); }</code></td>
+            </tr>
+            <tr>
+              <td><strong>Usage</strong></td>
+              <td><code>click(locator(btn));</code></td>
+              <td><code>click(btn());</code></td>
+            </tr>
+            <tr>
+              <td><strong>Freshness</strong></td>
+              <td>Requires manual locator creation</td>
+              <td>Always fresh, auto-updated</td>
+            </tr>
+            <tr>
+              <td><strong>Stale Elements</strong></td>
+              <td>Can occur if page changes</td>
+              <td>Prevented by fresh locators</td>
+            </tr>
+            <tr>
+              <td><strong>Readability</strong></td>
+              <td>Good</td>
+              <td>Excellent</td>
+            </tr>
+            <tr>
+              <td><strong>Maintenance</strong></td>
+              <td>Moderate</td>
+              <td>Easy</td>
+            </tr>
+            <tr>
+              <td><strong>Best For</strong></td>
+              <td>Simple, static pages</td>
+              <td>Dynamic pages, SPAs, production code</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="alert alert-success">
+          <strong>Recommendation:</strong> Always use Locator methods pattern for production code. It's more robust and prevents common issues with dynamic web applications.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Best Practices</h2>
+        <ul>
+          <li><strong>Use Locator methods</strong> instead of string selectors for Playwright</li>
+          <li>Use explicit waits instead of Thread.sleep()</li>
+          <li>Prefer CSS selectors over XPath for better performance</li>
+          <li>Use Page Object Model for maintainability</li>
+          <li>Keep locators in page objects, not in step definitions</li>
+          <li>Use meaningful variable and method names</li>
+          <li>Add assertions after important actions</li>
+          <li>Use Playwright native assertions for better error messages</li>
+          <li>Handle stale element exceptions with retry logic</li>
+          <li>Close browsers properly in @After hooks</li>
+          <li>Use headless mode for CI/CD pipelines</li>
+        </ul>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Sands Automation Framework. Created by <a href="#">Afsar Ali</a></p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

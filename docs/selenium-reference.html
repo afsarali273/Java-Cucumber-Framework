@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selenium Reference - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+          <li class="nav-item"><a href="examples.html" class="nav-link"><i class="fas fa-code-branch"></i>Examples</a></li>
+          <li class="nav-item"><a href="api-reference.html" class="nav-link"><i class="fas fa-book"></i>API Reference</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Selenium Complete Reference</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>SeleniumReusable - All Methods</h2>
+        <p>Complete reference of all methods available in <code>SeleniumReusable</code> class.</p>
+        
+        <div class="alert alert-info">
+          <strong>Usage:</strong> Extend SeleniumReusable in your Page Object classes to access all these methods.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Navigation Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>navigateTo()</code></td>
+              <td>String url</td>
+              <td>Navigate to specified URL</td>
+            </tr>
+            <tr>
+              <td><code>navigateBack()</code></td>
+              <td>-</td>
+              <td>Navigate back in browser history</td>
+            </tr>
+            <tr>
+              <td><code>navigateForward()</code></td>
+              <td>-</td>
+              <td>Navigate forward in browser history</td>
+            </tr>
+            <tr>
+              <td><code>refreshPage()</code></td>
+              <td>-</td>
+              <td>Refresh current page</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Element Interaction Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>click()</code></td>
+              <td>By locator</td>
+              <td>Click on element</td>
+            </tr>
+            <tr>
+              <td><code>type()</code></td>
+              <td>By locator, String text</td>
+              <td>Clear and type text into element</td>
+            </tr>
+            <tr>
+              <td><code>typeAndEnter()</code></td>
+              <td>By locator, String text</td>
+              <td>Type text and press Enter</td>
+            </tr>
+            <tr>
+              <td><code>clear()</code></td>
+              <td>By locator</td>
+              <td>Clear element text</td>
+            </tr>
+            <tr>
+              <td><code>getText()</code></td>
+              <td>By locator</td>
+              <td>Get element text content</td>
+            </tr>
+            <tr>
+              <td><code>getAttribute()</code></td>
+              <td>By locator, String attribute</td>
+              <td>Get element attribute value</td>
+            </tr>
+            <tr>
+              <td><code>getCssValue()</code></td>
+              <td>By locator, String property</td>
+              <td>Get CSS property value</td>
+            </tr>
+            <tr>
+              <td><code>jsClick()</code></td>
+              <td>By locator</td>
+              <td>Click using JavaScript</td>
+            </tr>
+            <tr>
+              <td><code>doubleClick()</code></td>
+              <td>By locator</td>
+              <td>Double click on element</td>
+            </tr>
+            <tr>
+              <td><code>mouseHover()</code></td>
+              <td>By locator</td>
+              <td>Hover mouse over element</td>
+            </tr>
+            <tr>
+              <td><code>dragAndDrop()</code></td>
+              <td>By source, By target</td>
+              <td>Drag source to target</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Dropdown Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>selectDropdownByText()</code></td>
+              <td>By locator, String text</td>
+              <td>Select option by visible text</td>
+            </tr>
+            <tr>
+              <td><code>selectDropdownByValue()</code></td>
+              <td>By locator, String value</td>
+              <td>Select option by value attribute</td>
+            </tr>
+            <tr>
+              <td><code>selectDropdownByIndex()</code></td>
+              <td>By locator, int index</td>
+              <td>Select option by index (0-based)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Checkbox & Radio Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>check()</code></td>
+              <td>By locator</td>
+              <td>Check checkbox if not already checked</td>
+            </tr>
+            <tr>
+              <td><code>uncheck()</code></td>
+              <td>By locator</td>
+              <td>Uncheck checkbox if checked</td>
+            </tr>
+            <tr>
+              <td><code>isChecked()</code></td>
+              <td>By locator</td>
+              <td>Returns true if checkbox is checked</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Wait Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>waitForElementToBeVisible()</code></td>
+              <td>By locator</td>
+              <td>Wait until element is visible</td>
+            </tr>
+            <tr>
+              <td><code>waitForElementToBeClickable()</code></td>
+              <td>By locator</td>
+              <td>Wait until element is clickable</td>
+            </tr>
+            <tr>
+              <td><code>waitForElementToBePresent()</code></td>
+              <td>By locator</td>
+              <td>Wait until element is present in DOM</td>
+            </tr>
+            <tr>
+              <td><code>waitForElementToBeInvisible()</code></td>
+              <td>By locator</td>
+              <td>Wait until element becomes invisible</td>
+            </tr>
+            <tr>
+              <td><code>waitForAttributeToContain()</code></td>
+              <td>By locator, String attribute, String value</td>
+              <td>Wait until attribute contains value</td>
+            </tr>
+            <tr>
+              <td><code>waitForSeconds()</code></td>
+              <td>int seconds</td>
+              <td>Hard wait for specified seconds</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Scroll Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>scrollToElement()</code></td>
+              <td>By locator</td>
+              <td>Scroll to bring element into view</td>
+            </tr>
+            <tr>
+              <td><code>scrollToTop()</code></td>
+              <td>-</td>
+              <td>Scroll to top of page</td>
+            </tr>
+            <tr>
+              <td><code>scrollToBottom()</code></td>
+              <td>-</td>
+              <td>Scroll to bottom of page</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Window/Tab Management</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>switchToWindow()</code></td>
+              <td>String windowHandle</td>
+              <td>Switch to window by handle</td>
+            </tr>
+            <tr>
+              <td><code>closeCurrentWindow()</code></td>
+              <td>-</td>
+              <td>Close current window/tab</td>
+            </tr>
+            <tr>
+              <td><code>openNewTab()</code></td>
+              <td>-</td>
+              <td>Open new browser tab</td>
+            </tr>
+            <tr>
+              <td><code>switchToLatestTab()</code></td>
+              <td>-</td>
+              <td>Switch to most recently opened tab</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Screenshot Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>takeScreenshot()</code></td>
+              <td>String filePath</td>
+              <td>Capture full page screenshot</td>
+            </tr>
+            <tr>
+              <td><code>takeElementScreenshot()</code></td>
+              <td>By locator, String filePath</td>
+              <td>Capture screenshot of specific element</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Selenium 4 Relative Locators</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>findElementAbove()</code></td>
+              <td>By locator, By aboveLocator</td>
+              <td>Find element above reference element</td>
+            </tr>
+            <tr>
+              <td><code>findElementBelow()</code></td>
+              <td>By locator, By belowLocator</td>
+              <td>Find element below reference element</td>
+            </tr>
+            <tr>
+              <td><code>findElementNear()</code></td>
+              <td>By locator, By nearLocator</td>
+              <td>Find element near reference element</td>
+            </tr>
+            <tr>
+              <td><code>findElementToLeftOf()</code></td>
+              <td>By locator, By leftLocator</td>
+              <td>Find element to left of reference</td>
+            </tr>
+            <tr>
+              <td><code>findElementToRightOf()</code></td>
+              <td>By locator, By rightLocator</td>
+              <td>Find element to right of reference</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Utility Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>isDisplayed()</code></td>
+              <td>By locator</td>
+              <td>Check if element is displayed</td>
+            </tr>
+            <tr>
+              <td><code>isEnabled()</code></td>
+              <td>By locator</td>
+              <td>Check if element is enabled</td>
+            </tr>
+            <tr>
+              <td><code>findElements()</code></td>
+              <td>By locator</td>
+              <td>Find all matching elements</td>
+            </tr>
+            <tr>
+              <td><code>uploadFile()</code></td>
+              <td>By locator, String filePath</td>
+              <td>Upload file to input element</td>
+            </tr>
+            <tr>
+              <td><code>getElementRect()</code></td>
+              <td>By locator</td>
+              <td>Get element rectangle (x, y, width, height)</td>
+            </tr>
+            <tr>
+              <td><code>getShadowRoot()</code></td>
+              <td>By locator</td>
+              <td>Access Shadow DOM root element</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Assertion Methods</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>assertEquals()</code></td>
+              <td>Object actual, Object expected, String message</td>
+              <td>Assert two values are equal</td>
+            </tr>
+            <tr>
+              <td><code>assertNotEquals()</code></td>
+              <td>Object actual, Object expected, String message</td>
+              <td>Assert two values are not equal</td>
+            </tr>
+            <tr>
+              <td><code>assertTrue()</code></td>
+              <td>boolean condition, String message</td>
+              <td>Assert condition is true</td>
+            </tr>
+            <tr>
+              <td><code>assertFalse()</code></td>
+              <td>boolean condition, String message</td>
+              <td>Assert condition is false</td>
+            </tr>
+            <tr>
+              <td><code>assertNull()</code></td>
+              <td>Object object, String message</td>
+              <td>Assert object is null</td>
+            </tr>
+            <tr>
+              <td><code>assertNotNull()</code></td>
+              <td>Object object, String message</td>
+              <td>Assert object is not null</td>
+            </tr>
+            <tr>
+              <td><code>assertContains()</code></td>
+              <td>String actual, String expected, String message</td>
+              <td>Assert string contains substring</td>
+            </tr>
+            <tr>
+              <td><code>enableSoftAssert()</code></td>
+              <td>-</td>
+              <td>Enable soft assertions mode</td>
+            </tr>
+            <tr>
+              <td><code>assertAll()</code></td>
+              <td>-</td>
+              <td>Verify all soft assertions</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Ready-Made Cucumber Steps (UISteps)</h2>
+        <p>Pre-built step definitions that work with both Selenium and Playwright.</p>
+        
+        <h3>Navigation Steps</h3>
+        <pre><code>Given open browser
+Given navigate to "https://example.com"
+Given navigate to "${baseUrl}/login"
+When close browser
+When refresh page
+When navigate back
+When navigate forward</code></pre>
+
+        <h3>Element Interaction Steps</h3>
+        <pre><code>When click element "#loginBtn"
+When click text "Login"
+When type "john@example.com" into "#email"
+When type "password123" into "#password" and press enter
+When clear "#searchBox"
+When select "United States" from dropdown "#country"
+When upload file "/path/to/file.pdf" to "#fileInput"
+When check "#agreeTerms"
+When uncheck "#newsletter"
+When hover over "#menuItem"
+When double click "#item"
+When drag "#source" to "#target"</code></pre>
+
+        <h3>Wait Steps</h3>
+        <pre><code>When wait for visible "#result" for 10 seconds
+When wait for clickable "#submitBtn" for 5 seconds
+When wait for invisible "#loader" for 15 seconds
+When wait for text "#message" in "Success" for 10 seconds
+When pause for 3 seconds</code></pre>
+
+        <h3>Assertion Steps</h3>
+        <pre><code>Then element "#dashboard" should be visible
+Then element "#errorMsg" should not be visible
+Then element "#welcome" should contain text "Hello"
+Then element "#title" text should be "Dashboard"
+Then page should contain text "Welcome"
+Then element "#link" attribute "href" should be "/home"
+Then element "#button" css "color" should be "rgb(255, 0, 0)"
+Then element "#submitBtn" should be enabled
+Then element "#disabledBtn" should be disabled</code></pre>
+
+        <h3>Variable Storage Steps</h3>
+        <pre><code>When save text of "#username" as "savedUsername"
+When save attribute "href" of "#link" as "linkUrl"
+When save current url as "homeUrl"
+When save page title as "pageTitle"
+When clear saved variables</code></pre>
+
+        <h3>Screenshot Steps</h3>
+        <pre><code>When take screenshot "test-output/homepage.png"
+When take element screenshot "#chart" save as "chart.png"</code></pre>
+
+        <h3>Tab/Window Steps</h3>
+        <pre><code>When open new tab
+When switch to latest tab
+When switch to tab 0
+When close current tab</code></pre>
+
+        <h3>Alert Steps</h3>
+        <pre><code>When accept alert
+When dismiss alert
+Then alert text should be "Are you sure?"</code></pre>
+
+        <h3>Frame Steps</h3>
+        <pre><code>When switch to frame "iframe1"
+When switch to default content</code></pre>
+
+        <h3>Page State Steps</h3>
+        <pre><code>Then page title should be "Home Page"
+Then page title should contain "Dashboard"
+Then current url should be "https://example.com/home"
+Then current url should contain "/dashboard"</code></pre>
+
+        <h3>Element Count Steps</h3>
+        <pre><code>Then element count of ".product-item" should be 5
+Then element count of ".result" should be greater than 0
+Then element "#submitBtn" should exist
+Then element "#errorMsg" should not exist</code></pre>
+
+        <h3>Checkbox Steps</h3>
+        <pre><code>Then checkbox "#terms" should be checked
+Then checkbox "#newsletter" should not be checked</code></pre>
+
+        <h3>Scroll Steps</h3>
+        <pre><code>When scroll to element "#footer"
+When scroll to top
+When scroll to bottom</code></pre>
+
+        <h3>Keyboard Steps</h3>
+        <pre><code>When press key "Escape" on element "#modal"
+When press enter on element "#searchBox"</code></pre>
+
+        <h3>Dropdown Advanced Steps</h3>
+        <pre><code>When select option by index 2 from dropdown "#country"
+When select option by value "usa" from dropdown "#country"
+Then selected option in dropdown "#country" should be "United States"</code></pre>
+
+        <h3>Advanced Steps</h3>
+        <pre><code>When execute js "window.scrollTo(0, 500)"
+When right click element "#contextMenu"
+Then element "#price" text should match regex "\\$\\d+\\.\\d{2}"</code></pre>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Sands Automation Framework. Created by <a href="#">Afsar Ali</a></p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

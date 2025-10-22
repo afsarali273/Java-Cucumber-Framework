@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desktop Automation - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link active"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Desktop Automation (WinAppDriver)</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>Windows desktop application automation using WinAppDriver for native Windows apps.</p>
+        
+        <div class="card">
+          <h3>Key Features</h3>
+          <ul>
+            <li>Windows desktop app automation</li>
+            <li>Support for WPF, WinForms, UWP apps</li>
+            <li>Keyboard shortcuts and actions</li>
+            <li>Window management</li>
+            <li>Element inspection with Inspect.exe</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Prerequisites</h2>
+        <div class="alert alert-warning">
+          <h4>Install WinAppDriver</h4>
+          <ol>
+            <li>Download from: <a href="https://github.com/microsoft/WinAppDriver/releases" target="_blank">WinAppDriver Releases</a></li>
+            <li>Install WinAppDriver.msi</li>
+            <li>Enable Developer Mode in Windows Settings</li>
+            <li>Start WinAppDriver: <code>C:\Program Files (x86)\Windows Application Driver\WinAppDriver.exe</code></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Configuration</h2>
+        <div class="code-block">
+          <pre><code># config.properties
+framework.type=desktop
+
+# WinAppDriver Configuration
+desktop.winAppDriverUrl=http://127.0.0.1:4723
+desktop.app=C:\\Windows\\System32\\calc.exe
+desktop.platformName=Windows
+desktop.deviceName=WindowsPC
+
+# Or attach to existing app
+desktop.appTopLevelWindow=0x12345678</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>WindowsDesktopReusable Methods</h2>
+        
+        <h3>App Lifecycle</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>launchApp()</code></td>
+              <td>URL, DesiredCapabilities</td>
+              <td>Launch Windows app</td>
+            </tr>
+            <tr>
+              <td><code>launchAppByPath()</code></td>
+              <td>String appPath</td>
+              <td>Launch app by executable path</td>
+            </tr>
+            <tr>
+              <td><code>attachToApp()</code></td>
+              <td>String windowHandle</td>
+              <td>Attach to existing app</td>
+            </tr>
+            <tr>
+              <td><code>closeApp()</code></td>
+              <td>-</td>
+              <td>Close app and quit driver</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Element Interaction</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>click()</code></td>
+              <td>By locator</td>
+              <td>Click element</td>
+            </tr>
+            <tr>
+              <td><code>doubleClick()</code></td>
+              <td>By locator</td>
+              <td>Double click element</td>
+            </tr>
+            <tr>
+              <td><code>rightClick()</code></td>
+              <td>By locator</td>
+              <td>Right click element</td>
+            </tr>
+            <tr>
+              <td><code>type()</code></td>
+              <td>By locator, String text</td>
+              <td>Clear and type text</td>
+            </tr>
+            <tr>
+              <td><code>sendKeys()</code></td>
+              <td>By locator, CharSequence...</td>
+              <td>Send keys without clearing</td>
+            </tr>
+            <tr>
+              <td><code>getText()</code></td>
+              <td>By locator</td>
+              <td>Get element text</td>
+            </tr>
+            <tr>
+              <td><code>getAttribute()</code></td>
+              <td>By locator, String attribute</td>
+              <td>Get attribute value</td>
+            </tr>
+            <tr>
+              <td><code>hover()</code></td>
+              <td>By locator</td>
+              <td>Hover over element</td>
+            </tr>
+            <tr>
+              <td><code>dragAndDrop()</code></td>
+              <td>By source, By target</td>
+              <td>Drag and drop</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Element State</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Returns</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>isDisplayed()</code></td>
+              <td>boolean</td>
+              <td>Check if element visible</td>
+            </tr>
+            <tr>
+              <td><code>isEnabled()</code></td>
+              <td>boolean</td>
+              <td>Check if element enabled</td>
+            </tr>
+            <tr>
+              <td><code>isSelected()</code></td>
+              <td>boolean</td>
+              <td>Check if element selected</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Keyboard Actions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>pressKeyboardShortcut()</code></td>
+              <td>Keys modifier, String key</td>
+              <td>Press shortcut (Ctrl+C, Alt+F4)</td>
+            </tr>
+            <tr>
+              <td><code>pressKey()</code></td>
+              <td>Keys key</td>
+              <td>Press single key</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Window Management</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>switchToWindow()</code></td>
+              <td>String title</td>
+              <td>Switch to window by title</td>
+            </tr>
+            <tr>
+              <td><code>switchToWindowByHandle()</code></td>
+              <td>String handle</td>
+              <td>Switch by handle</td>
+            </tr>
+            <tr>
+              <td><code>getCurrentWindowHandle()</code></td>
+              <td>-</td>
+              <td>Get current window handle</td>
+            </tr>
+            <tr>
+              <td><code>getAllWindowHandles()</code></td>
+              <td>-</td>
+              <td>Get all window handles</td>
+            </tr>
+            <tr>
+              <td><code>closeCurrentWindow()</code></td>
+              <td>-</td>
+              <td>Close current window</td>
+            </tr>
+            <tr>
+              <td><code>maximizeWindow()</code></td>
+              <td>-</td>
+              <td>Maximize window</td>
+            </tr>
+            <tr>
+              <td><code>minimizeWindow()</code></td>
+              <td>-</td>
+              <td>Minimize window</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Dropdown & Wait Methods</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Parameters</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>selectDropdownByText()</code></td>
+              <td>By locator, String text</td>
+              <td>Select by visible text</td>
+            </tr>
+            <tr>
+              <td><code>selectDropdownByValue()</code></td>
+              <td>By locator, String value</td>
+              <td>Select by value</td>
+            </tr>
+            <tr>
+              <td><code>selectDropdownByIndex()</code></td>
+              <td>By locator, int index</td>
+              <td>Select by index</td>
+            </tr>
+            <tr>
+              <td><code>waitForElement()</code></td>
+              <td>By locator, int timeout</td>
+              <td>Wait for element visible</td>
+            </tr>
+            <tr>
+              <td><code>waitForElementClickable()</code></td>
+              <td>By locator, int timeout</td>
+              <td>Wait for element clickable</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Page Object Example</h2>
+        <div class="code-block">
+          <pre><code>public class CalculatorPage extends WindowsDesktopReusable {
+    
+    // Locators using Accessibility ID
+    By num5 = By.name("Five");
+    By num3 = By.name("Three");
+    By plusButton = By.name("Plus");
+    By equalsButton = By.name("Equals");
+    By result = By.accessibilityId("CalculatorResults");
+    
+    public void add(int a, int b) {
+        click(By.name(getNumberName(a)));
+        click(plusButton);
+        click(By.name(getNumberName(b)));
+        click(equalsButton);
+        UnifiedLogger.action("Add", a + " + " + b);
+    }
+    
+    public String getResult() {
+        return getText(result);
+    }
+    
+    public void clearCalculator() {
+        pressKeyboardShortcut(Keys.CONTROL, "c");
+    }
+    
+    private String getNumberName(int num) {
+        String[] names = {"Zero", "One", "Two", "Three", "Four", 
+                          "Five", "Six", "Seven", "Eight", "Nine"};
+        return names[num];
+    }
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Feature File Example</h2>
+        <div class="code-block">
+          <pre><code>@Desktop
+Feature: Calculator Automation
+
+  Scenario: Add two numbers
+    Given calculator app is launched
+    When user adds 5 and 3
+    Then result should be 8
+    
+  Scenario: Use keyboard shortcut
+    Given calculator app is launched
+    When user enters "25"
+    And user presses "Ctrl+C" to copy
+    Then clipboard should contain "25"</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Step Definitions</h2>
+        <div class="code-block">
+          <pre><code>public class DesktopSteps extends WindowsDesktopReusable {
+    
+    @Given("calculator app is launched")
+    public void calculatorAppIsLaunched() {
+        // App launched via hooks
+        UnifiedLogger.info("Calculator launched");
+    }
+    
+    @When("user adds {int} and {int}")
+    public void userAdds(int a, int b) {
+        CalculatorPage calc = new CalculatorPage();
+        calc.add(a, b);
+    }
+    
+    @When("user presses {string} to copy")
+    public void userPressesShortcut(String shortcut) {
+        pressKeyboardShortcut(Keys.CONTROL, "c");
+    }
+    
+    @Then("result should be {int}")
+    public void resultShouldBe(int expected) {
+        CalculatorPage calc = new CalculatorPage();
+        String result = calc.getResult();
+        AssertUtils.assertContains(result, String.valueOf(expected), 
+                                   "Result validation");
+    }
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Locator Strategies</h2>
+        <div class="card">
+          <h3>Using Inspect.exe</h3>
+          <p>Use Windows SDK Inspect.exe tool to identify elements:</p>
+          <div class="code-block">
+            <pre><code>// By Name
+By.name("Button Name")
+
+// By Accessibility ID (AutomationId)
+By.accessibilityId("btnSubmit")
+
+// By Class Name
+By.className("Button")
+
+// By XPath
+By.xpath("//Button[@Name='Submit']")
+
+// By Tag Name
+By.tagName("Button")</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Running Desktop Tests</h2>
+        <div class="code-block">
+          <pre><code># Start WinAppDriver
+"C:\Program Files (x86)\Windows Application Driver\WinAppDriver.exe"
+
+# Run desktop tests
+mvn test -Dcucumber.filter.tags="@Desktop"
+
+# Run specific feature
+mvn test -Dcucumber.options="--features src/test/resources/features/calculator.feature"</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Best Practices</h2>
+        <div class="alert alert-info">
+          <ul>
+            <li>Use Accessibility IDs (AutomationId) for stable locators</li>
+            <li>Use Inspect.exe to identify elements</li>
+            <li>Handle multiple windows properly</li>
+            <li>Use keyboard shortcuts for efficiency</li>
+            <li>Test on target Windows version</li>
+            <li>Close apps properly to avoid resource leaks</li>
+            <li>Use explicit waits for slow UI updates</li>
+          </ul>
+        </div>
+      </section>
+
+      <button class="back-to-top" id="back-to-top">↑</button>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

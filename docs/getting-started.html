@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+          <li class="nav-item"><a href="examples.html" class="nav-link"><i class="fas fa-code-branch"></i>Examples</a></li>
+          <li class="nav-item"><a href="api-reference.html" class="nav-link"><i class="fas fa-book"></i>API Reference</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Getting Started</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Prerequisites</h2>
+        <p>Before you begin, ensure you have the following installed:</p>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Software</th>
+              <th>Version</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Java JDK</td>
+              <td>11 or higher</td>
+              <td>Core runtime environment</td>
+            </tr>
+            <tr>
+              <td>Apache Maven</td>
+              <td>3.6+</td>
+              <td>Build and dependency management</td>
+            </tr>
+            <tr>
+              <td>Git</td>
+              <td>Latest</td>
+              <td>Version control</td>
+            </tr>
+            <tr>
+              <td>Chrome/Firefox</td>
+              <td>Latest</td>
+              <td>Web browser for testing</td>
+            </tr>
+            <tr>
+              <td>IDE</td>
+              <td>IntelliJ/Eclipse</td>
+              <td>Development environment</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="alert alert-info">
+          <strong>Note:</strong> Selenium Manager will automatically download browser drivers. No manual driver setup required!
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Installation Steps</h2>
+        
+        <h3>Step 1: Clone the Repository</h3>
+        <pre><code>git clone https://github.com/YOUR_USERNAME/SandsAutoFramework.git
+cd SandsAutoFramework</code></pre>
+
+        <h3>Step 2: Verify Java Installation</h3>
+        <pre><code>java -version
+# Should show Java 11 or higher
+
+mvn -version
+# Should show Maven 3.6 or higher</code></pre>
+
+        <h3>Step 3: Build the Project</h3>
+        <pre><code>mvn clean install</code></pre>
+        <p>This command will:</p>
+        <ul>
+          <li>Download all dependencies</li>
+          <li>Compile source code</li>
+          <li>Run unit tests (if any)</li>
+          <li>Package the framework as JAR</li>
+        </ul>
+
+        <h3>Step 4: Install Playwright Browsers (Optional)</h3>
+        <p>If you plan to use Playwright:</p>
+        <pre><code>mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>IDE Setup</h2>
+        
+        <h3>IntelliJ IDEA</h3>
+        <ol>
+          <li>Open IntelliJ IDEA</li>
+          <li>File → Open → Select SandsAutoFramework folder</li>
+          <li>Wait for Maven to import dependencies</li>
+          <li>Install Cucumber plugin: File → Settings → Plugins → Search "Cucumber for Java"</li>
+          <li>Enable annotation processing: Settings → Build → Compiler → Annotation Processors</li>
+        </ol>
+
+        <h3>Eclipse</h3>
+        <ol>
+          <li>Open Eclipse</li>
+          <li>File → Import → Maven → Existing Maven Projects</li>
+          <li>Select SandsAutoFramework folder</li>
+          <li>Install Cucumber plugin from Eclipse Marketplace</li>
+        </ol>
+
+        <h3>VS Code</h3>
+        <ol>
+          <li>Open VS Code</li>
+          <li>File → Open Folder → Select SandsAutoFramework</li>
+          <li>Install extensions: Java Extension Pack, Cucumber (Gherkin)</li>
+        </ol>
+      </section>
+
+      <section class="section">
+        <h2>Configuration</h2>
+        
+        <h3>Basic Configuration</h3>
+        <p>Edit <code>src/main/resources/config.properties</code>:</p>
+        <pre><code># Framework Type: selenium | playwright | api | mobile | desktop
+framework.type=selenium
+
+# Browser: chrome | firefox | edge | safari
+browser=chrome
+
+# Headless Mode
+headless=false
+
+# Environment: qa | uat | staging | prod
+environment=qa
+
+# Parallel Execution
+parallel.execution=true
+thread.count=3</code></pre>
+
+        <h3>Environment-Specific Configuration</h3>
+        <p>Create environment files in <code>src/main/resources/</code>:</p>
+        
+        <h4>qa.properties</h4>
+        <pre><code>app.url=https://qa.example.com
+api.base.url=https://api-qa.example.com
+db.url=jdbc:mysql://qa-db:3306/testdb</code></pre>
+
+        <h4>prod.properties</h4>
+        <pre><code>app.url=https://example.com
+api.base.url=https://api.example.com
+db.url=jdbc:mysql://prod-db:3306/proddb</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Running Your First Test</h2>
+        
+        <h3>Run All Tests</h3>
+        <pre><code>mvn clean test</code></pre>
+
+        <h3>Run Specific Tags</h3>
+        <pre><code># Run UI tests only
+mvn test -Dcucumber.filter.tags="@UI"
+
+# Run API tests only
+mvn test -Dcucumber.filter.tags="@API"
+
+# Run Smoke tests
+mvn test -Dcucumber.filter.tags="@Smoke"
+
+# Run multiple tags
+mvn test -Dcucumber.filter.tags="@UI and @Smoke"</code></pre>
+
+        <h3>Run with Different Browser</h3>
+        <pre><code>mvn test -Dbrowser=firefox
+mvn test -Dbrowser=edge</code></pre>
+
+        <h3>Run in Headless Mode</h3>
+        <pre><code>mvn test -Dheadless=true</code></pre>
+
+        <h3>Run with Different Environment</h3>
+        <pre><code>mvn test -Denvironment=staging</code></pre>
+
+        <h3>Run Specific Feature File</h3>
+        <pre><code>mvn test -Dcucumber.features="src/test/resources/features/login.feature"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Viewing Reports</h2>
+        
+        <h3>Custom HTML Report</h3>
+        <pre><code>open test-output/reports/CustomReport_*.html</code></pre>
+        <p>Features: Pass/fail summary, screenshots, detailed logs</p>
+
+        <h3>ExtentReports</h3>
+        <pre><code>open test-output/reports/ExtentReport_*.html</code></pre>
+        <p>Features: Dark theme, category filtering, timeline view</p>
+
+        <h3>Allure Report</h3>
+        <pre><code>mvn allure:serve</code></pre>
+        <p>Features: Interactive dashboard, trends, history</p>
+
+        <h3>Cucumber HTML Report</h3>
+        <pre><code>open test-output/cucumber-reports/cucumber.html</code></pre>
+
+        <h3>Log Files</h3>
+        <pre><code>cat test-output/logs/automation.log</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Creating Your First Test</h2>
+        
+        <h3>1. Create Feature File</h3>
+        <p>Create <code>src/test/resources/features/login.feature</code>:</p>
+        <pre><code>@UI @Smoke
+Feature: Login Functionality
+
+  Scenario: Successful login with valid credentials
+    Given user opens the login page
+    When user enters username "testuser" and password "Test@123"
+    And user clicks on login button
+    Then user should see the dashboard
+    And user should see welcome message "Welcome, Test User"</code></pre>
+
+        <h3>2. Create Page Object</h3>
+        <p>Create <code>src/main/java/com/automation/pages/LoginPage.java</code>:</p>
+        <pre><code>package com.automation.pages;
+
+import com.automation.reusables.SeleniumReusable;
+import org.openqa.selenium.By;
+
+public class LoginPage extends SeleniumReusable {
+    
+    // Locators
+    private By usernameField = By.id("username");
+    private By passwordField = By.id("password");
+    private By loginButton = By.id("loginBtn");
+    private By welcomeMessage = By.className("welcome-msg");
+    
+    // Methods
+    public void openLoginPage() {
+        navigateTo(ConfigManager.getProperty("app.url") + "/login");
+    }
+    
+    public void enterUsername(String username) {
+        type(usernameField, username);
+    }
+    
+    public void enterPassword(String password) {
+        type(passwordField, password);
+    }
+    
+    public void clickLogin() {
+        click(loginButton);
+    }
+    
+    public String getWelcomeMessage() {
+        return getText(welcomeMessage);
+    }
+}</code></pre>
+
+        <h3>3. Create Step Definitions</h3>
+        <p>Create <code>src/test/java/com/automation/stepdefinitions/LoginSteps.java</code>:</p>
+        <pre><code>package com.automation.stepdefinitions;
+
+import com.automation.pages.LoginPage;
+import com.automation.core.assertions.AssertUtils;
+import io.cucumber.java.en.*;
+
+public class LoginSteps {
+    
+    private LoginPage loginPage = new LoginPage();
+    
+    @Given("user opens the login page")
+    public void userOpensLoginPage() {
+        loginPage.openLoginPage();
+    }
+    
+    @When("user enters username {string} and password {string}")
+    public void userEntersCredentials(String username, String password) {
+        loginPage.enterUsername(username);
+        loginPage.enterPassword(password);
+    }
+    
+    @When("user clicks on login button")
+    public void userClicksLoginButton() {
+        loginPage.clickLogin();
+    }
+    
+    @Then("user should see the dashboard")
+    public void userShouldSeeDashboard() {
+        String currentUrl = DriverManager.getSeleniumDriver().getCurrentUrl();
+        AssertUtils.assertTrue(currentUrl.contains("/dashboard"), 
+            "User should be on dashboard page");
+    }
+    
+    @Then("user should see welcome message {string}")
+    public void userShouldSeeWelcomeMessage(String expectedMessage) {
+        String actualMessage = loginPage.getWelcomeMessage();
+        AssertUtils.assertEquals(actualMessage, expectedMessage, 
+            "Welcome message should match");
+    }
+}</code></pre>
+
+        <h3>4. Run Your Test</h3>
+        <pre><code>mvn test -Dcucumber.filter.tags="@Smoke"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Troubleshooting</h2>
+        
+        <h3>Issue: Maven dependencies not downloading</h3>
+        <div class="alert alert-warning">
+          <strong>Solution:</strong>
+          <pre><code>mvn clean install -U
+# -U forces update of dependencies</code></pre>
+        </div>
+
+        <h3>Issue: Browser driver not found</h3>
+        <div class="alert alert-warning">
+          <strong>Solution:</strong> Selenium Manager auto-downloads drivers. Ensure you have internet connection and Chrome/Firefox installed.
+        </div>
+
+        <h3>Issue: Tests failing in parallel</h3>
+        <div class="alert alert-warning">
+          <strong>Solution:</strong> Reduce thread count in config.properties:
+          <pre><code>thread.count=2</code></pre>
+        </div>
+
+        <h3>Issue: Playwright browsers not installed</h3>
+        <div class="alert alert-warning">
+          <strong>Solution:</strong>
+          <pre><code>mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install"</code></pre>
+        </div>
+
+        <h3>Issue: Port already in use (Appium/WinAppDriver)</h3>
+        <div class="alert alert-warning">
+          <strong>Solution:</strong> Kill the process using the port:
+          <pre><code># macOS/Linux
+lsof -ti:4723 | xargs kill -9
+
+# Windows
+netstat -ano | findstr :4723
+taskkill /PID [PID_NUMBER] /F</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Next Steps</h2>
+        <div class="card-grid">
+          <div class="card">
+            <h3>📖 Learn Architecture</h3>
+            <p>Understand the framework design and components</p>
+            <a href="architecture.html" style="color: var(--primary);">Read Architecture Guide →</a>
+          </div>
+          <div class="card">
+            <h3>🌐 Web Automation</h3>
+            <p>Deep dive into Selenium and Playwright</p>
+            <a href="web-automation.html" style="color: var(--primary);">Explore Web Testing →</a>
+          </div>
+          <div class="card">
+            <h3>💻 API Testing</h3>
+            <p>Learn REST and SOAP API automation</p>
+            <a href="api-automation.html" style="color: var(--primary);">Start API Testing →</a>
+          </div>
+          <div class="card">
+            <h3>📱 Mobile Testing</h3>
+            <p>Automate Android and iOS apps</p>
+            <a href="mobile-automation.html" style="color: var(--primary);">Mobile Automation →</a>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Sands Automation Framework. Created by <a href="#">Afsar Ali</a></p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

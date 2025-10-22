@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reporting - Sands Automation Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link active"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Reporting & Logging</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>Unified reporting system that logs to multiple reporting tools simultaneously.</p>
+        
+        <div class="card">
+          <h3>Reporting Tools</h3>
+          <ul>
+            <li><strong>ExtentReports</strong> - Modern HTML reports with dark theme</li>
+            <li><strong>CustomReporter</strong> - Lightweight HTML with embedded screenshots</li>
+            <li><strong>Allure</strong> - Interactive dashboard with trends</li>
+            <li><strong>Cucumber HTML</strong> - Standard Cucumber reports</li>
+            <li><strong>LogManager</strong> - File-based logging</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>UnifiedLogger</h2>
+        <p>Single logging call logs to all reporting systems simultaneously.</p>
+        
+        <h3>Usage</h3>
+        <div class="code-block">
+          <pre><code>// Info logging
+UnifiedLogger.info("Test started");
+UnifiedLogger.info("Navigating to login page");
+
+// Pass/Fail logging
+UnifiedLogger.pass("Login successful");
+UnifiedLogger.fail("Expected element not found");
+
+// Action logging (for reusable methods)
+UnifiedLogger.action("Click", loginButton);
+UnifiedLogger.action("Type", "username field | testuser");
+
+// Warning logging
+UnifiedLogger.warn("Element took longer than expected");
+
+// Error with exception
+UnifiedLogger.error("API call failed", exception);
+
+// Debug logging (file only)
+UnifiedLogger.debug("Debug information");</code></pre>
+        </div>
+
+        <h3>What Gets Logged Where</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Console</th>
+              <th>File</th>
+              <th>ExtentReport</th>
+              <th>CustomReport</th>
+              <th>Allure</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>info()</code></td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+            </tr>
+            <tr>
+              <td><code>pass()</code></td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+            </tr>
+            <tr>
+              <td><code>fail()</code></td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+            </tr>
+            <tr>
+              <td><code>warn()</code></td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+            </tr>
+            <tr>
+              <td><code>action()</code></td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+            </tr>
+            <tr>
+              <td><code>debug()</code></td>
+              <td>-</td>
+              <td>✓</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>ExtentReports</h2>
+        <p>Modern HTML reports with dark theme and rich features.</p>
+        
+        <div class="card">
+          <h3>Features</h3>
+          <ul>
+            <li>Dark theme with modern UI</li>
+            <li>Screenshots embedded in report</li>
+            <li>Category and author filtering</li>
+            <li>System information display</li>
+            <li>Timeline view</li>
+            <li>Pass/Fail statistics</li>
+          </ul>
+        </div>
+
+        <h3>Direct API (Optional)</h3>
+        <div class="code-block">
+          <pre><code>// Usually not needed - use UnifiedLogger instead
+ExtentReporter.startTest("Test Name");
+ExtentReporter.logInfo("Info message");
+ExtentReporter.logPass("Pass message");
+ExtentReporter.logFail("Fail message");
+ExtentReporter.attachScreenshot(screenshotPath);
+ExtentReporter.assignCategory("Smoke", "UI");
+ExtentReporter.assignAuthor("Afsar Ali");
+ExtentReporter.endTest();</code></pre>
+        </div>
+
+        <h3>Report Location</h3>
+        <div class="code-block">
+          <pre><code>test-output/reports/ExtentReport_20250121_143022.html</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>CustomReporter</h2>
+        <p>Lightweight HTML reporter with embedded screenshots as base64.</p>
+        
+        <div class="card">
+          <h3>Features</h3>
+          <ul>
+            <li>Single HTML file (portable)</li>
+            <li>Screenshots embedded as base64</li>
+            <li>Pass/Fail summary</li>
+            <li>Test duration tracking</li>
+            <li>Detailed step logs</li>
+            <li>No external dependencies</li>
+          </ul>
+        </div>
+
+        <h3>Direct API (Optional)</h3>
+        <div class="code-block">
+          <pre><code>// Usually not needed - use UnifiedLogger instead
+CustomReporter.startTest("Test Name");
+CustomReporter.logInfo("Info message");
+CustomReporter.logPass("Pass message");
+CustomReporter.logFail("Fail message");
+CustomReporter.attachScreenshot(screenshotPath);
+CustomReporter.endTest();
+CustomReporter.generateReport();</code></pre>
+        </div>
+
+        <h3>Report Location</h3>
+        <div class="code-block">
+          <pre><code>test-output/reports/CustomReport_20250121_143022.html</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Allure Reports</h2>
+        <p>Interactive dashboard with trends and detailed analytics.</p>
+        
+        <div class="card">
+          <h3>Features</h3>
+          <ul>
+            <li>Interactive dashboard</li>
+            <li>Timeline view</li>
+            <li>Trend analysis</li>
+            <li>Test history</li>
+            <li>Categories and suites</li>
+            <li>Attachments support</li>
+          </ul>
+        </div>
+
+        <h3>Generate Allure Report</h3>
+        <div class="code-block">
+          <pre><code># Generate and open report
+mvn allure:serve
+
+# Generate report only
+mvn allure:report
+
+# Report location
+target/site/allure-maven-plugin/index.html</code></pre>
+        </div>
+
+        <h3>Allure Annotations</h3>
+        <div class="code-block">
+          <pre><code>import io.qameta.allure.*;
+
+@Epic("E-Commerce")
+@Feature("Login")
+@Story("User Authentication")
+@Severity(SeverityLevel.CRITICAL)
+@Test
+public void testLogin() {
+    Allure.step("Navigate to login page");
+    Allure.step("Enter credentials");
+    Allure.step("Click login button");
+    
+    // Attach screenshot
+    Allure.addAttachment("Screenshot", "image/png", 
+                         new ByteArrayInputStream(screenshot), "png");
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Cucumber Reports</h2>
+        <p>Standard Cucumber HTML and JSON reports.</p>
+        
+        <div class="code-block">
+          <pre><code># Cucumber HTML Report
+test-output/cucumber-reports/cucumber.html
+
+# Cucumber JSON Report
+test-output/cucumber-reports/cucumber.json
+
+# Configuration in Runner
+@CucumberOptions(
+    plugin = {
+        "html:test-output/cucumber-reports/cucumber.html",
+        "json:test-output/cucumber-reports/cucumber.json",
+        "pretty"
+    }
+)</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>File Logging</h2>
+        <p>Detailed file-based logging using SLF4J and Logback.</p>
+        
+        <h3>Log Levels</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Usage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>DEBUG</code></td>
+              <td>Detailed debugging information</td>
+            </tr>
+            <tr>
+              <td><code>INFO</code></td>
+              <td>General informational messages</td>
+            </tr>
+            <tr>
+              <td><code>WARN</code></td>
+              <td>Warning messages</td>
+            </tr>
+            <tr>
+              <td><code>ERROR</code></td>
+              <td>Error messages with exceptions</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Log Location</h3>
+        <div class="code-block">
+          <pre><code>test-output/logs/automation.log</code></pre>
+        </div>
+
+        <h3>Log Configuration (logback.xml)</h3>
+        <div class="code-block">
+          <pre><code>&lt;configuration&gt;
+    &lt;appender name="FILE" class="ch.qos.logback.core.FileAppender"&gt;
+        &lt;file&gt;test-output/logs/automation.log&lt;/file&gt;
+        &lt;encoder&gt;
+            &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+    
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="FILE" /&gt;
+    &lt;/root&gt;
+&lt;/configuration&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Screenshot Management</h2>
+        
+        <h3>Automatic Screenshots</h3>
+        <div class="code-block">
+          <pre><code># config.properties
+screenshot.on.failure=true
+
+# Screenshots automatically captured on:
+# - Test failure
+# - Assertion failure
+# - Exception thrown</code></pre>
+        </div>
+
+        <h3>Manual Screenshots</h3>
+        <div class="code-block">
+          <pre><code>// Take screenshot manually
+String path = ScreenshotUtil.captureScreenshot("test_name");
+
+// Screenshot automatically attached to all reports
+UnifiedLogger.info("Screenshot captured: " + path);</code></pre>
+        </div>
+
+        <h3>Screenshot Location</h3>
+        <div class="code-block">
+          <pre><code>test-output/screenshots/test_name_20250121_143022.png</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Report Summary</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Report Type</th>
+              <th>Location</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ExtentReport</td>
+              <td>test-output/reports/ExtentReport_*.html</td>
+              <td>Stakeholder demos, modern UI</td>
+            </tr>
+            <tr>
+              <td>CustomReport</td>
+              <td>test-output/reports/CustomReport_*.html</td>
+              <td>Quick review, portable</td>
+            </tr>
+            <tr>
+              <td>Allure</td>
+              <td>target/site/allure-maven-plugin/</td>
+              <td>Trends, analytics, history</td>
+            </tr>
+            <tr>
+              <td>Cucumber HTML</td>
+              <td>test-output/cucumber-reports/cucumber.html</td>
+              <td>BDD scenarios review</td>
+            </tr>
+            <tr>
+              <td>Logs</td>
+              <td>test-output/logs/automation.log</td>
+              <td>Debugging, detailed analysis</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Best Practices</h2>
+        <div class="alert alert-info">
+          <ul>
+            <li>Always use UnifiedLogger for consistent logging</li>
+            <li>Use meaningful log messages</li>
+            <li>Log actions, not just results</li>
+            <li>Attach screenshots on failures</li>
+            <li>Use appropriate log levels</li>
+            <li>Review all report types for different insights</li>
+            <li>Archive reports for historical analysis</li>
+            <li>Use Allure for trend analysis</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Example Test with Logging</h2>
+        <div class="code-block">
+          <pre><code>@Test
+public void testLogin() {
+    UnifiedLogger.info("Starting login test");
+    
+    UnifiedLogger.action("Navigate", appUrl);
+    driver.get(appUrl);
+    
+    UnifiedLogger.action("Type", "username field");
+    loginPage.enterUsername("testuser");
+    
+    UnifiedLogger.action("Type", "password field");
+    loginPage.enterPassword("password123");
+    
+    UnifiedLogger.action("Click", "login button");
+    loginPage.clickLogin();
+    
+    if (dashboardPage.isDisplayed()) {
+        UnifiedLogger.pass("Login successful - Dashboard displayed");
+    } else {
+        UnifiedLogger.fail("Login failed - Dashboard not displayed");
+    }
+}</code></pre>
+        </div>
+      </section>
+
+      <button class="back-to-top" id="back-to-top">↑</button>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
