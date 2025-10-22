@@ -61,9 +61,9 @@ public class ConfigManager {
     }
 
     private void loadConfigurations() {
-        globalConfig = loadProperties("src/main/resources/config.properties");
+        globalConfig = loadProperties("config.properties");
         String environment = globalConfig.getProperty("environment", "qa");
-        envConfig = loadProperties("src/main/resources/" + environment + ".properties");
+        envConfig = loadProperties(environment + ".properties");
     }
 
     private void initializeFrameworkConfig() {
@@ -95,12 +95,14 @@ public class ConfigManager {
         );
     }
 
-    private Properties loadProperties(String filePath) {
+    private Properties loadProperties(String fileName) {
         Properties properties = new Properties();
-        try (FileInputStream fis = new FileInputStream(filePath)) {
-            properties.load(fis);
+        try (java.io.InputStream is = getClass().getClassLoader().getResourceAsStream(fileName)) {
+            if (is != null) {
+                properties.load(is);
+            }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load properties from: " + filePath, e);
+            // Silently ignore if file not found (e.g., environment-specific files)
         }
         return properties;
     }

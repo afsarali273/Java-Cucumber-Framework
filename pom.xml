@@ -11,6 +11,13 @@
 
     <name>SandsAutoFramework</name>
     <description>Enterprise-grade automation framework supporting Selenium, Playwright, and API testing</description>
+    <url>https://github.com/YOUR_GITHUB_USERNAME/SandsAutoFramework</url>
+
+    <scm>
+        <connection>scm:git:git://github.com/YOUR_GITHUB_USERNAME/SandsAutoFramework.git</connection>
+        <developerConnection>scm:git:ssh://github.com:YOUR_GITHUB_USERNAME/SandsAutoFramework.git</developerConnection>
+        <url>https://github.com/YOUR_GITHUB_USERNAME/SandsAutoFramework</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -279,20 +286,13 @@
         </plugins>
     </build>
 
-    <!-- Optional: distributionManagement for remote repositories (configure later when you deploy) -->
-    <!--
+    <!-- Distribution Management for GitHub Packages -->
     <distributionManagement>
         <repository>
-            <id>company-nexus</id>
-            <name>Company Nexus Releases</name>
-            <url>https://nexus.example.com/repository/maven-releases/</url>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/YOUR_GITHUB_USERNAME/SandsAutoFramework</url>
         </repository>
-        <snapshotRepository>
-            <id>company-nexus-snapshots</id>
-            <name>Company Nexus Snapshots</name>
-            <url>https://nexus.example.com/repository/maven-snapshots/</url>
-        </snapshotRepository>
     </distributionManagement>
-    -->
 
 </project>
