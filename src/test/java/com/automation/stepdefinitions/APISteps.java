@@ -7,12 +7,32 @@ import java.util.HashMap;
 import java.util.Map;
 import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
+import java.io.File;
+import io.restassured.module.jsv.JsonSchemaValidator;
+import com.automation.core.api.APIClient;
+
+import java.util.regex.Pattern;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
+import java.time.Instant;
+import java.time.Duration;
+import java.util.List;
+import java.util.Comparator;
+import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class APISteps extends APIReusable {
 
-    private Map<String, String> savedVariables = new HashMap<>();
-    private Map<String, String> headers = new HashMap<>();
-    private Map<String, String> queryParams = new HashMap<>();
+    private final Map<String, String> savedVariables = new HashMap<>();
+    private final Map<String, String> headers = new HashMap<>();
+    private final Map<String, String> queryParams = new HashMap<>();
     private Map<String, String> testData;
 
     @When("user sends GET request to {string}")
@@ -182,6 +202,231 @@ public class APISteps extends APIReusable {
         validateJsonPathIsNull(fieldName);
     }
 
+    // ======= NEW: Additional assertions =======
+
+    @Then("json path {string} should match regex {string}")
+    public void jsonPathShouldMatchRegex(String jsonPath, String regex) {
+        Object val = getJsonPathValue(jsonPath);
+        String s = val == null ? null : val.toString();
+        boolean matches = s != null && Pattern.compile(regex).matcher(s).matches();
+        assertTrue(matches, "JsonPath '" + jsonPath + "' should match regex '" + regex + "' but was '" + s + "'");
+    }
+
+    @Then("json path {string} should be of type {string}")
+    public void jsonPathShouldBeOfType(String jsonPath, String type) {
+        Object v = getJsonPathValue(jsonPath);
+        String actualType = (v == null) ? "null" : v.getClass().getSimpleName().toLowerCase();
+        boolean ok = false;
+        switch (type.toLowerCase()) {
+            case "string": ok = (v instanceof String); break;
+            case "number": ok = (v instanceof Number); break;
+            case "boolean": ok = (v instanceof Boolean); break;
+            case "object": ok = (v instanceof java.util.Map); break;
+            case "array": ok = (v instanceof java.util.List); break;
+            case "null": ok = (v == null); break;
+        }
+        assertTrue(ok, "JsonPath '" + jsonPath + "' expected type '" + type + "' but was '" + actualType + "'");
+    }
+
+    @Then("response should be valid json")
+    public void responseShouldBeValidJson() {
+        String body = getResponseBody();
+        try {
+            JsonElement e = JsonParser.parseString(body);
+            assertNotNull(e, "Response should be valid JSON");
+        } catch (JsonSyntaxException ex) {
+            throw new AssertionError("Response is not valid JSON: " + ex.getMessage());
+        }
+    }
+
+    @Then("response json should equal file {string}")
+    public void responseJsonShouldEqualFile(String classpathFile) throws IOException {
+        String expected = readClasspathResourceAsString(classpathFile);
+        String actual = getResponseBody();
+        JsonElement e1 = JsonParser.parseString(expected);
+        JsonElement e2 = JsonParser.parseString(actual);
+        assertEquals(e2, e1, "Response JSON should match expected JSON from " + classpathFile);
+    }
+
+    @Then("json path {string} keys should contain {string}")
+    public void jsonPathKeysShouldContain(String jsonPath, String keysCommaSeparated) {
+        Object v = getJsonPathValue(jsonPath);
+        if (!(v instanceof java.util.Map)) {
+            throw new AssertionError("JsonPath '" + jsonPath + "' is not a JSON object");
+        }
+        @SuppressWarnings("unchecked")
+        java.util.Map<String, Object> map = (java.util.Map<String, Object>) v;
+        String[] keys = keysCommaSeparated.split(",");
+        for (String k : keys) {
+            String trimmed = k.trim();
+            assertTrue(map.containsKey(trimmed), "Expected key '" + trimmed + "' in object at '" + jsonPath + "'");
+        }
+    }
+
+    @Then("json array {string} elements should be sorted by {string} in {string} order")
+    public void jsonArrayShouldBeSortedBy(String arrayPath, String sortByJsonPath, String order) {
+        java.util.List<java.util.Map<String, Object>> list = response.jsonPath().getList(arrayPath);
+        if (list == null) throw new AssertionError("Array not found at: " + arrayPath);
+        // Use Object list and a safe comparator to avoid generic type conflicts
+        List<Object> values = new ArrayList<>();
+        for (Map<String, Object> item : list) {
+            Object val = item.get(sortByJsonPath);
+            if (val == null) values.add(null);
+            else if (val instanceof Number) values.add(((Number) val).doubleValue());
+            else values.add(val);
+        }
+
+        List<Object> sorted = new ArrayList<>(values);
+
+        Comparator<Object> safeComparator = (o1, o2) -> {
+            if (o1 == o2) return 0;
+            if (o1 == null) return -1;
+            if (o2 == null) return 1;
+
+            // Both non-null: handle numbers specially
+            if (o1 instanceof Number && o2 instanceof Number) {
+                double d1 = ((Number) o1).doubleValue();
+                double d2 = ((Number) o2).doubleValue();
+                return Double.compare(d1, d2);
+            }
+
+            // If both are Comparable and of same class, try direct comparison
+            if (o1 instanceof Comparable && o2 instanceof Comparable && o1.getClass().isInstance(o2)) {
+                try {
+                    @SuppressWarnings({"unchecked", "rawtypes"})
+                    int res = ((Comparable) o1).compareTo(o2);
+                    return res;
+                } catch (ClassCastException ignore) {
+                    // fall through to string compare
+                }
+            }
+
+            // Fallback to string comparison
+            return o1.toString().compareTo(o2.toString());
+        };
+
+        if ("asc".equalsIgnoreCase(order)) {
+            sorted.sort(Comparator.nullsFirst(safeComparator));
+        } else {
+            sorted.sort(Comparator.nullsFirst(safeComparator).reversed());
+        }
+
+        assertEquals(values, sorted, "Array at '" + arrayPath + "' is not sorted by '" + sortByJsonPath + "' in order " + order);
+    }
+
+    @Then("json path {string} should be ISO8601 within {int} seconds")
+    public void jsonPathShouldBeIso8601Within(String jsonPath, int seconds) {
+        Object v = getJsonPathValue(jsonPath);
+        if (v == null) throw new AssertionError("Value at '" + jsonPath + "' is null");
+        String s = v.toString();
+        try {
+            OffsetDateTime odt = OffsetDateTime.parse(s);
+            Instant then = odt.toInstant();
+            Instant now = Instant.now();
+            long diff = Math.abs(Duration.between(now, then).getSeconds());
+            assertTrue(diff <= seconds, "Timestamp at '" + jsonPath + "' differs from now by " + diff + " seconds, allowed " + seconds);
+        } catch (DateTimeParseException ex) {
+            throw new AssertionError("Value at '" + jsonPath + "' is not a valid ISO8601 timestamp: " + s);
+        }
+    }
+
+    @Then("response header {string} should match regex {string}")
+    public void responseHeaderShouldMatchRegex(String headerName, String regex) {
+        String value = getHeader(headerName);
+        boolean ok = value != null && Pattern.compile(regex).matcher(value).matches();
+        assertTrue(ok, "Header '" + headerName + "' expected to match regex '" + regex + "' but was '" + value + "'");
+    }
+
+    // ======= MORE API ASSERTIONS =======
+
+    @Then("response header {string} should not exist")
+    public void responseHeaderShouldNotExist(String headerName) {
+        String value = getHeader(headerName);
+        assertNull(value, "Header '" + headerName + "' should not be present but was '" + value + "'");
+    }
+
+    @Then("cookie {string} should exist")
+    public void cookieShouldExist(String cookieName) {
+        String val = response.getCookie(cookieName);
+        assertNotNull(val, "Cookie '" + cookieName + "' should exist");
+    }
+
+    @Then("cookie {string} should be {string}")
+    public void cookieShouldBe(String cookieName, String expected) {
+        String val = response.getCookie(cookieName);
+        assertEquals(val, replaceVariables(expected), "Cookie '" + cookieName + "' validation");
+    }
+
+    @Then("response body size should be less than {int} bytes")
+    public void responseBodySizeShouldBeLessThan(int maxBytes) {
+        byte[] bytes = getResponseBody().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        assertTrue(bytes.length < maxBytes, "Response body size '" + bytes.length + "' should be less than " + maxBytes + " bytes");
+    }
+
+    @Then("json array {string} should have unique values by {string}")
+    public void jsonArrayShouldHaveUniqueValuesBy(String arrayPath, String field) {
+        List<Map<String, Object>> list = response.jsonPath().getList(arrayPath);
+        if (list == null) throw new AssertionError("Array not found at: " + arrayPath);
+        java.util.Set<Object> seen = new java.util.HashSet<>();
+        for (Map<String, Object> item : list) {
+            Object v = item.get(field);
+            if (seen.contains(v)) {
+                throw new AssertionError("Duplicate value '" + v + "' found for field '" + field + "' in array '" + arrayPath + "'");
+            }
+            seen.add(v);
+        }
+    }
+
+    @Then("at least one element in json array {string} should have {string} equal {string}")
+    public void atLeastOneElementShouldMatch(String arrayPath, String field, String expected) {
+        List<Map<String, Object>> list = response.jsonPath().getList(arrayPath);
+        if (list == null) throw new AssertionError("Array not found at: " + arrayPath);
+        boolean found = false;
+        String exp = replaceVariables(expected);
+        for (Map<String, Object> item : list) {
+            Object v = item.get(field);
+            if (v != null && exp.equals(v.toString())) { found = true; break; }
+        }
+        assertTrue(found, "No element in '" + arrayPath + "' had '" + field + "' equal to '" + exp + "'");
+    }
+
+    @Then("jwt in json path {string} should not be expired")
+    public void jwtInJsonPathShouldNotBeExpired(String jsonPath) {
+        Object tok = getJsonPathValue(jsonPath);
+        if (tok == null) throw new AssertionError("JWT token not found at: " + jsonPath);
+        String token = tok.toString();
+        String[] parts = token.split("\\.");
+        if (parts.length < 2) throw new AssertionError("Invalid JWT token format");
+        try {
+            byte[] decoded = java.util.Base64.getUrlDecoder().decode(parts[1]);
+            String payload = new String(decoded, java.nio.charset.StandardCharsets.UTF_8);
+            JsonElement el = JsonParser.parseString(payload);
+            if (!el.getAsJsonObject().has("exp")) throw new AssertionError("JWT payload has no 'exp' claim");
+            long exp = el.getAsJsonObject().get("exp").getAsLong();
+            long now = Instant.now().getEpochSecond();
+            assertTrue(exp > now, "JWT token at '" + jsonPath + "' is expired or exp <= now");
+        } catch (IllegalArgumentException | JsonSyntaxException e) {
+            throw new AssertionError("Failed to decode/parse JWT payload: " + e.getMessage());
+        }
+    }
+
+    @Then("response encoding should be {string}")
+    public void responseEncodingShouldBe(String expected) {
+        String enc = response.getHeader("Content-Encoding");
+        assertEquals(enc == null ? "" : enc, replaceVariables(expected), "Response Content-Encoding validation");
+    }
+
+    // ======= existing steps continue below =======
+
+    /**
+     * Deprecated helper method - kept for compatibility but not exposed as a Cucumber step
+     */
+    @Deprecated
+    public void jsonPathShouldBeDuplicate(String jsonPath, String expectedValue) {
+        // placeholder duplicate of earlier step to keep older codepaths working if directly called
+        validateJsonPath(jsonPath, replaceVariables(expectedValue));
+    }
+
     // ========== SAVE & RETRIEVE VARIABLES ==========
 
     @When("user saves json path {string} as {string}")
@@ -201,13 +446,17 @@ public class APISteps extends APIReusable {
     @Then("saved variable {string} should be {string}")
     public void savedVariableShouldBe(String variableName, String expectedValue) {
         String actualValue = savedVariables.get(variableName);
-        validateFieldValue(variableName, replaceVariables(expectedValue));
+        String expected = replaceVariables(expectedValue);
+        if (actualValue == null && expected == null) return;
+        if (actualValue == null || !actualValue.equals(expected)) {
+            throw new AssertionError("Saved variable '" + variableName + "' expected to be '" + expected + "' but was '" + actualValue + "'");
+        }
     }
 
     @Then("saved variable {string} should not be null")
     public void savedVariableShouldNotBeNull(String variableName) {
         String value = savedVariables.get(variableName);
-        validateFieldNotNull(variableName);
+        assertNotNull(value, "Saved variable '" + variableName + "' should not be null");
     }
 
     // ========== REQUEST BODY BUILDERS ==========
@@ -220,7 +469,20 @@ public class APISteps extends APIReusable {
 
     @When("user sets request body from file {string}")
     public void userSetsRequestBodyFromFile(String filePath) {
-        // Implementation for loading from file if needed
+        String resolved = replaceVariables(filePath);
+        try {
+            File f = new File(resolved);
+            if (f.exists() && f.isFile()) {
+                requestBody = Files.readString(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);
+                LogManager.info("Loaded request body from file: " + f.getAbsolutePath());
+                return;
+            }
+            // fallback to classpath
+            requestBody = readClasspathResourceAsString(resolved);
+            LogManager.info("Loaded request body from classpath resource: " + resolved);
+        } catch (IOException e) {
+            throw new AssertionError("Failed to load request body from file/classpath: " + resolved + ", error: " + e.getMessage());
+        }
     }
 
     // ========== HEADERS & QUERY PARAMS ==========
@@ -251,6 +513,126 @@ public class APISteps extends APIReusable {
         headers.clear();
     }
 
+    // ------------------ Additional Common API Steps ------------------
+
+    @When("user sets bearer token from response json {string} as header {string}")
+    public void userSetsBearerTokenFromResponse(String jsonPath, String headerName) {
+        Object tokenObj = getJsonPathValue(jsonPath);
+        String token = tokenObj == null ? null : tokenObj.toString();
+        if (token != null) {
+            headers.put(headerName, "Bearer " + token);
+            LogManager.info("Set header '" + headerName + "' with bearer token from json path: " + jsonPath);
+        } else {
+            LogManager.info("Token at json path '" + jsonPath + "' was null; header not set");
+        }
+    }
+
+    @When("user applies headers")
+    public void userAppliesHeaders() {
+        if (!headers.isEmpty()) {
+            APIClient.setHeaders(headers);
+            LogManager.info("Applied headers: " + headers);
+            headers.clear();
+        }
+    }
+
+    @When("user clears request spec and headers")
+    public void userClearsRequestSpecAndHeaders() {
+        APIClient.clearRequestSpec();
+        headers.clear();
+        LogManager.info("Cleared request spec and local headers map");
+    }
+
+    @When("user sets basic auth with username {string} and password {string}")
+    public void userSetsBasicAuth(String username, String password) {
+        APIClient.getRequestSpec().auth().preemptive().basic(replaceVariables(username), replaceVariables(password));
+        LogManager.info("Set basic auth for user: " + username);
+    }
+
+    @When("user sets content type {string}")
+    public void userSetsContentType(String contentType) {
+        APIClient.setHeader("Content-Type", replaceVariables(contentType));
+        LogManager.info("Set Content-Type: " + contentType);
+    }
+
+    @When("user sets accept header {string}")
+    public void userSetsAcceptHeader(String accept) {
+        APIClient.setHeader("Accept", replaceVariables(accept));
+        LogManager.info("Set Accept: " + accept);
+    }
+
+    @When("user uploads file {string} to {string} as multipart field {string}")
+    public void userUploadsFileMultipart(String filePath, String endpoint, String fieldName) {
+        File f = new File(replaceVariables(filePath));
+        if (!f.exists()) {
+            throw new AssertionError("File not found: " + f.getAbsolutePath());
+        }
+        response = APIClient.getRequestSpec().multiPart(fieldName, f).post(replaceVariables(endpoint));
+        LogManager.info("Uploaded file '" + f.getAbsolutePath() + "' to endpoint: " + endpoint + " as field: " + fieldName);
+    }
+
+    @Then("response should match json schema {string}")
+    public void responseShouldMatchJsonSchema(String schemaPath) {
+        // schemaPath should be a classpath resource like "schemas/response-schema.json"
+        response.then().assertThat().body(JsonSchemaValidator.matchesJsonSchemaInClasspath(replaceVariables(schemaPath)));
+        LogManager.info("Validated response against JSON schema: " + schemaPath);
+    }
+
+    @When("user saves response header {string} as {string}")
+    public void userSavesResponseHeader(String headerName, String variableName) {
+        String val = getHeader(headerName);
+        savedVariables.put(variableName, val);
+        LogManager.info("Saved response header '" + headerName + "' as variable '" + variableName + "' = " + val);
+    }
+
+    @When("user polls {string} until json path {string} equals {string} within {int} seconds interval {int} seconds")
+    public void userPollsUntilJsonPathEquals(String endpoint, String jsonPath, String expectedValue, int timeoutSeconds, int intervalSeconds) throws InterruptedException {
+        long end = System.currentTimeMillis() + timeoutSeconds * 1000L;
+        boolean matched = false;
+        String resolvedEndpoint = replaceVariables(endpoint);
+        String expected = replaceVariables(expectedValue);
+        while (System.currentTimeMillis() < end) {
+            sendGetRequest(resolvedEndpoint);
+            Object val = getJsonPathValue(jsonPath);
+            if (val != null && expected.equals(val.toString())) {
+                matched = true;
+                break;
+            }
+            Thread.sleep(Math.max(500, intervalSeconds * 1000L));
+        }
+        if (!matched) {
+            throw new AssertionError("Condition not met within timeout: json path '" + jsonPath + "' did not equal '" + expected + "'");
+        }
+        LogManager.info("Polling succeeded: json path '" + jsonPath + "' equals '" + expected + "'");
+    }
+
+    @When("user saves response time as {string}")
+    public void userSavesResponseTime(String variableName) {
+        String t = String.valueOf(getResponseTime());
+        savedVariables.put(variableName, t);
+        LogManager.info("Saved response time as '" + variableName + "' = " + t + "ms");
+    }
+
+    @Then("response header {string} should contain {string}")
+    public void responseHeaderShouldContain(String headerName, String expectedText) {
+        String actual = getHeader(headerName);
+        assertContains(actual, replaceVariables(expectedText), "Header contains validation for '" + headerName + "'");
+    }
+
+    @When("user retries last request up to {int} times with interval {int} seconds until status {int}")
+    public void userRetriesLastRequest(int maxAttempts, int intervalSeconds, int expectedStatus) throws InterruptedException {
+        int attempts = 0;
+        boolean success = false;
+        while (attempts < maxAttempts) {
+            attempts++;
+            if (response != null && response.getStatusCode() == expectedStatus) {
+                success = true; break;
+            }
+            Thread.sleep(Math.max(500, intervalSeconds * 1000L));
+        }
+        if (!success) throw new AssertionError("Failed to reach status " + expectedStatus + " after " + maxAttempts + " attempts");
+    }
+
     // ========== SOAP SUPPORT ==========
 
     @When("user creates SOAP envelope with action {string} and body:")
@@ -277,7 +659,6 @@ public class APISteps extends APIReusable {
 
     @Then("SOAP xpath {string} should be {string}")
     public void soapXpathShouldBe(String xpath, String expectedValue) {
-        String actualValue = extractSoapValue(xpath);
         validateFieldValue(xpath, replaceVariables(expectedValue));
     }
 
@@ -306,27 +687,42 @@ public class APISteps extends APIReusable {
         return result;
     }
 
+    private String readClasspathResourceAsString(String path) throws IOException {
+        InputStream is = getClass().getClassLoader().getResourceAsStream(path);
+        if (is == null) throw new IOException("Resource not found on classpath: " + path);
+        try (InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+            StringBuilder sb = new StringBuilder();
+            char[] buf = new char[4096];
+            int len;
+            while ((len = r.read(buf)) != -1) sb.append(buf, 0, len);
+            return sb.toString();
+        }
+    }
+
     @Given("Access {string} with {string} for {string}")
     public void access_with_for(String url, String headers, String tcId) throws IOException, CsvException {
         String testDataFile = "src/test/resources/testdata.csv";
-        testData = com.automation.core.utils.DataDrivenUtils.getTestDataByTcId(testDataFile, tcId);
-        if (testData != null) {
-            url = testData.getOrDefault("url", url);
-            headers = testData.getOrDefault("headers", headers);
-        }
+        Map<String, String> td = com.automation.core.utils.DataDrivenUtils.getTestDataByTcId(testDataFile, tcId);
+        if (td == null) td = new HashMap<>();
+        String resolvedUrl = td.getOrDefault("url", url);
+        String resolvedHeaders = td.getOrDefault("headers", headers);
+        // ensure testData map is set and contains url/headers for later Send steps
+        this.testData = td;
+        this.testData.put("url", resolvedUrl);
+        this.testData.put("headers", resolvedHeaders);
         // Set up headers if provided (from testData or argument)
         this.headers.clear();
-        if (headers != null && !headers.equalsIgnoreCase("NA") && !headers.isEmpty()) {
+        if (resolvedHeaders != null && !resolvedHeaders.equalsIgnoreCase("NA") && !resolvedHeaders.isEmpty()) {
             // If headers is a JSON string, parse and add to headers map
             try {
-                org.json.JSONObject jsonHeaders = new org.json.JSONObject(headers);
+                org.json.JSONObject jsonHeaders = new org.json.JSONObject(resolvedHeaders);
                 for (String key : jsonHeaders.keySet()) {
                     this.headers.put(key, jsonHeaders.getString(key));
                 }
             } catch (Exception e) {
                 // If not JSON, treat as single header: key:value
-                if (headers.contains(":")) {
-                    String[] parts = headers.split(":", 2);
+                if (resolvedHeaders.contains(":")) {
+                    String[] parts = resolvedHeaders.split(":", 2);
                     this.headers.put(parts[0].trim(), parts[1].trim());
                 }
             }

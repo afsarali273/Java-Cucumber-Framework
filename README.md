@@ -241,6 +241,52 @@ public class LoginPage extends PlaywrightReusable {
 }
 ```
 
+## UI Example Feature Files
+
+We provide a sample feature file with many common UI steps to serve as templates and smoke tests for the UI layer.
+
+- Location: `src/test/resources/features/ui_examples.feature`
+- Tag: `@UI` (and feature-level and scenario-level tags for grouping)
+
+What the feature covers:
+- Navigation and basic page validation
+- Form interactions (type, clear, save values)
+- Dropdowns, checkboxes and file upload
+- Tabs / windows management
+- Screenshots and element screenshots
+- Saving variables and reusing them via `${var}` placeholders
+
+Placeholders and test data
+- The feature uses a placeholder `${sampleFilePath}` for file upload. You can provide this in two ways:
+  1. Add a property (or env variable) and set it in your CI before running the tests. For example:
+
+```bash
+export SAMPLE_FILE_PATH=/absolute/path/to/sample-file.txt
+```
+
+  2. Or set the value programmatically in a test hook before file-upload scenario: `ScenarioContext.set("sampleFilePath", "/path/to/file")`.
+
+Running the examples
+- Run all UI scenarios with the `@UI` tag:
+
+```bash
+mvn test -Dcucumber.filter.tags="@UI"
+```
+
+- To run the specific example feature file only:
+
+```bash
+mvn test -Dcucumber.options="--features src/test/resources/features/ui_examples.feature"
+```
+
+Notes
+- These examples are meant as templates; update selectors (CSS/XPath) to match your AUT. Some demo sites (like w3schools) use iframes — the example steps show how to call JS or use Playwright to handle these situations.
+- Because `UISteps` delegates to `UIKeywords`, the same Gherkin steps work for both Selenium and Playwright when `framework.type` in `config.properties` is set accordingly.
+
+If you want, I can also:
+- Add a second feature file with negative tests and edge-cases.
+- Generate a short quick-reference table of all implemented step phrases and parameters to add to the docs.
+
 ## Reports
 
 After test execution, you'll have:
