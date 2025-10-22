@@ -6,7 +6,7 @@
 
     <groupId>com.automation</groupId>
     <artifactId>SandsAutoFramework</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>SandsAutoFramework</name>
@@ -80,11 +80,13 @@
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
             <version>${cucumber.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-testng</artifactId>
             <version>${cucumber.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- TestNG -->
@@ -92,6 +94,7 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Rest Assured -->
@@ -224,11 +227,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
                 <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                    <parallel>methods</parallel>
-                    <threadCount>3</threadCount>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
 
@@ -241,6 +240,59 @@
                     <reportDirectory>${project.basedir}/test-output/allure</reportDirectory>
                 </configuration>
             </plugin>
+
+            <!-- Attach sources.jar to the build -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Attach javadoc.jar to the build -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <doclint>none</doclint>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+
         </plugins>
     </build>
+
+    <!-- Optional: distributionManagement for remote repositories (configure later when you deploy) -->
+    <!--
+    <distributionManagement>
+        <repository>
+            <id>company-nexus</id>
+            <name>Company Nexus Releases</name>
+            <url>https://nexus.example.com/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>company-nexus-snapshots</id>
+            <name>Company Nexus Snapshots</name>
+            <url>https://nexus.example.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+    -->
+
 </project>

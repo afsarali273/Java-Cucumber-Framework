@@ -1,4 +1,4 @@
-package com.automation.core.hooks;
+package com.automation.core.commonSteps;
 
 import com.automation.core.api.APIClient;
 import com.automation.core.config.ConfigManager;
@@ -19,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CucumberHooks {
 

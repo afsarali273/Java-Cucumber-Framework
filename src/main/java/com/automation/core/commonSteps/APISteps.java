@@ -27,44 +27,101 @@ import java.util.Comparator;
 import java.util.ArrayList;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import com.automation.core.context.ScenarioContext;
 
+/**
+ * Comprehensive API step definitions for REST/SOAP API testing.
+ * 
+ * Built on RestAssured with full support for variable substitution using ${variableName}.
+ * All responses and extracted values can be saved to ScenarioContext for reuse.
+ * 
+ * Categories:
+ * - HTTP Methods: GET, POST, PUT, DELETE with custom endpoints
+ * - Service Switching: Multi-service support, custom base URLs
+ * - Request Building: Set body from string/file, headers, query params, auth
+ * - JSON Path Validations: Extract and validate JSON fields, arrays, nested objects
+ * - Response Validations: Status codes, headers, content-type, response time, body
+ * - Advanced Assertions: Regex matching, type checking, array sorting, unique values
+ * - Variables: Save/retrieve response data, headers, body to ScenarioContext
+ * - Authentication: Basic auth, bearer tokens, custom headers
+ * - File Upload: Multipart file upload support
+ * - JSON Schema: Validate response against JSON schema files
+ * - Polling: Poll endpoints until condition met
+ * - SOAP: SOAP envelope creation, fault validation, XPath assertions
+ * - Data-Driven: CSV-based test data support
+ * - Cookies: Cookie validation and extraction
+ * - JWT: JWT token expiry validation
+ * 
+ * Example usage:
+ *   Given user switches to "userService" API service
+ *   When user sends GET request to "/users/1"
+ *   Then response status code should be 200
+ *   And json path "name" should be "John Doe"
+ *   When user saves json path "id" as "userId"
+ *   Then saved variable "userId" should not be null
+ */
 public class APISteps extends APIReusable {
 
-    private final Map<String, String> savedVariables = new HashMap<>();
+    // saved variables are stored in ScenarioContext so they are shared across step classes
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> queryParams = new HashMap<>();
     private Map<String, String> testData;
 
+    // ========== BASIC HTTP OPERATIONS ==========
+
+    /**
+     * Example: When user sends GET request to "/users/1"
+     * Example: When user sends GET request to "/users/${userId}"
+     */
     @When("user sends GET request to {string}")
     public void userSendsGETRequestTo(String endpoint) {
         sendGetRequest(replaceVariables(endpoint));
     }
 
+    /**
+     * Example: When user creates POST request body with title "Test" and body "Content"
+     */
     @When("user creates POST request body with title {string} and body {string}")
     public void userCreatesPostRequestBody(String title, String body) {
         createJsonBody(replaceVariables(title), replaceVariables(body), 1);
     }
 
+    /**
+     * Example: When user sends POST request to "/users"
+     */
     @When("user sends POST request to {string}")
     public void userSendsPOSTRequestTo(String endpoint) {
         sendPostRequest(replaceVariables(endpoint), requestBody);
     }
 
+    /**
+     * Example: Then response status code should be 200
+     */
     @Then("response status code should be {int}")
     public void responseStatusCodeShouldBe(int expectedStatusCode) {
         validateStatusCode(expectedStatusCode);
     }
 
+    /**
+     * Example: Then response should contain "id" field
+     */
     @Then("response should contain {string} field")
     public void responseShouldContainField(String fieldName) {
         validateResponseContainsField(fieldName);
     }
 
+    /**
+     * Example: Then response "name" should be "John Doe"
+     * Example: Then response "email" should be "${expectedEmail}"
+     */
     @Then("response {string} should be {string}")
     public void responseFieldShouldBe(String fieldName, String expectedValue) {
         validateFieldValue(fieldName, replaceVariables(expectedValue));
     }
 
+    /**
+     * Example: Then response "id" should not be null
+     */
     @Then("response {string} should not be null")
     public void responseFieldShouldNotBeNull(String fieldName) {
         validateFieldNotNull(fieldName);
@@ -432,32 +489,18 @@ public class APISteps extends APIReusable {
     @When("user saves json path {string} as {string}")
     public void userSavesJsonPathAs(String jsonPath, String variableName) {
         String value = String.valueOf(getJsonPathValue(jsonPath));
-        savedVariables.put(variableName, value);
+        ScenarioContext.set(variableName, value);
         LogManager.info("Saved variable '" + variableName + "' = " + value);
     }
 
     @When("user saves response body as {string}")
     public void userSavesResponseBodyAs(String variableName) {
         String body = getResponseBody();
-        savedVariables.put(variableName, body);
+        ScenarioContext.set(variableName, body);
         LogManager.info("Saved response body as '" + variableName + "'");
     }
 
-    @Then("saved variable {string} should be {string}")
-    public void savedVariableShouldBe(String variableName, String expectedValue) {
-        String actualValue = savedVariables.get(variableName);
-        String expected = replaceVariables(expectedValue);
-        if (actualValue == null && expected == null) return;
-        if (actualValue == null || !actualValue.equals(expected)) {
-            throw new AssertionError("Saved variable '" + variableName + "' expected to be '" + expected + "' but was '" + actualValue + "'");
-        }
-    }
-
-    @Then("saved variable {string} should not be null")
-    public void savedVariableShouldNotBeNull(String variableName) {
-        String value = savedVariables.get(variableName);
-        assertNotNull(value, "Saved variable '" + variableName + "' should not be null");
-    }
+    // NOTE: saved-variable assertions are implemented in SharedSteps to avoid duplicates across step classes
 
     // ========== REQUEST BODY BUILDERS ==========
 
@@ -581,7 +624,7 @@ public class APISteps extends APIReusable {
     @When("user saves response header {string} as {string}")
     public void userSavesResponseHeader(String headerName, String variableName) {
         String val = getHeader(headerName);
-        savedVariables.put(variableName, val);
+        ScenarioContext.set(variableName, val);
         LogManager.info("Saved response header '" + headerName + "' as variable '" + variableName + "' = " + val);
     }
 
@@ -609,7 +652,7 @@ public class APISteps extends APIReusable {
     @When("user saves response time as {string}")
     public void userSavesResponseTime(String variableName) {
         String t = String.valueOf(getResponseTime());
-        savedVariables.put(variableName, t);
+        ScenarioContext.set(variableName, t);
         LogManager.info("Saved response time as '" + variableName + "' = " + t + "ms");
     }
 
@@ -671,16 +714,16 @@ public class APISteps extends APIReusable {
 
     @When("user clears saved variables")
     public void userClearsSavedVariables() {
-        LogManager.info("Clearing " + savedVariables.size() + " saved variables");
-        savedVariables.clear();
+        LogManager.info("Clearing scenario context saved variables");
+        ScenarioContext.clear();
     }
 
     private String replaceVariables(String text) {
         String result = text;
-        for (Map.Entry<String, String> entry : savedVariables.entrySet()) {
+        for (Map.Entry<String, Object> entry : ScenarioContext.getAll().entrySet()) {
             String placeholder = "${" + entry.getKey() + "}";
-            if (result.contains(placeholder)) {
-                result = result.replace(placeholder, entry.getValue());
+            if (result != null && result.contains(placeholder)) {
+                result = result.replace(placeholder, String.valueOf(entry.getValue()));
                 LogManager.info("Replaced variable: " + placeholder + " -> " + entry.getValue());
             }
         }

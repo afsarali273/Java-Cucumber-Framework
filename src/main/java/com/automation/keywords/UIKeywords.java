@@ -2,7 +2,7 @@ package com.automation.keywords;
 
 import com.automation.core.config.ConfigManager;
 import com.automation.core.driver.DriverManager;
-import com.automation.core.logging.LogManager;
+import com.automation.core.logging.UnifiedLogger;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
@@ -23,7 +23,7 @@ public class UIKeywords {
     
     public static void openBrowser() {
         DriverManager.initializeDriver();
-        LogManager.info("Browser opened");
+        UnifiedLogger.info("Browser opened");
     }
     
     public static void navigateToURL(String url) {
@@ -32,7 +32,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().navigate(url);
         }
-        LogManager.info("Navigated to: " + url);
+        UnifiedLogger.action("Navigate", url);
     }
     
     public static void clickElement(String locator) {
@@ -41,7 +41,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().click(locator);
         }
-        LogManager.info("Clicked on: " + locator);
+        UnifiedLogger.action("Click", locator);
     }
     
     public static void enterText(String locator, String text) {
@@ -52,7 +52,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().fill(locator, text);
         }
-        LogManager.info("Entered text '" + text + "' in: " + locator);
+        UnifiedLogger.action("Type", text + " into " + locator);
     }
     
     public static String getTextFromElement(String locator) {
@@ -62,7 +62,7 @@ public class UIKeywords {
         } else {
             text = DriverManager.getPlaywrightPage().textContent(locator);
         }
-        LogManager.info("Retrieved text: " + text);
+        UnifiedLogger.info("Retrieved text: " + text);
         return text;
     }
     
@@ -77,7 +77,7 @@ public class UIKeywords {
         } else {
             visible = DriverManager.getPlaywrightPage().isVisible(locator);
         }
-        LogManager.info("Element visible: " + visible);
+        UnifiedLogger.info("Element visible: " + visible);
         return visible;
     }
     
@@ -86,12 +86,12 @@ public class UIKeywords {
             DriverManager.getPlaywrightPage().waitForSelector(locator, 
                 new Page.WaitForSelectorOptions().setTimeout(seconds * 1000));
         }
-        LogManager.info("Waited for element: " + locator);
+        UnifiedLogger.info("Waited for element: " + locator);
     }
     
     public static void closeBrowser() {
         DriverManager.quitDriver();
-        LogManager.info("Browser closed");
+        UnifiedLogger.info("Browser closed");
     }
 
     // --- Keyword-driven UI Automation Methods ---
@@ -102,7 +102,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().selectOption(locator, text);
         }
-        LogManager.info("Selected dropdown by text: " + text + " in: " + locator);
+        UnifiedLogger.action("Select dropdown", text + " in " + locator);
     }
 
     public static void selectDropdownByValue(String locator, String value) {
@@ -111,7 +111,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().selectOption(locator, value);
         }
-        LogManager.info("Selected dropdown by value: " + value + " in: " + locator);
+        UnifiedLogger.info("Selected dropdown by value: " + value + " in: " + locator);
     }
 
     public static void selectDropdownByIndex(String locator, int index) {
@@ -120,7 +120,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().selectOption(locator, String.valueOf(index));
         }
-        LogManager.info("Selected dropdown by index: " + index + " in: " + locator);
+        UnifiedLogger.info("Selected dropdown by index: " + index + " in: " + locator);
     }
 
     public static void checkCheckbox(String locator) {
@@ -134,7 +134,7 @@ public class UIKeywords {
                 DriverManager.getPlaywrightPage().check(locator);
             }
         }
-        LogManager.info("Checked checkbox: " + locator);
+        UnifiedLogger.info("Checked checkbox: " + locator);
     }
 
     public static void uncheckCheckbox(String locator) {
@@ -148,7 +148,7 @@ public class UIKeywords {
                 DriverManager.getPlaywrightPage().uncheck(locator);
             }
         }
-        LogManager.info("Unchecked checkbox: " + locator);
+        UnifiedLogger.info("Unchecked checkbox: " + locator);
     }
 
     public static void mouseHover(String locator) {
@@ -158,7 +158,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().hover(locator);
         }
-        LogManager.info("Mouse hovered on: " + locator);
+        UnifiedLogger.info("Mouse hovered on: " + locator);
     }
 
     public static void doubleClick(String locator) {
@@ -168,7 +168,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().dblclick(locator);
         }
-        LogManager.info("Double clicked on: " + locator);
+        UnifiedLogger.info("Double clicked on: " + locator);
     }
 
     public static void dragAndDrop(String sourceLocator, String targetLocator) {
@@ -180,7 +180,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().dragAndDrop(sourceLocator, targetLocator);
         }
-        LogManager.info("Dragged element: " + sourceLocator + " to " + targetLocator);
+        UnifiedLogger.info("Dragged element: " + sourceLocator + " to " + targetLocator);
     }
 
     public static void waitForVisible(String locator, int seconds) {
@@ -190,7 +190,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().waitForSelector(locator, new Page.WaitForSelectorOptions().setTimeout(seconds * 1000).setState(WaitForSelectorState.VISIBLE));
         }
-        LogManager.info("Waited for visible: " + locator);
+        UnifiedLogger.info("Waited for visible: " + locator);
     }
 
     public static void waitForClickable(String locator, int seconds) {
@@ -201,7 +201,7 @@ public class UIKeywords {
             // Playwright does not have direct clickable wait, use visible
             DriverManager.getPlaywrightPage().waitForSelector(locator, new Page.WaitForSelectorOptions().setTimeout(seconds * 1000).setState(WaitForSelectorState.VISIBLE));
         }
-        LogManager.info("Waited for clickable: " + locator);
+        UnifiedLogger.info("Waited for clickable: " + locator);
     }
 
     public static void waitForInvisible(String locator, int seconds) {
@@ -211,7 +211,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().waitForSelector(locator, new Page.WaitForSelectorOptions().setTimeout(seconds * 1000).setState(WaitForSelectorState.HIDDEN));
         }
-        LogManager.info("Waited for invisible: " + locator);
+        UnifiedLogger.info("Waited for invisible: " + locator);
     }
 
     public static void waitForText(String locator, String text, int seconds) {
@@ -227,7 +227,7 @@ public class UIKeywords {
                 try { Thread.sleep(500); } catch (InterruptedException ignored) {}
             }
         }
-        LogManager.info("Waited for text: '" + text + "' in: " + locator);
+        UnifiedLogger.info("Waited for text: '" + text + "' in: " + locator);
     }
 
     public static void takeScreenshot(String filePath) {
@@ -236,13 +236,13 @@ public class UIKeywords {
             java.io.File src = ts.getScreenshotAs(org.openqa.selenium.OutputType.FILE);
             try {
                 java.nio.file.Files.move(src.toPath(), new java.io.File(filePath).toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                LogManager.info("Screenshot saved: " + filePath);
+                UnifiedLogger.info("Screenshot saved: " + filePath);
             } catch (Exception e) {
-                LogManager.info("Screenshot failed: " + e.getMessage());
+                UnifiedLogger.info("Screenshot failed: " + e.getMessage());
             }
         } else {
             DriverManager.getPlaywrightPage().screenshot(new Page.ScreenshotOptions().setPath(java.nio.file.Paths.get(filePath)));
-            LogManager.info("Screenshot saved: " + filePath);
+            UnifiedLogger.info("Screenshot saved: " + filePath);
         }
     }
 
@@ -253,13 +253,13 @@ public class UIKeywords {
             java.io.File src = element.getScreenshotAs(org.openqa.selenium.OutputType.FILE);
             try {
                 java.nio.file.Files.move(src.toPath(), new java.io.File(filePath).toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                LogManager.info("Element screenshot saved: " + filePath);
+                UnifiedLogger.info("Element screenshot saved: " + filePath);
             } catch (Exception e) {
-                LogManager.info("Element screenshot failed: " + e.getMessage());
+                UnifiedLogger.info("Element screenshot failed: " + e.getMessage());
             }
         } else {
             DriverManager.getPlaywrightPage().locator(locator).screenshot(new Locator.ScreenshotOptions().setPath(java.nio.file.Paths.get(filePath)));
-            LogManager.info("Element screenshot saved: " + filePath);
+            UnifiedLogger.info("Element screenshot saved: " + filePath);
         }
     }
 
@@ -269,7 +269,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().setInputFiles(locator, java.nio.file.Paths.get(filePath));
         }
-        LogManager.info("File uploaded: " + filePath + " to: " + locator);
+        UnifiedLogger.info("File uploaded: " + filePath + " to: " + locator);
     }
 
     public static void navigateBack() {
@@ -278,7 +278,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().goBack();
         }
-        LogManager.info("Navigated back");
+        UnifiedLogger.info("Navigated back");
     }
 
     public static void navigateForward() {
@@ -287,7 +287,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().goForward();
         }
-        LogManager.info("Navigated forward");
+        UnifiedLogger.info("Navigated forward");
     }
 
     public static void refreshPage() {
@@ -296,7 +296,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().reload();
         }
-        LogManager.info("Page refreshed");
+        UnifiedLogger.info("Page refreshed");
     }
 
     public static String getAttribute(String locator, String attribute) {
@@ -306,7 +306,7 @@ public class UIKeywords {
         } else {
             value = DriverManager.getPlaywrightPage().getAttribute(locator, attribute);
         }
-        LogManager.info("Got attribute '" + attribute + "' from: " + locator + " value: " + value);
+        UnifiedLogger.info("Got attribute '" + attribute + "' from: " + locator + " value: " + value);
         return value;
     }
 
@@ -317,7 +317,7 @@ public class UIKeywords {
         } else {
             value = DriverManager.getPlaywrightPage().locator(locator).evaluate("el => getComputedStyle(el).getPropertyValue('" + property + "')").toString();
         }
-        LogManager.info("Got CSS value '" + property + "' from: " + locator + " value: " + value);
+        UnifiedLogger.info("Got CSS value '" + property + "' from: " + locator + " value: " + value);
         return value;
     }
 
@@ -329,7 +329,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().locator(locator).scrollIntoViewIfNeeded();
         }
-        LogManager.info("Scrolled to element: " + locator);
+        UnifiedLogger.info("Scrolled to element: " + locator);
     }
 
     public static void executeJS(String script, Object... args) {
@@ -338,7 +338,7 @@ public class UIKeywords {
         } else {
             DriverManager.getPlaywrightPage().evaluate(script, args);
         }
-        LogManager.info("Executed JS: " + script);
+        UnifiedLogger.info("Executed JS: " + script);
     }
 
     public static String getElementRect(String locator) {
@@ -350,7 +350,7 @@ public class UIKeywords {
             Object box = DriverManager.getPlaywrightPage().locator(locator).boundingBox();
             rectInfo = box != null ? box.toString() : "null";
         }
-        LogManager.info("Element rect: " + rectInfo);
+        UnifiedLogger.info("Element rect: " + rectInfo);
         return rectInfo;
     }
 
@@ -361,7 +361,7 @@ public class UIKeywords {
         } else {
             present = DriverManager.getPlaywrightPage().content().contains(text);
         }
-        LogManager.info("Text present: '" + text + "' = " + present);
+        UnifiedLogger.info("Text present: '" + text + "' = " + present);
         return present;
     }
 
@@ -372,7 +372,7 @@ public class UIKeywords {
         } else {
             enabled = DriverManager.getPlaywrightPage().isEnabled(locator);
         }
-        LogManager.info("Element enabled: " + enabled);
+        UnifiedLogger.info("Element enabled: " + enabled);
         return enabled;
     }
 
@@ -384,7 +384,7 @@ public class UIKeywords {
             WebElement host = driver.findElement(By.cssSelector(locator));
             WebElement shadowRoot = (WebElement) ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("return arguments[0].shadowRoot", host);
             text = shadowRoot.findElement(By.cssSelector(shadowLocator)).getText();
-            LogManager.info("Shadow root text: " + text);
+            UnifiedLogger.info("Shadow root text: " + text);
         }
         return text;
     }
@@ -414,8 +414,165 @@ public class UIKeywords {
                     break;
             }
             if (element != null) text = element.getText();
-            LogManager.info("Relative element text: " + text);
+            UnifiedLogger.info("Relative element text: " + text);
         }
         return text;
+    }
+
+    public static boolean isElementPresent(String locator) {
+        boolean present;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            try {
+                DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator));
+                present = true;
+            } catch (org.openqa.selenium.NoSuchElementException e) {
+                present = false;
+            }
+        } else {
+            present = DriverManager.getPlaywrightPage().locator(locator).count() > 0;
+        }
+        UnifiedLogger.info("Element present: " + present);
+        return present;
+    }
+
+    public static int getElementCount(String locator) {
+        int count;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            count = DriverManager.getSeleniumDriver().findElements(By.cssSelector(locator)).size();
+        } else {
+            count = DriverManager.getPlaywrightPage().locator(locator).count();
+        }
+        UnifiedLogger.info("Element count: " + count);
+        return count;
+    }
+
+    public static boolean isCheckboxChecked(String locator) {
+        boolean checked;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            checked = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator)).isSelected();
+        } else {
+            checked = DriverManager.getPlaywrightPage().isChecked(locator);
+        }
+        UnifiedLogger.info("Checkbox checked: " + checked);
+        return checked;
+    }
+
+    public static void scrollToTop() {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            ((org.openqa.selenium.JavascriptExecutor) DriverManager.getSeleniumDriver()).executeScript("window.scrollTo(0, 0);");
+        } else {
+            DriverManager.getPlaywrightPage().evaluate("window.scrollTo(0, 0)");
+        }
+        UnifiedLogger.info("Scrolled to top");
+    }
+
+    public static void scrollToBottom() {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            ((org.openqa.selenium.JavascriptExecutor) DriverManager.getSeleniumDriver()).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+        } else {
+            DriverManager.getPlaywrightPage().evaluate("window.scrollTo(0, document.body.scrollHeight)");
+        }
+        UnifiedLogger.info("Scrolled to bottom");
+    }
+
+    public static void pressKey(String locator, String key) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator)).sendKeys(org.openqa.selenium.Keys.valueOf(key.toUpperCase()));
+        } else {
+            DriverManager.getPlaywrightPage().press(locator, key);
+        }
+        UnifiedLogger.info("Pressed key '" + key + "' on: " + locator);
+    }
+
+    public static String getSelectedDropdownOption(String locator) {
+        String selected;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            selected = new org.openqa.selenium.support.ui.Select(DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator))).getFirstSelectedOption().getText();
+        } else {
+            selected = DriverManager.getPlaywrightPage().locator(locator + " option:checked").textContent();
+        }
+        UnifiedLogger.info("Selected dropdown option: " + selected);
+        return selected;
+    }
+
+    public static void rightClick(String locator) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            WebDriver driver = DriverManager.getSeleniumDriver();
+            new org.openqa.selenium.interactions.Actions(driver).contextClick(driver.findElement(By.cssSelector(locator))).perform();
+        } else {
+            DriverManager.getPlaywrightPage().click(locator, new Page.ClickOptions().setButton(com.microsoft.playwright.options.MouseButton.RIGHT));
+        }
+        UnifiedLogger.info("Right clicked on: " + locator);
+    }
+
+    public static void acceptAlert() {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().switchTo().alert().accept();
+        } else {
+            DriverManager.getPlaywrightPage().onDialog(dialog -> dialog.accept());
+        }
+        UnifiedLogger.info("Accepted alert");
+    }
+
+    public static void dismissAlert() {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().switchTo().alert().dismiss();
+        } else {
+            DriverManager.getPlaywrightPage().onDialog(dialog -> dialog.dismiss());
+        }
+        UnifiedLogger.info("Dismissed alert");
+    }
+
+    public static String getAlertText() {
+        String text = "";
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            text = DriverManager.getSeleniumDriver().switchTo().alert().getText();
+        } else {
+            // Playwright handles dialogs differently - text needs to be captured in dialog handler
+            UnifiedLogger.info("Playwright alert text retrieval requires dialog handler");
+        }
+        UnifiedLogger.info("Alert text: " + text);
+        return text;
+    }
+
+    public static void switchToFrame(String frameLocator) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().switchTo().frame(DriverManager.getSeleniumDriver().findElement(By.cssSelector(frameLocator)));
+        } else {
+            // Playwright auto-handles frames, but can use frameLocator if needed
+            UnifiedLogger.info("Playwright auto-handles frames");
+        }
+        UnifiedLogger.info("Switched to frame: " + frameLocator);
+    }
+
+    public static void switchToDefaultContent() {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().switchTo().defaultContent();
+        } else {
+            UnifiedLogger.info("Playwright auto-handles frames");
+        }
+        UnifiedLogger.info("Switched to default content");
+    }
+
+    public static String getPageTitle() {
+        String title;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            title = DriverManager.getSeleniumDriver().getTitle();
+        } else {
+            title = DriverManager.getPlaywrightPage().title();
+        }
+        UnifiedLogger.info("Page title: " + title);
+        return title;
+    }
+
+    public static String getCurrentURL() {
+        String url;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            url = DriverManager.getSeleniumDriver().getCurrentUrl();
+        } else {
+            url = DriverManager.getPlaywrightPage().url();
+        }
+        UnifiedLogger.info("Current URL: " + url);
+        return url;
     }
 }
