@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Steps Reference - Sands Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="api-steps-reference.html" class="nav-link active"><i class="fas fa-list"></i>API Steps Reference</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>API Steps Reference</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="alert alert-success">
+          <strong>150+ Step Definitions</strong> for comprehensive REST/SOAP API automation with variable substitution
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>HTTP Methods (8 steps)</h2>
+        <pre><code>When user sends GET request to "/users/1"
+When user sends GET request to "/users/${userId}"
+When user sends POST request to "/users"
+When user sends PUT request to "/users/1"
+When user sends DELETE request to "/users/1"
+When user sends "GET" request to "/endpoint"
+When user sends "POST" request to "/endpoint"
+When user sends "PUT" request to "/endpoint"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Service Switching (5 steps)</h2>
+        <pre><code>Given user switches to "userService" API service
+Given user uses custom base URL "https://api.example.com"
+When user sends "GET" request to "users" service endpoint "/list"
+When user sends GET request to "users" service endpoint "/list"
+When user sends POST request to "orders" service endpoint "/create"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Request Body (4 steps)</h2>
+        <pre><code>When user creates POST request body with title "Test" and body "Content"
+When user sets request body:
+  """
+  {"name": "John", "email": "john@example.com"}
+  """
+When user sets request body from file "testdata/request.json"
+When user sets request body from file "${requestFile}"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Headers & Query Params (7 steps)</h2>
+        <pre><code>When user sets header "Authorization" as "Bearer ${token}"
+When user sets header "Content-Type" as "application/json"
+When user sets query param "page" as "1"
+When user sets query param "limit" as "10"
+When user sends GET request to "/users" with query params
+When user sends "GET" request to "/users" with headers
+When user applies headers</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Authentication (4 steps)</h2>
+        <pre><code>When user sets basic auth with username "admin" and password "password"
+When user sets bearer token from response json "token" as header "Authorization"
+When user sets content type "application/json"
+When user sets accept header "application/json"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Status Code Validation (1 step)</h2>
+        <pre><code>Then response status code should be 200
+Then response status code should be 201
+Then response status code should be 400
+Then response status code should be 404</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Field Validation (4 steps)</h2>
+        <pre><code>Then response should contain "id" field
+Then response "name" should be "John Doe"
+Then response "email" should be "${expectedEmail}"
+Then response "id" should not be null
+Then response "deletedAt" should be null</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>JSON Path Validation (8 steps)</h2>
+        <pre><code>Then json path "data.name" should be "John"
+Then json path "user.email" should contain "@example.com"
+Then json path "data.id" should not be null
+Then json path "error" should be null
+Then json path "data.age" should be greater than 18
+Then json path "data.score" should be less than 100
+Then json array "users" should have size 10
+Then json array "items" should contain "Product1"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Response Validation (8 steps)</h2>
+        <pre><code>Then response time should be less than 2000 ms
+Then response content type should be "application/json"
+Then response header "Content-Type" should be "application/json"
+Then response header "Authorization" should exist
+Then response body should not be empty
+Then response body should contain "success"
+Then response should be valid json
+Then response should match json schema "schemas/user-schema.json"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Advanced Assertions (20 steps)</h2>
+        <pre><code>Then json path "email" should match regex "^[\\w.-]+@[\\w.-]+\\.\\w+$"
+Then json path "status" should be of type "string"
+Then json path "age" should be of type "number"
+Then json path "active" should be of type "boolean"
+Then response json should equal file "expected/response.json"
+Then json path "user" keys should contain "id,name,email"
+Then json array "users" elements should be sorted by "name" in "asc" order
+Then json path "createdAt" should be ISO8601 within 60 seconds
+Then response header "Cache-Control" should match regex "max-age=\\d+"
+Then response header "X-Custom" should not exist
+Then cookie "session" should exist
+Then cookie "session" should be "${sessionId}"
+Then response body size should be less than 5000 bytes
+Then json array "users" should have unique values by "email"
+Then at least one element in json array "users" should have "role" equal "admin"
+Then jwt in json path "token" should not be expired
+Then response encoding should be "gzip"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Variable Management (5 steps)</h2>
+        <pre><code>When user saves json path "data.id" as "userId"
+When user saves json path "token" as "authToken"
+When user saves response body as "fullResponse"
+When user saves response header "Location" as "resourceUrl"
+When user saves response time as "responseTime"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Advanced Operations (8 steps)</h2>
+        <pre><code>When user uploads file "testdata/document.pdf" to "/upload" as multipart field "file"
+When user polls "/status" until json path "state" equals "completed" within 30 seconds interval 5 seconds
+When user retries last request up to 3 times with interval 2 seconds until status 200
+When user logs response
+When user clears saved variables
+When user clears request spec and headers
+Then response header "ETag" should contain "W/"
+Then response header "Location" should contain "/users/"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>SOAP Support (5 steps)</h2>
+        <pre><code>When user creates SOAP envelope with action "GetUser" and body:
+  """
+  &lt;GetUserRequest&gt;
+    &lt;UserId&gt;123&lt;/UserId&gt;
+  &lt;/GetUserRequest&gt;
+  """
+When user sends SOAP request to "/soap/users" with action "GetUser"
+Then SOAP response should not have fault
+Then SOAP response should have fault
+Then SOAP xpath "//UserId" should be "123"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Data-Driven Testing (3 steps)</h2>
+        <pre><code>Given Access "https://api.example.com" with "Authorization: Bearer token" for "TC001"
+When Send "GET"
+When Send "POST" with request body "payload"
+Then verify request is success with status "200"
+Then verify "name" in response body is "John"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Complete Example</h2>
+        <h3>Feature File</h3>
+        <pre><code>@API @Regression
+Feature: User Management API
+
+  Background:
+    Given user switches to "userService" API service
+    And user sets header "Content-Type" as "application/json"
+
+  Scenario: Create new user
+    When user sets request body:
+      """
+      {
+        "name": "John Doe",
+        "email": "john@example.com",
+        "role": "admin"
+      }
+      """
+    And user sends POST request to "/users"
+    Then response status code should be 201
+    And response "name" should be "John Doe"
+    And response "id" should not be null
+    When user saves json path "id" as "userId"
+    And user saves json path "email" as "userEmail"
+
+  Scenario: Get user by ID
+    When user sends GET request to "/users/${userId}"
+    Then response status code should be 200
+    And json path "email" should be "${userEmail}"
+    And json path "role" should be "admin"
+    And response time should be less than 1000 ms
+
+  Scenario: Update user
+    When user sets request body:
+      """
+      {
+        "name": "John Updated",
+        "email": "${userEmail}"
+      }
+      """
+    And user sends PUT request to "/users/${userId}"
+    Then response status code should be 200
+    And json path "name" should be "John Updated"
+
+  Scenario: Search users with pagination
+    When user sets query param "page" as "1"
+    And user sets query param "limit" as "10"
+    And user sends GET request to "/users" with query params
+    Then response status code should be 200
+    And json array "data" should have size 10
+    And json path "pagination.page" should be 1
+
+  Scenario: Validate user email format
+    When user sends GET request to "/users/${userId}"
+    Then json path "email" should match regex "^[\\w.-]+@[\\w.-]+\\.\\w+$"
+    And json path "email" should be of type "string"
+
+  Scenario: Delete user
+    When user sends DELETE request to "/users/${userId}"
+    Then response status code should be 204
+
+  Scenario Outline: Create multiple users
+    When user sets request body:
+      """
+      {
+        "name": "<name>",
+        "email": "<email>",
+        "role": "<role>"
+      }
+      """
+    And user sends POST request to "/users"
+    Then response status code should be 201
+    And json path "name" should be "<name>"
+
+    Examples:
+      | name        | email              | role   |
+      | Alice Smith | alice@example.com  | user   |
+      | Bob Jones   | bob@example.com    | admin  |
+      | Carol White | carol@example.com  | user   |</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Variable Substitution</h2>
+        <p>All steps support <code>${variableName}</code> syntax for dynamic values:</p>
+        <pre><code>When user saves json path "token" as "authToken"
+And user sets header "Authorization" as "Bearer ${authToken}"
+And user sends GET request to "/users/${userId}"
+Then json path "email" should be "${expectedEmail}"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Tips & Best Practices</h2>
+        <ul>
+          <li>✅ Use Background for common setup (headers, base URL)</li>
+          <li>✅ Save IDs and tokens to variables for reuse</li>
+          <li>✅ Validate status codes first, then response body</li>
+          <li>✅ Use json path for nested field validation</li>
+          <li>✅ Add response time assertions for performance</li>
+          <li>✅ Use regex for format validation (email, phone, etc.)</li>
+          <li>✅ Leverage service switching for microservices</li>
+          <li>✅ Use data tables for multiple similar requests</li>
+          <li>✅ Clear variables between independent scenarios</li>
+          <li>✅ Log responses for debugging</li>
+        </ul>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Sands Automation Framework. Created by Afsar Ali</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
