@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mainframe Steps Reference - Sands Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="mainframe-automation.html" class="nav-link"><i class="fas fa-server"></i>Mainframe Automation</a></li>
+          <li class="nav-item"><a href="mainframe-steps-reference.html" class="nav-link active"><i class="fas fa-list"></i>Steps Reference</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Mainframe Steps Reference</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="alert alert-success">
+          <strong>80+ Step Definitions</strong> for comprehensive mainframe automation with variable substitution support
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Connection Steps (3)</h2>
+        <pre><code>Given user connects to mainframe session "A"
+Given user connects to mainframe session "${sessionId}"
+When user disconnects from mainframe
+When user closes mainframe session</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Text Input Steps (6)</h2>
+        <pre><code>When user enters "USER123" at row 10 column 20
+When user enters "${username}" at row 10 column 20
+When user types "MENU01" at position 5,10
+When user enters text "ORDER" at row 8 col 15</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Keyboard Actions (8)</h2>
+        <pre><code>When user presses Enter key
+When user presses Enter
+When user submits screen
+When user sends keys "@E"
+When user sends raw keys "@T@T@E"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Function Keys (6)</h2>
+        <pre><code>When user presses PF3
+When user presses PF12
+When user presses function key "3"
+When user presses PA1
+When user presses Attention key
+When user presses Reset key
+When user presses SysReq</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Navigation Steps (9)</h2>
+        <pre><code>When user clears the screen
+When user clears screen
+When user presses Tab
+When user tabs to next field
+When user tabs 3 times
+When user waits for screen ready
+When user waits for mainframe screen</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Screen Reading (4)</h2>
+        <pre><code>When user gets text from row 10 column 20 length 15
+When user reads full screen
+When user captures screen content
+When user logs screen content</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Basic Verification (10)</h2>
+        <pre><code>Then mainframe screen should contain "WELCOME"
+Then screen should contain text "MAIN MENU"
+Then mainframe should display "SUCCESS"
+Then mainframe screen should not contain "ERROR"
+Then text at row 10 column 20 length 15 should be "ACTIVE"
+Then text at position 10,20 with length 15 should be "ACTIVE"
+Then field at row 12 col 25 length 10 should contain "SUCCESS"
+Then mainframe screen should display "WELCOME" within 5 seconds
+Then screen should show "ORDER DETAILS" within 3 seconds
+Then wait for text "PROCESSING COMPLETE" for 10 seconds</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Advanced Assertions (20)</h2>
+        <pre><code>Then text at row 10 column 20 length 15 should not be empty
+Then text at row 10 column 20 length 15 should be empty
+Then field at row 12 col 25 length 10 should not contain "ERROR"
+Then text at row 10 column 20 length 15 should start with "ORD"
+Then text at row 10 column 20 length 15 should end with "123"
+Then text at row 10 column 20 length 15 should match regex "[A-Z]{3}\\d{3}"
+Then text at row 10 column 20 length 15 should be numeric
+Then text at row 10 column 20 length 15 should be alphanumeric
+Then text at row 10 column 20 length 15 should equal "ACTIVE" ignoring case
+Then text at row 10 column 20 length 15 should have length 10
+Then text at row 10 column 20 length 15 should be greater than "100"
+Then text at row 10 column 20 length 15 should be less than "999"
+Then screen should be empty
+Then screen should not be empty
+Then mainframe screen should contain all of:
+  | WELCOME |
+  | MENU    |
+  | USER    |
+Then mainframe screen should contain any of:
+  | SUCCESS |
+  | COMPLETE|
+  | DONE    |</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Variable Management (6)</h2>
+        <pre><code>When user saves text from row 15 column 5 length 20 as "accountNumber"
+When user saves text at position 15,5 length 20 as "customerId"
+When user saves full screen as "screenContent"
+When user stores field at row 18 column 25 length 10 as "transactionId"
+Then saved variable "accountNumber" should not be empty
+Then saved variable "orderId" should contain "ORD"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Advanced Operations (5)</h2>
+        <pre><code>When user enters multiple fields:
+  | row | col | text      |
+  | 10  | 20  | USER123   |
+  | 11  | 20  | PASSWORD  |
+  | 12  | 20  | DEPT01    |
+
+When user fills form at row 10 column 20 with:
+  | field    | value     |
+  | username | USER123   |
+  | password | PASSWORD  |
+
+When user pauses for 2 seconds
+When user waits 3 seconds</code></pre>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Sands Automation Framework. Created by Afsar Ali</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

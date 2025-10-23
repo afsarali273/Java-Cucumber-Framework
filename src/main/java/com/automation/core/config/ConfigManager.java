@@ -302,6 +302,10 @@ public class ConfigManager {
         return "desktop".equalsIgnoreCase(FRAMEWORK_TYPE) || "windows".equalsIgnoreCase(FRAMEWORK_TYPE);
     }
 
+    public static boolean isMainframe() {
+        return "mainframe".equalsIgnoreCase(FRAMEWORK_TYPE);
+    }
+
     public static boolean isCucumber() {
         return "cucumber".equalsIgnoreCase(EXECUTION_TYPE);
     }

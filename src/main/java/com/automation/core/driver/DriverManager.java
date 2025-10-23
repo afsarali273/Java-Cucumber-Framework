@@ -2,6 +2,7 @@ package com.automation.core.driver;
 
 import com.automation.core.config.ConfigManager;
 import com.automation.core.logging.LogManager;
+import com.automation.core.mainframe.MainFrameDriver;
 import com.microsoft.playwright.*;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
@@ -25,6 +26,7 @@ public class DriverManager {
     private static final ThreadLocal<Page> playwrightPage = new ThreadLocal<>();
     private static final ThreadLocal<AppiumDriver> appiumDriver = new ThreadLocal<>();
     private static final ThreadLocal<WindowsDriver> windowsDriver = new ThreadLocal<>();
+    private static final ThreadLocal<MainFrameDriver> mainframeDriver = new ThreadLocal<>();
 
     public static void initializeDriver() {
         if (ConfigManager.isAPI()) {
@@ -40,6 +42,8 @@ public class DriverManager {
             initializeAppiumDriver();
         } else if (ConfigManager.isDesktop()) {
             initializeWindowsDriver();
+        } else if (ConfigManager.isMainframe()) {
+            initializeMainframeDriver();
         }
     }
 
@@ -167,6 +171,10 @@ public class DriverManager {
         return windowsDriver.get();
     }
 
+    public static MainFrameDriver getMainframeDriver() {
+        return mainframeDriver.get();
+    }
+
     public static void quitDriver() {
         if (ConfigManager.isAPI()) {
             return;
@@ -196,6 +204,8 @@ public class DriverManager {
             quitAppiumDriver();
         } else if (ConfigManager.isDesktop()) {
             quitWindowsDriver();
+        } else if (ConfigManager.isMainframe()) {
+            quitMainframeDriver();
         }
     }
 
@@ -262,6 +272,27 @@ public class DriverManager {
                 LogManager.error("Error closing Playwright: " + e.getMessage());
             }
             playwright.remove();
+        }
+    }
+
+    private static void initializeMainframeDriver() {
+        ConfigManager config = ConfigManager.getInstance();
+        String sessionId = config.getProperty("mainframe.sessionId", "A");
+        MainFrameDriver driver = new MainFrameDriver();
+        driver.connect(sessionId);
+        mainframeDriver.set(driver);
+        LogManager.info("MainframeDriver initialized with session: " + sessionId);
+    }
+
+    public static void quitMainframeDriver() {
+        if (mainframeDriver.get() != null) {
+            try {
+                mainframeDriver.get().close();
+                LogManager.info("MainframeDriver closed");
+            } catch (Exception e) {
+                LogManager.error("Error closing MainframeDriver: " + e.getMessage());
+            }
+            mainframeDriver.remove();
         }
     }
 }

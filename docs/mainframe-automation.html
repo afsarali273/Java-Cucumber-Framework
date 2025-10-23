@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mainframe Automation - Sands Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="mainframe-automation.html" class="nav-link active"><i class="fas fa-server"></i>Mainframe Automation</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="examples.html" class="nav-link"><i class="fas fa-code-branch"></i>Examples</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>Mainframe Automation</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>Automate 3270 mainframe terminal sessions using EHLLAPI (Emulator High-Level Language Application Programming Interface).</p>
+        
+        <div class="alert alert-info">
+          <strong>Platform:</strong> Windows only (EHLLAPI is Windows-specific)
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Prerequisites</h2>
+        <div class="card">
+          <h3>Required Software</h3>
+          <ul>
+            <li><strong>3270 Terminal Emulator</strong> (one of):
+              <ul>
+                <li>IBM Personal Communications (PCOMM)</li>
+                <li>Micro Focus Rumba</li>
+                <li>Attachmate Extra!</li>
+                <li>BlueZone</li>
+              </ul>
+            </li>
+            <li><strong>EHLLAPI DLL:</strong> pcshll32.dll (included with emulator)</li>
+            <li><strong>JNA Library:</strong> Automatically included via Maven</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Configuration</h2>
+        <h3>config.properties</h3>
+        <pre><code># Framework Type
+framework.type=mainframe
+
+# Mainframe Session ID (typically A-Z)
+mainframe.sessionId=A
+
+# Mainframe Connection Timeout (seconds)
+mainframe.timeout=30
+
+# Mainframe Screen Wait Timeout (seconds)
+mainframe.screen.wait=10</code></pre>
+
+        <div class="alert alert-warning">
+          <strong>Note:</strong> Session ID must match your terminal emulator's configured session letter.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Using MainframeReusable</h2>
+        <h3>Java Example</h3>
+        <pre><code>public class MainframeTest extends MainframeReusable {
+    
+    @Test
+    public void testMainframeLogin() {
+        // Connect to session
+        connectToMainframe("A");
+        
+        // Enter credentials
+        enterText(10, 20, "USER123");
+        enterText(11, 20, "PASSWORD");
+        
+        // Submit
+        pressEnter();
+        
+        // Wait for response
+        waitForText("WELCOME", 5);
+        
+        // Verify screen content
+        verifyTextOnScreen("MAIN MENU");
+        
+        // Disconnect
+        disconnectFromMainframe();
+    }
+}</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Cucumber BDD Examples</h2>
+        
+        <h3>Example 1: Login Scenario</h3>
+        <pre><code>@Mainframe
+Feature: Mainframe Login
+
+  Scenario: Successful login
+    Given user connects to mainframe session "A"
+    When user enters "USER123" at row 10 column 20
+    And user enters "PASSWORD" at row 11 column 20
+    And user presses Enter key
+    Then mainframe screen should display "WELCOME" within 5 seconds
+    And mainframe screen should contain "MAIN MENU"</code></pre>
+
+        <h3>Example 2: Data Retrieval</h3>
+        <pre><code>@Mainframe
+Feature: Account Information
+
+  Scenario: Retrieve account details
+    Given user connects to mainframe session "A"
+    When user enters "MENU01" at row 5 column 10
+    And user presses Enter key
+    And user saves text from row 15 column 5 length 20 as "accountNumber"
+    Then text at row 15 column 5 length 20 should be "${accountNumber}"
+    When user disconnects from mainframe</code></pre>
+
+        <h3>Example 3: Function Keys</h3>
+        <pre><code>@Mainframe
+Feature: Navigation
+
+  Scenario: Navigate using function keys
+    Given user connects to mainframe session "A"
+    When user presses PF3
+    Then mainframe screen should contain "PREVIOUS SCREEN"
+    When user presses PF12
+    Then mainframe screen should contain "EXIT"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Available Methods</h2>
+        
+        <h3>Connection Methods</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>connectToMainframe(String sessionId)</code></td>
+              <td>Connect to mainframe session</td>
+            </tr>
+            <tr>
+              <td><code>disconnectFromMainframe()</code></td>
+              <td>Disconnect from session</td>
+            </tr>
+            <tr>
+              <td><code>closeMainframeSession()</code></td>
+              <td>Close and cleanup session</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Input Methods</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>enterText(int row, int col, String text)</code></td>
+              <td>Enter text at specific position</td>
+            </tr>
+            <tr>
+              <td><code>sendKeys(String keys)</code></td>
+              <td>Send raw keys to terminal</td>
+            </tr>
+            <tr>
+              <td><code>pressEnter()</code></td>
+              <td>Press Enter key</td>
+            </tr>
+            <tr>
+              <td><code>tab()</code></td>
+              <td>Press Tab key</td>
+            </tr>
+            <tr>
+              <td><code>clearScreen()</code></td>
+              <td>Clear the screen</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Function Keys</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>sendFunctionKey(String key)</code></td>
+              <td>Send any function key</td>
+            </tr>
+            <tr>
+              <td><code>sendPF(int number)</code></td>
+              <td>Send PF key (1-24)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Screen Reading</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>getTextFromScreen(int row, int col, int length)</code></td>
+              <td>Get text from position</td>
+            </tr>
+            <tr>
+              <td><code>getFullScreen()</code></td>
+              <td>Get entire screen content</td>
+            </tr>
+            <tr>
+              <td><code>waitForScreenReady()</code></td>
+              <td>Wait for screen unlock</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Verification Methods</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>verifyTextOnScreen(String text)</code></td>
+              <td>Verify text exists on screen</td>
+            </tr>
+            <tr>
+              <td><code>verifyTextAtPosition(int row, int col, int length, String text)</code></td>
+              <td>Verify text at position</td>
+            </tr>
+            <tr>
+              <td><code>waitForText(String text, int timeout)</code></td>
+              <td>Wait for text to appear</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Cucumber Step Definitions (80+ Steps)</h2>
+        <p><a href="mainframe-steps-reference.html" class="badge badge-primary">View Complete Steps Reference →</a></p>
+        
+        <h3>Connection Steps (3)</h3>
+        <pre><code>Given user connects to mainframe session "A"
+When user disconnects from mainframe
+When user closes mainframe session</code></pre>
+
+        <h3>Input Steps (6)</h3>
+        <pre><code>When user enters "TEXT" at row 10 column 20
+When user types "MENU01" at position 5,10
+When user enters text "ORDER" at row 8 col 15</code></pre>
+
+        <h3>Keyboard Actions (8)</h3>
+        <pre><code>When user presses Enter key
+When user presses Enter
+When user submits screen
+When user sends keys "@E"
+When user sends raw keys "@T@T@E"</code></pre>
+
+        <h3>Function Keys (6)</h3>
+        <pre><code>When user presses PF3
+When user presses function key "3"
+When user presses PA1
+When user presses Attention key
+When user presses Reset key</code></pre>
+
+        <h3>Navigation (9)</h3>
+        <pre><code>When user clears the screen
+When user presses Tab
+When user tabs 3 times
+When user waits for screen ready</code></pre>
+
+        <h3>Screen Reading (4)</h3>
+        <pre><code>When user gets text from row 10 column 20 length 15
+When user reads full screen
+When user logs screen content</code></pre>
+
+        <h3>Basic Verification (10)</h3>
+        <pre><code>Then mainframe screen should contain "EXPECTED TEXT"
+Then mainframe screen should not contain "ERROR"
+Then text at row 10 column 20 length 15 should be "EXPECTED"
+Then field at row 12 col 25 length 10 should contain "SUCCESS"
+Then mainframe screen should display "TEXT" within 5 seconds</code></pre>
+
+        <h3>Advanced Assertions (20)</h3>
+        <pre><code>Then text at row 10 column 20 length 15 should not be empty
+Then text at row 10 column 20 length 15 should start with "ORD"
+Then text at row 10 column 20 length 15 should match regex "[A-Z]{3}\\d{3}"
+Then text at row 10 column 20 length 15 should be numeric
+Then text at row 10 column 20 length 15 should be greater than "100"
+Then screen should not be empty
+Then mainframe screen should contain all of:
+  | WELCOME |
+  | MENU    |</code></pre>
+
+        <h3>Variable Management (6)</h3>
+        <pre><code>When user saves text from row 15 column 5 length 20 as "accountNumber"
+When user saves full screen as "screenContent"
+Then saved variable "accountNumber" should not be empty
+Then saved variable "orderId" should contain "ORD"</code></pre>
+
+        <h3>Advanced Operations (5)</h3>
+        <pre><code>When user enters multiple fields:
+  | row | col | text      |
+  | 10  | 20  | USER123   |
+When user pauses for 2 seconds</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Special Keys</h2>
+        <p>Use these codes with <code>sendKeys()</code> method:</p>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Key</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@E</code></td>
+              <td>Enter</td>
+              <td>Submit screen</td>
+            </tr>
+            <tr>
+              <td><code>@C</code></td>
+              <td>Clear</td>
+              <td>Clear screen</td>
+            </tr>
+            <tr>
+              <td><code>@T</code></td>
+              <td>Tab</td>
+              <td>Move to next field</td>
+            </tr>
+            <tr>
+              <td><code>@1</code> to <code>@24</code></td>
+              <td>PF1-PF24</td>
+              <td>Program function keys</td>
+            </tr>
+            <tr>
+              <td><code>@A</code></td>
+              <td>Attention</td>
+              <td>System request</td>
+            </tr>
+            <tr>
+              <td><code>@R</code></td>
+              <td>Reset</td>
+              <td>Reset keyboard</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Complete Example</h2>
+        <h3>Feature File</h3>
+        <pre><code>@Mainframe @Regression
+Feature: Mainframe Order Processing
+
+  Background:
+    Given user connects to mainframe session "A"
+
+  Scenario: Create new order
+    When user enters "ORDER" at row 5 column 10
+    And user presses Enter key
+    And user enters "NEW" at row 8 column 15
+    And user presses Enter key
+    Then mainframe screen should display "ORDER ENTRY" within 3 seconds
+    
+    When user enters "CUST12345" at row 10 column 20
+    And user enters "PROD67890" at row 12 column 20
+    And user enters "100" at row 14 column 20
+    And user presses Enter key
+    Then mainframe screen should contain "ORDER CREATED"
+    
+    When user saves text from row 18 column 25 length 10 as "orderNumber"
+    Then text at row 18 column 25 length 10 should be "${orderNumber}"
+    
+  Scenario: Search existing order
+    When user enters "SEARCH" at row 5 column 10
+    And user presses Enter key
+    And user enters "${orderNumber}" at row 10 column 20
+    And user presses Enter key
+    Then mainframe screen should display "ORDER DETAILS" within 3 seconds
+    And mainframe screen should contain "CUST12345"
+    
+  Scenario Outline: Process multiple orders
+    When user enters "ORDER" at row 5 column 10
+    And user presses Enter key
+    And user enters "<customer>" at row 10 column 20
+    And user enters "<product>" at row 12 column 20
+    And user presses Enter key
+    Then mainframe screen should contain "ORDER CREATED"
+    
+    Examples:
+      | customer  | product   |
+      | CUST001   | PROD001   |
+      | CUST002   | PROD002   |
+      | CUST003   | PROD003   |</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Running Tests</h2>
+        <pre><code># Run all mainframe tests
+mvn test -Dcucumber.filter.tags="@Mainframe"
+
+# Run with specific framework type
+mvn test -Dframework.type=mainframe
+
+# Run specific scenario
+mvn test -Dcucumber.filter.tags="@Mainframe and @Login"
+
+# Run with custom session
+mvn test -Dmainframe.sessionId=B</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Troubleshooting</h2>
+        
+        <div class="card">
+          <h3>DLL Not Found</h3>
+          <p><strong>Error:</strong> Unable to load library 'pcshll32'</p>
+          <p><strong>Solution:</strong></p>
+          <ul>
+            <li>Ensure terminal emulator is installed</li>
+            <li>Add DLL location to system PATH</li>
+            <li>Copy pcshll32.dll to project root</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Session Not Connected</h3>
+          <p><strong>Error:</strong> MainFrameDriver not connected</p>
+          <p><strong>Solution:</strong></p>
+          <ul>
+            <li>Verify terminal emulator is running</li>
+            <li>Check session ID matches emulator</li>
+            <li>Ensure session is configured properly</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Screen Not Ready</h3>
+          <p><strong>Error:</strong> Text not found within timeout</p>
+          <p><strong>Solution:</strong></p>
+          <ul>
+            <li>Increase mainframe.screen.wait timeout</li>
+            <li>Use waitForScreenReady() before operations</li>
+            <li>Add explicit waits between actions</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Text Not Found</h3>
+          <p><strong>Error:</strong> Expected text not on screen</p>
+          <p><strong>Solution:</strong></p>
+          <ul>
+            <li>Verify row/column coordinates (1-based)</li>
+            <li>Use getFullScreen() to debug</li>
+            <li>Check screen is fully loaded</li>
+            <li>Verify text case sensitivity</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Best Practices</h2>
+        <ul>
+          <li>✅ Always connect before operations</li>
+          <li>✅ Use waitForText() for dynamic screens</li>
+          <li>✅ Disconnect after test completion</li>
+          <li>✅ Store reusable data in ScenarioContext</li>
+          <li>✅ Use descriptive variable names</li>
+          <li>✅ Add appropriate waits between operations</li>
+          <li>✅ Verify screen state before assertions</li>
+          <li>✅ Use Background for common setup steps</li>
+          <li>✅ Tag scenarios appropriately (@Mainframe)</li>
+          <li>✅ Handle errors gracefully</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>Integration with Framework</h2>
+        
+        <h3>UnifiedLogger</h3>
+        <p>All mainframe operations are automatically logged to:</p>
+        <ul>
+          <li>ExtentReports</li>
+          <li>CustomReporter</li>
+          <li>Allure Reports</li>
+          <li>Log files</li>
+        </ul>
+
+        <h3>ScenarioContext</h3>
+        <p>Share data between steps:</p>
+        <pre><code>// Save data
+ScenarioContext.set("orderNumber", "ORD12345");
+
+// Retrieve data
+String order = ScenarioContext.get("orderNumber", String.class);</code></pre>
+
+        <h3>Thread Safety</h3>
+        <p>All components are thread-safe for parallel execution:</p>
+        <ul>
+          <li>ThreadLocal driver instances</li>
+          <li>Thread-safe ScenarioContext</li>
+          <li>Synchronized logging</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>Limitations</h2>
+        <div class="alert alert-warning">
+          <ul>
+            <li>Windows-only (EHLLAPI is Windows-specific)</li>
+            <li>Requires compatible terminal emulator</li>
+            <li>3270 terminal sessions only</li>
+            <li>Single session per thread</li>
+          </ul>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Sands Automation Framework. Created by Afsar Ali</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

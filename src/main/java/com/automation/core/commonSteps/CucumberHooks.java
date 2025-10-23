@@ -44,7 +44,7 @@ public class CucumberHooks {
         UnifiedLogger.info("Starting Scenario: " + scenarioName);
 
         // Initialize drivers or clients based on tag
-        if (tags.contains("@UI") || tags.contains("@Mobile") || tags.contains("@Desktop")) {
+        if (tags.contains("@UI") || tags.contains("@Mobile") || tags.contains("@Desktop") || tags.contains("@Mainframe")) {
             DriverManager.initializeDriver();
         } else if (tags.contains("@API")) {
             APIClient.initializeAPIClient();
@@ -139,6 +139,7 @@ public class CucumberHooks {
         if (tags.contains("@API")) ExtentReporter.assignCategory("API");
         if (tags.contains("@Mobile")) ExtentReporter.assignCategory("Mobile");
         if (tags.contains("@Desktop")) ExtentReporter.assignCategory("Desktop");
+        if (tags.contains("@Mainframe")) ExtentReporter.assignCategory("Mainframe");
     }
 
     private static void handleFailureScreenshot(Scenario scenario) throws IOException {
