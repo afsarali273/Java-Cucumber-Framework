@@ -147,23 +147,86 @@ public class CucumberHooks {
         Set<String> tags = new HashSet<>(scenario.getSourceTagNames());
 
         if (config.getBooleanProperty("screenshot.on.failure", true) && !tags.contains("@API")) {
-            String screenshotPath = ScreenshotUtil.captureScreenshot(scenario.getName());
-            if (screenshotPath != null) {
-                byte[] screenshot = Files.readAllBytes(Paths.get(screenshotPath));
+            // Handle mainframe screen capture
+            if (tags.contains("@Mainframe")) {
+                captureMainframeScreen(scenario);
+            } else {
+                // Regular screenshot for UI/Mobile/Desktop
+                String screenshotPath = ScreenshotUtil.captureScreenshot(scenario.getName());
+                if (screenshotPath != null) {
+                    byte[] screenshot = Files.readAllBytes(Paths.get(screenshotPath));
 
-                // Attach to Cucumber
-                scenario.attach(screenshot, "image/png", "Screenshot");
+                    // Attach to Cucumber
+                    scenario.attach(screenshot, "image/png", "Screenshot");
 
-                // Attach to Allure
-                io.qameta.allure.Allure.addAttachment(
-                        "Screenshot on Failure", "image/png",
-                        new ByteArrayInputStream(screenshot), "png"
-                );
+                    // Attach to Allure
+                    io.qameta.allure.Allure.addAttachment(
+                            "Screenshot on Failure", "image/png",
+                            new ByteArrayInputStream(screenshot), "png"
+                    );
 
-                // Attach to ExtentReport
-                ExtentReporter.attachScreenshot(screenshotPath);
+                    // Attach to ExtentReport
+                    ExtentReporter.attachScreenshot(screenshotPath);
+                }
             }
         }
+    }
+
+    private static void captureMainframeScreen(Scenario scenario) {
+        try {
+            String timestamp = java.time.LocalDateTime.now().toString().replace(":", "-");
+            String baseName = scenario.getName().replaceAll("[^a-zA-Z0-9]", "_");
+            String screenDir = "test-output/mainframe-screens";
+            new File(screenDir).mkdirs();
+            
+            String textFile = screenDir + "/" + baseName + "_" + timestamp + ".txt";
+            String imageFile = screenDir + "/" + baseName + "_" + timestamp + ".png";
+            
+            // Capture screen text (always)
+            String screenText = DriverManager.getMainframeDriver().getScreen();
+            Files.write(Paths.get(textFile), formatMainframeScreen(screenText).getBytes());
+            
+            // Attach text to reports
+            byte[] textBytes = Files.readAllBytes(Paths.get(textFile));
+            scenario.attach(textBytes, "text/plain", "Mainframe Screen Text");
+            io.qameta.allure.Allure.addAttachment("Mainframe Screen", "text/plain", 
+                new ByteArrayInputStream(textBytes), "txt");
+            ExtentReporter.logInfo("Mainframe Screen:\n" + formatMainframeScreen(screenText));
+            
+            // Try to capture desktop screenshot (if GUI available)
+            try {
+                java.awt.Robot robot = new java.awt.Robot();
+                java.awt.Rectangle screenRect = new java.awt.Rectangle(
+                    java.awt.Toolkit.getDefaultToolkit().getScreenSize());
+                java.awt.image.BufferedImage capture = robot.createScreenCapture(screenRect);
+                javax.imageio.ImageIO.write(capture, "png", new File(imageFile));
+                
+                byte[] imageBytes = Files.readAllBytes(Paths.get(imageFile));
+                scenario.attach(imageBytes, "image/png", "Desktop Screenshot");
+                io.qameta.allure.Allure.addAttachment("Desktop Screenshot", "image/png",
+                    new ByteArrayInputStream(imageBytes), "png");
+                ExtentReporter.attachScreenshot(imageFile);
+                
+                UnifiedLogger.info("Mainframe screen captured: text + image");
+            } catch (Exception e) {
+                UnifiedLogger.info("Mainframe screen text captured (image capture not available)");
+            }
+        } catch (Exception e) {
+            UnifiedLogger.error("Failed to capture mainframe screen: ", e);
+        }
+    }
+    
+    private static String formatMainframeScreen(String screenText) {
+        if (screenText == null || screenText.isEmpty()) {
+            return "[Empty Screen]";
+        }
+        StringBuilder formatted = new StringBuilder();
+        formatted.append("=" .repeat(80)).append("\n");
+        formatted.append("MAINFRAME SCREEN CAPTURE\n");
+        formatted.append("=" .repeat(80)).append("\n");
+        formatted.append(screenText);
+        formatted.append("\n").append("=" .repeat(80)).append("\n");
+        return formatted.toString();
     }
 
     private static void generateAllureReport() {
