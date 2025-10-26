@@ -27,6 +27,20 @@ public class DriverManager {
     private static final ThreadLocal<AppiumDriver> appiumDriver = new ThreadLocal<>();
     private static final ThreadLocal<WindowsDriver> windowsDriver = new ThreadLocal<>();
     private static final ThreadLocal<MainFrameDriver> mainframeDriver = new ThreadLocal<>();
+    
+    // Track all active drivers for emergency cleanup
+    private static final java.util.Set<WebDriver> activeSeleniumDrivers = 
+        java.util.Collections.synchronizedSet(new java.util.HashSet<>());
+    private static final java.util.Set<Playwright> activePlaywrights = 
+        java.util.Collections.synchronizedSet(new java.util.HashSet<>());
+    
+    static {
+        // Register shutdown hook to cleanup any remaining drivers
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            LogManager.info("Shutdown hook triggered - cleaning up remaining drivers");
+            forceCleanupAll();
+        }));
+    }
 
     public static void initializeDriver() {
         if (ConfigManager.isAPI()) {
@@ -52,27 +66,41 @@ public class DriverManager {
         String browser = config.getBrowser();
         boolean headless = config.isHeadless();
 
-        WebDriver driver;
-        switch (browser.toLowerCase()) {
-            case "firefox":
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
-                if (headless) firefoxOptions.addArguments("--headless");
-                driver = new FirefoxDriver(firefoxOptions);
-                break;
-            case "chrome":
-            default:
-                ChromeOptions chromeOptions = new ChromeOptions();
-                if (headless) chromeOptions.addArguments("--headless");
-                chromeOptions.addArguments("--disable-notifications");
-                driver = new ChromeDriver(chromeOptions);
-                break;
-        }
+        WebDriver driver = null;
+        try {
+            switch (browser.toLowerCase()) {
+                case "firefox":
+                    FirefoxOptions firefoxOptions = new FirefoxOptions();
+                    if (headless) firefoxOptions.addArguments("--headless");
+                    driver = new FirefoxDriver(firefoxOptions);
+                    break;
+                case "chrome":
+                default:
+                    ChromeOptions chromeOptions = new ChromeOptions();
+                    if (headless) chromeOptions.addArguments("--headless");
+                    chromeOptions.addArguments("--disable-notifications");
+                    chromeOptions.addArguments("--remote-allow-origins=*");
+                    driver = new ChromeDriver(chromeOptions);
+                    break;
+            }
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(config.getIntProperty("implicit.wait", 10)));
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(config.getIntProperty("page.load.timeout", 30)));
-        driver.manage().window().maximize();
-        seleniumDriver.set(driver);
-        LogManager.info("Selenium WebDriver initialized: " + browser);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(config.getIntProperty("implicit.wait", 10)));
+            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(config.getIntProperty("page.load.timeout", 30)));
+            driver.manage().window().maximize();
+            seleniumDriver.set(driver);
+            activeSeleniumDrivers.add(driver);
+            LogManager.info("Selenium WebDriver initialized: " + browser + " [Thread: " + Thread.currentThread().getName() + "]");
+        } catch (Exception e) {
+            LogManager.error("Error initializing Selenium driver: " + e.getMessage());
+            if (driver != null) {
+                try {
+                    driver.quit();
+                } catch (Exception quitEx) {
+                    LogManager.error("Error quitting driver after init failure: " + quitEx.getMessage());
+                }
+            }
+            throw new RuntimeException("Failed to initialize Selenium driver", e);
+        }
     }
 
     private static void initializePlaywrightDriver() {
@@ -81,34 +109,32 @@ public class DriverManager {
         boolean headless = config.isHeadless();
 
         try {
-            // Create Playwright instance per thread
-            if (playwright.get() == null) {
-                playwright.set(Playwright.create());
-                LogManager.info("Playwright instance created for thread: " + Thread.currentThread().getName());
-            }
+            // Create fresh Playwright instance for each scenario
+            Playwright pw = Playwright.create();
+            playwright.set(pw);
+            activePlaywrights.add(pw);
+            LogManager.info("Playwright instance created for thread: " + Thread.currentThread().getName());
 
-            // Create Browser instance per thread
-            if (playwrightBrowser.get() == null || !playwrightBrowser.get().isConnected()) {
-                BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions().setHeadless(headless);
-                Browser browserInstance;
-                switch (browser.toLowerCase()) {
-                    case "firefox":
-                        browserInstance = playwright.get().firefox().launch(launchOptions);
-                        break;
-                    case "webkit":
-                        browserInstance = playwright.get().webkit().launch(launchOptions);
-                        break;
-                    case "chrome":
-                    default:
-                        browserInstance = playwright.get().chromium().launch(launchOptions);
-                        break;
-                }
-                playwrightBrowser.set(browserInstance);
-                LogManager.info("Playwright Browser launched: " + browser);
+            // Create Browser instance
+            BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions().setHeadless(headless);
+            Browser browserInstance;
+            switch (browser.toLowerCase()) {
+                case "firefox":
+                    browserInstance = pw.firefox().launch(launchOptions);
+                    break;
+                case "webkit":
+                    browserInstance = pw.webkit().launch(launchOptions);
+                    break;
+                case "chrome":
+                default:
+                    browserInstance = pw.chromium().launch(launchOptions);
+                    break;
             }
+            playwrightBrowser.set(browserInstance);
+            LogManager.info("Playwright Browser launched: " + browser);
 
-            // Create new context and page for each scenario
-            BrowserContext context = playwrightBrowser.get().newContext();
+            // Create context and page
+            BrowserContext context = browserInstance.newContext();
             playwrightContext.set(context);
             Page page = context.newPage();
             page.setDefaultTimeout(config.getIntProperty("explicit.wait", 20) * 1000);
@@ -116,8 +142,29 @@ public class DriverManager {
             LogManager.info("Playwright Context and Page created");
         } catch (Exception e) {
             LogManager.error("Error initializing Playwright: " + e.getMessage());
+            // Cleanup on failure
+            cleanupPlaywrightOnError();
             throw new RuntimeException("Failed to initialize Playwright driver", e);
         }
+    }
+
+    private static void cleanupPlaywrightOnError() {
+        try {
+            if (playwrightPage.get() != null) playwrightPage.get().close();
+        } catch (Exception ignored) {}
+        try {
+            if (playwrightContext.get() != null) playwrightContext.get().close();
+        } catch (Exception ignored) {}
+        try {
+            if (playwrightBrowser.get() != null) playwrightBrowser.get().close();
+        } catch (Exception ignored) {}
+        try {
+            if (playwright.get() != null) playwright.get().close();
+        } catch (Exception ignored) {}
+        playwrightPage.remove();
+        playwrightContext.remove();
+        playwrightBrowser.remove();
+        playwright.remove();
     }
 
     private static void initializeAppiumDriver() {
@@ -152,11 +199,23 @@ public class DriverManager {
     }
 
     public static WebDriver getSeleniumDriver() {
-        return seleniumDriver.get();
+        WebDriver driver = seleniumDriver.get();
+        if (driver == null && ConfigManager.isSelenium()) {
+            // Lazy initialization - create driver on first access
+            initializeSeleniumDriver();
+            driver = seleniumDriver.get();
+        }
+        return driver;
     }
 
     public static Page getPlaywrightPage() {
-        return playwrightPage.get();
+        Page page = playwrightPage.get();
+        if (page == null && ConfigManager.isPlaywright()) {
+            // Lazy initialization - create driver on first access
+            initializePlaywrightDriver();
+            page = playwrightPage.get();
+        }
+        return page;
     }
     
     public static void setPlaywrightPage(Page page) {
@@ -181,15 +240,28 @@ public class DriverManager {
         }
 
         if (ConfigManager.isSelenium()) {
-            if (seleniumDriver.get() != null) {
-                seleniumDriver.get().quit();
-                seleniumDriver.remove();
-                LogManager.info("Selenium WebDriver closed");
+            WebDriver driver = seleniumDriver.get();
+            if (driver != null) {
+                try {
+                    driver.quit();
+                    activeSeleniumDrivers.remove(driver);
+                    LogManager.info("Selenium WebDriver closed [Thread: " + Thread.currentThread().getName() + "]");
+                } catch (Exception e) {
+                    LogManager.error("Error closing Selenium driver: " + e.getMessage());
+                } finally {
+                    seleniumDriver.remove();
+                }
             }
         } else if (ConfigManager.isPlaywright()) {
-            // Only close Context after each scenario, keep Browser and Playwright alive
+            // Close page, context, browser, and playwright for each scenario in parallel execution
             if (playwrightPage.get() != null) {
-                playwrightPage.remove();
+                try {
+                    playwrightPage.get().close();
+                } catch (Exception e) {
+                    LogManager.error("Error closing Playwright page: " + e.getMessage());
+                } finally {
+                    playwrightPage.remove();
+                }
             }
             if (playwrightContext.get() != null) {
                 try {
@@ -197,8 +269,31 @@ public class DriverManager {
                     LogManager.info("Playwright Context closed");
                 } catch (Exception e) {
                     LogManager.error("Error closing Playwright context: " + e.getMessage());
+                } finally {
+                    playwrightContext.remove();
                 }
-                playwrightContext.remove();
+            }
+            if (playwrightBrowser.get() != null) {
+                try {
+                    playwrightBrowser.get().close();
+                    LogManager.info("Playwright Browser closed");
+                } catch (Exception e) {
+                    LogManager.error("Error closing Playwright browser: " + e.getMessage());
+                } finally {
+                    playwrightBrowser.remove();
+                }
+            }
+            Playwright pw = playwright.get();
+            if (pw != null) {
+                try {
+                    pw.close();
+                    activePlaywrights.remove(pw);
+                    LogManager.info("Playwright instance closed [Thread: " + Thread.currentThread().getName() + "]");
+                } catch (Exception e) {
+                    LogManager.error("Error closing Playwright: " + e.getMessage());
+                } finally {
+                    playwright.remove();
+                }
             }
         } else if (ConfigManager.isMobile()) {
             quitAppiumDriver();
@@ -255,23 +350,40 @@ public class DriverManager {
     }
 
     public static void closePlaywright() {
-        if (playwrightBrowser.get() != null) {
-            try {
-                playwrightBrowser.get().close();
-                LogManager.info("Playwright Browser closed for thread: " + Thread.currentThread().getName());
-            } catch (Exception e) {
-                LogManager.error("Error closing Playwright browser: " + e.getMessage());
+        // This method is now deprecated - cleanup happens in quitDriver()
+        // Kept for backward compatibility
+        LogManager.info("closePlaywright() called - cleanup handled by quitDriver()");
+    }
+    
+    /**
+     * Force cleanup all active drivers from all threads.
+     * Called by shutdown hook to ensure no orphaned browsers.
+     */
+    public static void forceCleanupAll() {
+        // Cleanup all Selenium drivers
+        synchronized (activeSeleniumDrivers) {
+            for (WebDriver driver : activeSeleniumDrivers) {
+                try {
+                    driver.quit();
+                    LogManager.info("Force closed Selenium driver");
+                } catch (Exception e) {
+                    LogManager.error("Error force closing Selenium driver: " + e.getMessage());
+                }
             }
-            playwrightBrowser.remove();
+            activeSeleniumDrivers.clear();
         }
-        if (playwright.get() != null) {
-            try {
-                playwright.get().close();
-                LogManager.info("Playwright instance closed for thread: " + Thread.currentThread().getName());
-            } catch (Exception e) {
-                LogManager.error("Error closing Playwright: " + e.getMessage());
+        
+        // Cleanup all Playwright instances
+        synchronized (activePlaywrights) {
+            for (Playwright pw : activePlaywrights) {
+                try {
+                    pw.close();
+                    LogManager.info("Force closed Playwright instance");
+                } catch (Exception e) {
+                    LogManager.error("Error force closing Playwright: " + e.getMessage());
+                }
             }
-            playwright.remove();
+            activePlaywrights.clear();
         }
     }
 

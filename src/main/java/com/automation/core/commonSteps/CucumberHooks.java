@@ -43,12 +43,19 @@ public class CucumberHooks {
 
         UnifiedLogger.info("Starting Scenario: " + scenarioName);
 
-        // Initialize drivers or clients based on tag
-        if (tags.contains("@UI") || tags.contains("@Mobile") || tags.contains("@Desktop") || tags.contains("@Mainframe")) {
-            DriverManager.initializeDriver();
-        } else if (tags.contains("@API")) {
-            APIClient.initializeAPIClient();
+        // Option 1: Eager initialization (current - browsers open immediately)
+        // Option 2: Lazy initialization (browsers open on first use)
+        boolean lazyInit = ConfigManager.getInstance().getBooleanProperty("driver.lazy.init", false);
+        
+        if (!lazyInit) {
+            // Initialize drivers or clients based on tag
+            if (tags.contains("@UI") || tags.contains("@Mobile") || tags.contains("@Desktop") || tags.contains("@Mainframe")) {
+                DriverManager.initializeDriver();
+            } else if (tags.contains("@API")) {
+                APIClient.initializeAPIClient();
+            }
         }
+        // If lazy init, driver will be created on first getDriver() call
     }
 
     @After
@@ -67,23 +74,49 @@ public class CucumberHooks {
                 } else {
                     UnifiedLogger.fail(scenarioName + " - Failed");
                 }
-                handleFailureScreenshot(scenario);
+                try {
+                    handleFailureScreenshot(scenario);
+                } catch (Exception screenshotEx) {
+                    UnifiedLogger.error("Failed to capture screenshot: " , screenshotEx);
+                }
             } else {
                 UnifiedLogger.pass(scenarioName + " - Passed");
             }
         } catch (Exception e) {
             UnifiedLogger.fail("Error during afterScenario: " + e.getMessage());
         } finally {
-            // Cleanup and finalize reports
-            ExtentReporter.endTest();
-            CustomReporter.endTest();
-            DriverManager.quitDriver();
-            APIClient.clearRequestSpec();
+            // CRITICAL: Cleanup must happen even if above code fails
+            try {
+                ExtentReporter.endTest();
+            } catch (Exception e) {
+                UnifiedLogger.error("Error ending ExtentReport: " ,e);
+            }
             
-            // Clear scenario context to prevent memory leaks
-            com.automation.core.context.ScenarioContext.reset();
+            try {
+                CustomReporter.endTest();
+            } catch (Exception e) {
+                UnifiedLogger.error("Error ending CustomReport: " ,e);
+            }
             
-            UnifiedLogger.info("Completed Scenario: " + scenarioName + " | Status: " + scenario.getStatus());
+            try {
+                DriverManager.quitDriver();
+            } catch (Exception e) {
+                UnifiedLogger.error("Error quitting driver: " ,e);
+            }
+            
+            try {
+                APIClient.clearRequestSpec();
+            } catch (Exception e) {
+                UnifiedLogger.error("Error clearing API client: " ,e);
+            }
+            
+            try {
+                com.automation.core.context.ScenarioContext.reset();
+            } catch (Exception e) {
+                UnifiedLogger.error("Error resetting ScenarioContext: " ,e);
+            }
+            
+            UnifiedLogger.info("Completed Scenario: " + scenarioName + " | Status: " + scenario.getStatus() + " [Thread: " + Thread.currentThread().getName() + "]");
         }
     }
 
@@ -118,18 +151,10 @@ public class CucumberHooks {
 
     @AfterAll
     public static void afterAll() {
-        try {
-            if (ConfigManager.isPlaywright()) {
-                DriverManager.closePlaywright();
-            }
-        } catch (Exception e) {
-            UnifiedLogger.error("Error closing Playwright: ", e);
-        } finally {
-            ExtentReporter.flushReports();
-            CustomReporter.generateReport();
-            generateAllureReport();
-            ColoredLogger.header("TEST SUITE COMPLETED");
-        }
+        ExtentReporter.flushReports();
+        CustomReporter.generateReport();
+        generateAllureReport();
+        ColoredLogger.header("TEST SUITE COMPLETED");
     }
 
     // ---------------------- Helper Methods ----------------------

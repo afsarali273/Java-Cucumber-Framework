@@ -169,29 +169,270 @@ public class UISteps {
 
     // ------------------- Waiting -------------------
 
+    /**
+     * Example: When wait for visible "#loginButton" for 10 seconds
+     */
     @When("wait for visible {string} for {int} seconds")
     public void waitForVisible(String locator, int seconds) {
         UIKeywords.waitForVisible(replaceVariables(locator), seconds);
     }
 
+    /**
+     * Example: When wait for clickable "#submitBtn" for 15 seconds
+     */
     @When("wait for clickable {string} for {int} seconds")
     public void waitForClickable(String locator, int seconds) {
         UIKeywords.waitForClickable(replaceVariables(locator), seconds);
     }
 
+    /**
+     * Example: When wait for invisible ".loading-spinner" for 20 seconds
+     */
     @When("wait for invisible {string} for {int} seconds")
     public void waitForInvisible(String locator, int seconds) {
         UIKeywords.waitForInvisible(replaceVariables(locator), seconds);
     }
 
+    /**
+     * Example: When wait for text "Welcome" in ".message" for 10 seconds
+     */
     @When("wait for text {string} in {string} for {int} seconds")
-    public void waitForText(String locator, String text, int seconds) {
+    public void waitForText(String text, String locator, int seconds) {
         UIKeywords.waitForText(replaceVariables(locator), replaceVariables(text), seconds);
     }
 
+    /**
+     * Example: When pause for 3 seconds
+     */
     @When("pause for {int} seconds")
     public void pause(int seconds) {
-        UIKeywords.waitForElement(replaceVariables("body"), seconds); // generic wait
+        try {
+            Thread.sleep(seconds * 1000L);
+            LogManager.info("Paused for " + seconds + " seconds");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    /**
+     * Example: When wait for page load
+     */
+    @When("wait for page load")
+    public void waitForPageLoad() {
+        UIKeywords.waitForPageLoad();
+    }
+
+    /**
+     * Example: When wait for page load for 30 seconds
+     */
+    @When("wait for page load for {int} seconds")
+    public void waitForPageLoadWithTimeout(int seconds) {
+        UIKeywords.waitForPageLoad(seconds);
+    }
+
+    /**
+     * Example: When wait for element "#dashboard" to be present
+     */
+    @When("wait for element {string} to be present")
+    public void waitForElementPresent(String locator) {
+        UIKeywords.waitForElementPresent(replaceVariables(locator));
+    }
+
+    /**
+     * Example: When wait for element "#dashboard" to be present for 15 seconds
+     */
+    @When("wait for element {string} to be present for {int} seconds")
+    public void waitForElementPresentWithTimeout(String locator, int seconds) {
+        UIKeywords.waitForElementPresent(replaceVariables(locator), seconds);
+    }
+
+    /**
+     * Example: When wait for element "#loginForm" to be enabled
+     */
+    @When("wait for element {string} to be enabled")
+    public void waitForElementEnabled(String locator) {
+        UIKeywords.waitForElementEnabled(replaceVariables(locator));
+    }
+
+    /**
+     * Example: When wait for element "#loginForm" to be enabled for 10 seconds
+     */
+    @When("wait for element {string} to be enabled for {int} seconds")
+    public void waitForElementEnabledWithTimeout(String locator, int seconds) {
+        UIKeywords.waitForElementEnabled(replaceVariables(locator), seconds);
+    }
+
+    /**
+     * Example: When wait for element "#loadingSpinner" to disappear
+     */
+    @When("wait for element {string} to disappear")
+    public void waitForElementToDisappear(String locator) {
+        UIKeywords.waitForInvisible(replaceVariables(locator), 30);
+    }
+
+    /**
+     * Example: When wait for element "#loadingSpinner" to disappear for 20 seconds
+     */
+    @When("wait for element {string} to disappear for {int} seconds")
+    public void waitForElementToDisappearWithTimeout(String locator, int seconds) {
+        UIKeywords.waitForInvisible(replaceVariables(locator), seconds);
+    }
+
+    /**
+     * Example: When wait for text "Success" to appear
+     */
+    @When("wait for text {string} to appear")
+    public void waitForTextToAppear(String text) {
+        UIKeywords.waitForTextPresent(replaceVariables(text));
+    }
+
+    /**
+     * Example: When wait for text "Success" to appear for 15 seconds
+     */
+    @When("wait for text {string} to appear for {int} seconds")
+    public void waitForTextToAppearWithTimeout(String text, int seconds) {
+        UIKeywords.waitForTextPresent(replaceVariables(text), seconds);
+    }
+
+    /**
+     * Example: When wait for text "Loading..." to disappear
+     */
+    @When("wait for text {string} to disappear")
+    public void waitForTextToDisappear(String text) {
+        UIKeywords.waitForTextToDisappear(replaceVariables(text));
+    }
+
+    /**
+     * Example: When wait for text "Loading..." to disappear for 20 seconds
+     */
+    @When("wait for text {string} to disappear for {int} seconds")
+    public void waitForTextToDisappearWithTimeout(String text, int seconds) {
+        UIKeywords.waitForTextToDisappear(replaceVariables(text), seconds);
+    }
+
+    /**
+     * Example: When wait for attribute "class" of "#button" to contain "active"
+     */
+    @When("wait for attribute {string} of {string} to contain {string}")
+    public void waitForAttributeContains(String attribute, String locator, String value) {
+        UIKeywords.waitForAttributeContains(replaceVariables(locator), replaceVariables(attribute), replaceVariables(value));
+    }
+
+    /**
+     * Example: When wait for attribute "class" of "#button" to contain "active" for 10 seconds
+     */
+    @When("wait for attribute {string} of {string} to contain {string} for {int} seconds")
+    public void waitForAttributeContainsWithTimeout(String attribute, String locator, String value, int seconds) {
+        UIKeywords.waitForAttributeContains(replaceVariables(locator), replaceVariables(attribute), replaceVariables(value), seconds);
+    }
+
+    /**
+     * Example: When wait for URL to contain "dashboard"
+     */
+    @When("wait for URL to contain {string}")
+    public void waitForURLContains(String urlPart) {
+        UIKeywords.waitForURLContains(replaceVariables(urlPart));
+    }
+
+    /**
+     * Example: When wait for URL to contain "dashboard" for 15 seconds
+     */
+    @When("wait for URL to contain {string} for {int} seconds")
+    public void waitForURLContainsWithTimeout(String urlPart, int seconds) {
+        UIKeywords.waitForURLContains(replaceVariables(urlPart), seconds);
+    }
+
+    /**
+     * Example: When wait for title to be "Dashboard - MyApp"
+     */
+    @When("wait for title to be {string}")
+    public void waitForTitle(String title) {
+        UIKeywords.waitForTitle(replaceVariables(title));
+    }
+
+    /**
+     * Example: When wait for title to be "Dashboard - MyApp" for 10 seconds
+     */
+    @When("wait for title to be {string} for {int} seconds")
+    public void waitForTitleWithTimeout(String title, int seconds) {
+        UIKeywords.waitForTitle(replaceVariables(title), seconds);
+    }
+
+    /**
+     * Example: When wait for title to contain "Dashboard"
+     */
+    @When("wait for title to contain {string}")
+    public void waitForTitleContains(String titlePart) {
+        UIKeywords.waitForTitleContains(replaceVariables(titlePart));
+    }
+
+    /**
+     * Example: When wait for title to contain "Dashboard" for 10 seconds
+     */
+    @When("wait for title to contain {string} for {int} seconds")
+    public void waitForTitleContainsWithTimeout(String titlePart, int seconds) {
+        UIKeywords.waitForTitleContains(replaceVariables(titlePart), seconds);
+    }
+
+    /**
+     * Example: When wait for element count of ".item" to be 5
+     */
+    @When("wait for element count of {string} to be {int}")
+    public void waitForElementCount(String locator, int count) {
+        UIKeywords.waitForElementCount(replaceVariables(locator), count);
+    }
+
+    /**
+     * Example: When wait for element count of ".item" to be 5 for 15 seconds
+     */
+    @When("wait for element count of {string} to be {int} for {int} seconds")
+    public void waitForElementCountWithTimeout(String locator, int count, int seconds) {
+        UIKeywords.waitForElementCount(replaceVariables(locator), count, seconds);
+    }
+
+    /**
+     * Example: When wait for alert to be present
+     */
+    @When("wait for alert to be present")
+    public void waitForAlert() {
+        UIKeywords.waitForAlert();
+    }
+
+    /**
+     * Example: When wait for alert to be present for 10 seconds
+     */
+    @When("wait for alert to be present for {int} seconds")
+    public void waitForAlertWithTimeout(int seconds) {
+        UIKeywords.waitForAlert(seconds);
+    }
+
+    /**
+     * Example: When wait for frame "#myFrame" to be available
+     */
+    @When("wait for frame {string} to be available")
+    public void waitForFrame(String locator) {
+        UIKeywords.waitForFrameAvailable(replaceVariables(locator));
+    }
+
+    /**
+     * Example: When wait for frame "#myFrame" to be available for 10 seconds
+     */
+    @When("wait for frame {string} to be available for {int} seconds")
+    public void waitForFrameWithTimeout(String locator, int seconds) {
+        UIKeywords.waitForFrameAvailable(replaceVariables(locator), seconds);
+    }
+
+    /**
+     * Example: When wait for {int} milliseconds
+     */
+    @When("wait for {int} milliseconds")
+    public void waitMilliseconds(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+            LogManager.info("Waited for " + milliseconds + " milliseconds");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     // ------------------- Assertions -------------------

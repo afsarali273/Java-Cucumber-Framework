@@ -80,6 +80,9 @@ parallel.execution=true
 thread.count=3
 parallel.mode=methods
 
+# Lazy Driver Initialization (Recommended: true)
+driver.lazy.init=true
+
 # Timeouts (seconds)
 implicit.wait=10
 explicit.wait=20
@@ -365,6 +368,139 @@ mvn test -Dbrowser=chrome -Denvironment=prod -Dheadless=true
 # Override in IDE (IntelliJ Run Configuration)
 VM Options: -Dbrowser=firefox -Denvironment=qa</code></pre>
         </div>
+      </section>
+
+      <section class="section">
+        <h2>Parallel Execution Configuration</h2>
+        <p>Configure parallel test execution for faster test runs with proper browser lifecycle management.</p>
+        
+        <h3>Configuration Options</h3>
+        <div class="code-block">
+          <pre><code># Enable Parallel Execution
+parallel.execution=true
+
+# Thread Count: Number of parallel threads
+thread.count=2
+
+# Parallel Mode: methods | classes | tests | suites
+parallel.mode=methods
+
+# Lazy Driver Initialization (Recommended: true)
+# true: Browser opens only when first step needs it (no empty browsers)
+# false: Browser opens in @Before hook (may see empty browsers briefly)
+driver.lazy.init=true</code></pre>
+        </div>
+
+        <h3>Lazy Initialization Explained</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Setting</th>
+              <th>Behavior</th>
+              <th>Pros</th>
+              <th>Cons</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>driver.lazy.init=true</code><br><span class="badge badge-success">Recommended</span></td>
+              <td>Browser opens on first use</td>
+              <td>
+                ✅ No empty browsers<br>
+                ✅ Cleaner execution<br>
+                ✅ Better resource usage
+              </td>
+              <td>⚠️ First step ~100ms slower</td>
+              <td>Parallel execution, local dev, CI/CD</td>
+            </tr>
+            <tr>
+              <td><code>driver.lazy.init=false</code></td>
+              <td>Browser opens in @Before</td>
+              <td>
+                ✅ Faster first step<br>
+                ✅ Immediate initialization
+              </td>
+              <td>⚠️ Empty browsers visible briefly</td>
+              <td>Single-threaded execution</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Parallel Execution Timeline</h3>
+        <div class="alert alert-info">
+          <strong>With Lazy Initialization (driver.lazy.init=true):</strong>
+          <pre style="background: #f5f5f5; padding: 10px; margin-top: 10px;">Thread 1: Scenario A
+├─ @Before hook (0.2s)
+│  └─ Reports initialized
+├─ Step 1: "user opens website" (1s)
+│  └─ Browser opens + navigateTo() ← No empty browser!
+├─ Step 2: "user searches" (2s)
+└─ @After hook (0.5s)
+   └─ Browser closes ✅
+
+Thread 2: Scenario B (parallel)
+├─ @Before hook (0.2s)
+├─ Step 1: "user opens website" (1s)
+│  └─ Browser opens + navigateTo() ← No empty browser!
+└─ ...</pre>
+        </div>
+
+        <h3>Runtime Override</h3>
+        <div class="code-block">
+          <pre><code># Enable lazy initialization at runtime
+mvn test -Ddriver.lazy.init=true
+
+# Run with parallel execution
+mvn test -Dparallel.execution=true -Dthread.count=3 -Ddriver.lazy.init=true
+
+# CLI Runner with parallel execution
+mvn test -Pcli-runner -Dthread_count=3 -Dcucumber.filter.tags="@UI"</code></pre>
+        </div>
+
+        <h3>Best Practices for Parallel Execution</h3>
+        <div class="alert alert-success">
+          <ul>
+            <li>✅ Always set <code>driver.lazy.init=true</code> for parallel execution</li>
+            <li>✅ Use thread count = CPU cores (e.g., 2-4 for local, 5-10 for CI/CD)</li>
+            <li>✅ Enable headless mode for CI/CD: <code>headless=true</code></li>
+            <li>✅ All drivers are automatically cleaned up after each scenario</li>
+            <li>✅ ThreadLocal ensures complete isolation between threads</li>
+            <li>✅ Shutdown hook catches any orphaned browsers</li>
+          </ul>
+        </div>
+
+        <h3>Troubleshooting</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Issue</th>
+              <th>Solution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Empty browsers visible</td>
+              <td>Set <code>driver.lazy.init=true</code></td>
+            </tr>
+            <tr>
+              <td>Browsers not closing</td>
+              <td>Already fixed - automatic cleanup in @After hook</td>
+            </tr>
+            <tr>
+              <td>Thread interference</td>
+              <td>Framework uses ThreadLocal - fully isolated</td>
+            </tr>
+            <tr>
+              <td>Memory leaks</td>
+              <td>Shutdown hook ensures cleanup on JVM exit</td>
+            </tr>
+            <tr>
+              <td>Tests failing in parallel</td>
+              <td>Ensure test data is unique per thread</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <section class="section">

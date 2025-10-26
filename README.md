@@ -323,6 +323,7 @@ All reports show:
 parallel.execution=true
 thread.count=3
 parallel.mode=methods
+driver.lazy.init=true  # Recommended for cleaner parallel execution
 ```
 
 ### Retry Failed Tests

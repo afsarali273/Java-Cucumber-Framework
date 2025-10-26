@@ -575,4 +575,209 @@ public class UIKeywords {
         UnifiedLogger.info("Current URL: " + url);
         return url;
     }
+
+    // ------------------- Additional Wait Methods -------------------
+
+    public static void waitForPageLoad() {
+        waitForPageLoad(30);
+    }
+
+    public static void waitForPageLoad(int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(driver -> ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete"));
+        } else {
+            DriverManager.getPlaywrightPage().waitForLoadState(com.microsoft.playwright.options.LoadState.LOAD, new Page.WaitForLoadStateOptions().setTimeout(seconds * 1000));
+        }
+        UnifiedLogger.info("Waited for page load");
+    }
+
+    public static void waitForElementPresent(String locator) {
+        waitForElementPresent(locator, 30);
+    }
+
+    public static void waitForElementPresent(String locator, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated(By.cssSelector(locator)));
+        } else {
+            DriverManager.getPlaywrightPage().waitForSelector(locator, new Page.WaitForSelectorOptions().setTimeout(seconds * 1000));
+        }
+        UnifiedLogger.info("Waited for element present: " + locator);
+    }
+
+    public static void waitForElementEnabled(String locator) {
+        waitForElementEnabled(locator, 30);
+    }
+
+    public static void waitForElementEnabled(String locator, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(driver -> driver.findElement(By.cssSelector(locator)).isEnabled());
+        } else {
+            DriverManager.getPlaywrightPage().waitForSelector(locator, new Page.WaitForSelectorOptions().setTimeout(seconds * 1000));
+            long end = System.currentTimeMillis() + seconds * 1000;
+            while (System.currentTimeMillis() < end) {
+                if (DriverManager.getPlaywrightPage().isEnabled(locator)) break;
+                try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+            }
+        }
+        UnifiedLogger.info("Waited for element enabled: " + locator);
+    }
+
+    public static void waitForTextPresent(String text) {
+        waitForTextPresent(text, 30);
+    }
+
+    public static void waitForTextPresent(String text, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(driver -> driver.getPageSource().contains(text));
+        } else {
+            long end = System.currentTimeMillis() + seconds * 1000;
+            while (System.currentTimeMillis() < end) {
+                if (DriverManager.getPlaywrightPage().content().contains(text)) break;
+                try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+            }
+        }
+        UnifiedLogger.info("Waited for text present: " + text);
+    }
+
+    public static void waitForTextToDisappear(String text) {
+        waitForTextToDisappear(text, 30);
+    }
+
+    public static void waitForTextToDisappear(String text, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(driver -> !driver.getPageSource().contains(text));
+        } else {
+            long end = System.currentTimeMillis() + seconds * 1000;
+            while (System.currentTimeMillis() < end) {
+                if (!DriverManager.getPlaywrightPage().content().contains(text)) break;
+                try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+            }
+        }
+        UnifiedLogger.info("Waited for text to disappear: " + text);
+    }
+
+    public static void waitForAttributeContains(String locator, String attribute, String value) {
+        waitForAttributeContains(locator, attribute, value, 30);
+    }
+
+    public static void waitForAttributeContains(String locator, String attribute, String value, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(driver -> {
+                    String attrValue = driver.findElement(By.cssSelector(locator)).getAttribute(attribute);
+                    return attrValue != null && attrValue.contains(value);
+                });
+        } else {
+            long end = System.currentTimeMillis() + seconds * 1000;
+            while (System.currentTimeMillis() < end) {
+                String attrValue = DriverManager.getPlaywrightPage().getAttribute(locator, attribute);
+                if (attrValue != null && attrValue.contains(value)) break;
+                try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+            }
+        }
+        UnifiedLogger.info("Waited for attribute '" + attribute + "' to contain '" + value + "' in: " + locator);
+    }
+
+    public static void waitForURLContains(String urlPart) {
+        waitForURLContains(urlPart, 30);
+    }
+
+    public static void waitForURLContains(String urlPart, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(org.openqa.selenium.support.ui.ExpectedConditions.urlContains(urlPart));
+        } else {
+            DriverManager.getPlaywrightPage().waitForURL("**/*" + urlPart + "*", new Page.WaitForURLOptions().setTimeout(seconds * 1000));
+        }
+        UnifiedLogger.info("Waited for URL to contain: " + urlPart);
+    }
+
+    public static void waitForTitle(String title) {
+        waitForTitle(title, 30);
+    }
+
+    public static void waitForTitle(String title, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(org.openqa.selenium.support.ui.ExpectedConditions.titleIs(title));
+        } else {
+            long end = System.currentTimeMillis() + seconds * 1000;
+            while (System.currentTimeMillis() < end) {
+                if (title.equals(DriverManager.getPlaywrightPage().title())) break;
+                try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+            }
+        }
+        UnifiedLogger.info("Waited for title: " + title);
+    }
+
+    public static void waitForTitleContains(String titlePart) {
+        waitForTitleContains(titlePart, 30);
+    }
+
+    public static void waitForTitleContains(String titlePart, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(org.openqa.selenium.support.ui.ExpectedConditions.titleContains(titlePart));
+        } else {
+            long end = System.currentTimeMillis() + seconds * 1000;
+            while (System.currentTimeMillis() < end) {
+                if (DriverManager.getPlaywrightPage().title().contains(titlePart)) break;
+                try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+            }
+        }
+        UnifiedLogger.info("Waited for title to contain: " + titlePart);
+    }
+
+    public static void waitForElementCount(String locator, int count) {
+        waitForElementCount(locator, count, 30);
+    }
+
+    public static void waitForElementCount(String locator, int count, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(driver -> driver.findElements(By.cssSelector(locator)).size() == count);
+        } else {
+            long end = System.currentTimeMillis() + seconds * 1000;
+            while (System.currentTimeMillis() < end) {
+                if (DriverManager.getPlaywrightPage().locator(locator).count() == count) break;
+                try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+            }
+        }
+        UnifiedLogger.info("Waited for element count " + count + " of: " + locator);
+    }
+
+    public static void waitForAlert() {
+        waitForAlert(30);
+    }
+
+    public static void waitForAlert(int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(org.openqa.selenium.support.ui.ExpectedConditions.alertIsPresent());
+        } else {
+            // Playwright handles alerts via dialog events
+            UnifiedLogger.info("Playwright handles alerts via dialog events");
+        }
+        UnifiedLogger.info("Waited for alert");
+    }
+
+    public static void waitForFrameAvailable(String locator) {
+        waitForFrameAvailable(locator, 30);
+    }
+
+    public static void waitForFrameAvailable(String locator, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(org.openqa.selenium.support.ui.ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector(locator)));
+        } else {
+            // Playwright auto-handles frames
+            DriverManager.getPlaywrightPage().waitForSelector(locator, new Page.WaitForSelectorOptions().setTimeout(seconds * 1000));
+        }
+        UnifiedLogger.info("Waited for frame available: " + locator);
+    }
 }

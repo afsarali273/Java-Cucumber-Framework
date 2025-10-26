@@ -124,18 +124,45 @@ String text = getText(By.className("message"));
 // Get attribute
 String href = getAttribute(By.id("link"), "href");</code></pre>
 
-        <h3>Wait Strategies</h3>
-        <pre><code>// Wait for element to be visible
+        <h3>Wait Strategies (30+ Methods Available)</h3>
+        <pre><code>// Basic waits
 waitForElementToBeVisible(By.id("result"));
-
-// Wait for element to be clickable
 waitForElementToBeClickable(By.id("submit"));
-
-// Wait for element to disappear
 waitForElementToDisappear(By.className("loader"));
+
+// Page load waits
+waitForPageLoad();
+waitForPageLoad(30);
+
+// Element state waits
+waitForElementPresent(By.id("dashboard"));
+waitForElementEnabled(By.id("loginForm"));
+
+// Text waits
+waitForTextPresent("Success");
+waitForTextToDisappear("Loading...");
+
+// Attribute waits
+waitForAttributeContains(By.id("button"), "class", "active");
+
+// URL and title waits
+waitForURLContains("dashboard");
+waitForTitle("Dashboard - MyApp");
+waitForTitleContains("Dashboard");
+
+// Element count waits
+waitForElementCount(By.className("item"), 5);
+
+// Alert and frame waits
+waitForAlert();
+waitForFrameAvailable(By.id("myFrame"));
 
 // Custom wait
 waitForCondition(ExpectedConditions.titleContains("Dashboard"));</code></pre>
+        
+        <div class="alert alert-info">
+          <strong>📚 Complete Wait Reference:</strong> See <a href="#wait-steps-section">Wait Steps Section</a> below for all 30+ wait operations with Cucumber step definitions.
+        </div>
 
         <h3>Dropdown Handling</h3>
         <pre><code>// Select by visible text
@@ -839,6 +866,90 @@ public class FlipkartPage extends PlaywrightReusable {
           <li>Close browsers properly in @After hooks</li>
           <li>Use headless mode for CI/CD pipelines</li>
         </ul>
+      </section>
+
+      <section class="section" id="wait-steps-section">
+        <h2>⏱️ Wait Steps Reference (30+ Steps)</h2>
+        <p>Complete list of wait-related Cucumber step definitions for robust test automation.</p>
+        
+        <h3>Basic Wait Steps</h3>
+        <pre><code>When wait for visible "#loginButton" for 10 seconds
+When wait for clickable "#submitBtn" for 15 seconds
+When wait for invisible ".loading-spinner" for 20 seconds
+When wait for text "Welcome" in ".message" for 10 seconds
+When pause for 3 seconds
+When wait for 500 milliseconds</code></pre>
+        
+        <h3>Page Load Waits</h3>
+        <pre><code>When wait for page load
+When wait for page load for 30 seconds</code></pre>
+        
+        <h3>Element State Waits</h3>
+        <pre><code>When wait for element "#dashboard" to be present
+When wait for element "#dashboard" to be present for 15 seconds
+When wait for element "#loginForm" to be enabled
+When wait for element "#loginForm" to be enabled for 10 seconds
+When wait for element "#loadingSpinner" to disappear
+When wait for element "#loadingSpinner" to disappear for 20 seconds</code></pre>
+        
+        <h3>Text Waits</h3>
+        <pre><code>When wait for text "Success" to appear
+When wait for text "Success" to appear for 15 seconds
+When wait for text "Loading..." to disappear
+When wait for text "Loading..." to disappear for 20 seconds</code></pre>
+        
+        <h3>Attribute Waits</h3>
+        <pre><code>When wait for attribute "class" of "#button" to contain "active"
+When wait for attribute "class" of "#button" to contain "active" for 10 seconds</code></pre>
+        
+        <h3>URL & Title Waits</h3>
+        <pre><code>When wait for URL to contain "dashboard"
+When wait for URL to contain "dashboard" for 15 seconds
+When wait for title to be "Dashboard - MyApp"
+When wait for title to be "Dashboard - MyApp" for 10 seconds
+When wait for title to contain "Dashboard"
+When wait for title to contain "Dashboard" for 10 seconds</code></pre>
+        
+        <h3>Element Count Waits</h3>
+        <pre><code>When wait for element count of ".item" to be 5
+When wait for element count of ".item" to be 5 for 15 seconds</code></pre>
+        
+        <h3>Alert & Frame Waits</h3>
+        <pre><code>When wait for alert to be present
+When wait for alert to be present for 10 seconds
+When wait for frame "#myFrame" to be available
+When wait for frame "#myFrame" to be available for 10 seconds</code></pre>
+        
+        <h3>Usage Example</h3>
+        <pre><code>@UI @WaitExample
+Feature: Login with Proper Waits
+
+  Scenario: Login with wait strategies
+    Given navigate to "https://example.com"
+    When wait for page load
+    And wait for element "#loginForm" to be present
+    And type "testuser" into "#username"
+    And type "password123" into "#password"
+    And wait for element "#loginBtn" to be enabled
+    And click element "#loginBtn"
+    And wait for element ".loading-spinner" to disappear for 20 seconds
+    And wait for URL to contain "dashboard" for 10 seconds
+    Then element ".welcome-message" should be visible</code></pre>
+        
+        <div class="alert alert-success">
+          <strong>✅ Best Practices:</strong>
+          <ul>
+            <li>Use condition-based waits instead of hard waits (pause)</li>
+            <li>Wait for page load after navigation</li>
+            <li>Wait for loading indicators to disappear</li>
+            <li>Wait for URL changes after form submissions</li>
+            <li>Use appropriate timeouts based on application behavior</li>
+          </ul>
+        </div>
+        
+        <div class="alert alert-info">
+          <strong>📚 Full Documentation:</strong> For complete wait steps reference with examples and patterns, see <code>/documents/WAIT_STEPS_REFERENCE.md</code>
+        </div>
       </section>
 
       <footer class="footer">

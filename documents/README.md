@@ -480,9 +480,10 @@ Each application test project imports the framework as a **JAR dependency**:
 
 ### 🧪 BDD with Cucumber
 - Gherkin syntax for readable tests
-- 150+ pre-built step definitions
+- 520+ pre-built step definitions
 - Tag-based execution
 - Scenario context for data sharing
+- 30+ wait operations for robust testing
 
 ### ⚡ Parallel Execution
 - Thread-safe components
