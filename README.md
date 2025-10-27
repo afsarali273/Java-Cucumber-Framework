@@ -155,6 +155,23 @@ expect(locator).hasValue("test");
 expect(page).hasURL("https://example.com");
 ```
 
+## Playwright Test Generator 🎭
+
+Generate tests by recording browser interactions:
+
+```bash
+# macOS/Linux
+./codegen.sh https://example.com
+
+# Windows
+codegen.bat https://example.com
+
+# Default demo site
+./codegen.sh
+```
+
+Codegen opens a browser and records your actions, generating Playwright code automatically. See `CODEGEN_GUIDE.md` for details.
+
 ## Running Tests
 
 ```bash
