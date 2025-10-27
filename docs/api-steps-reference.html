@@ -36,7 +36,7 @@
 
       <section class="section">
         <div class="alert alert-success">
-          <strong>150+ Step Definitions</strong> for comprehensive REST/SOAP API automation with variable substitution
+          <strong>170+ Step Definitions</strong> for comprehensive REST/SOAP API automation with external files, query parameters, and variable substitution
         </div>
       </section>
 
@@ -62,25 +62,65 @@ When user sends POST request to "orders" service endpoint "/create"</code></pre>
       </section>
 
       <section class="section">
-        <h2>Request Body (4 steps)</h2>
+        <h2>Request Body (10 steps)</h2>
         <pre><code>When user creates POST request body with title "Test" and body "Content"
 When user sets request body:
   """
   {"name": "John", "email": "john@example.com"}
   """
 When user sets request body from file "testdata/request.json"
-When user sets request body from file "${requestFile}"</code></pre>
+When user sets request body from file "${requestFile}"
+
+# External JSON/XML Files with Variable Replacement
+When user sends POST request to "/users" with body from file "testData/rest/createUser.json"
+When user sends POST request to "/posts" with body from file "${jsonFile}"
+When user sends PUT request to "/users/1" with body from file "testData/rest/updateUser.json"
+When user sends SOAP request to "/soap/users" with body from file "testData/soap/getUserRequest.xml"
+When user sends SOAP request to "/soap/orders" with body from file "${soapFile}"
+When user sends "POST" request to "/api/data" with body from file "testData/custom.json"</code></pre>
       </section>
 
       <section class="section">
-        <h2>Headers & Query Params (7 steps)</h2>
-        <pre><code>When user sets header "Authorization" as "Bearer ${token}"
+        <h2>Headers & Query Params (18 steps)</h2>
+        <pre><code># Headers
+When user sets header "Authorization" as "Bearer ${token}"
 When user sets header "Content-Type" as "application/json"
+When user sends "GET" request to "/users" with headers
+When user applies headers
+
+# Query Parameters - Individual
 When user sets query param "page" as "1"
 When user sets query param "limit" as "10"
 When user sends GET request to "/users" with query params
-When user sends "GET" request to "/users" with headers
-When user applies headers</code></pre>
+
+# Query Parameters - DataTable (Recommended)
+When user sets query parameters:
+  | page   | 1      |
+  | limit  | 10     |
+  | sort   | name   |
+  | order  | asc    |
+
+# Query Parameters - Inline Format
+When user sets query parameters "page=1&limit=10&sort=name"
+When user sets query parameters "status=${status}&role=${role}"
+
+# Query Parameters - From Properties File
+When user sets query parameters from file "testData/queryParams/searchParams.properties"
+When user sets query parameters from file "${paramsFile}"
+
+# Query Parameters - From JSON File
+When user sets query parameters from json file "testData/queryParams/userFilters.json"
+When user sets query parameters from json file "${jsonParamsFile}"
+
+# Combined Steps (Request + Query Params)
+When user sends GET request to "/users" with query parameters:
+  | page   | 1      |
+  | limit  | 10     |
+When user sends POST request to "/search" with query parameters:
+  | filter | active |
+
+# Clear Query Parameters
+When user clears query parameters</code></pre>
       </section>
 
       <section class="section">
@@ -198,6 +238,70 @@ Then verify "name" in response body is "John"</code></pre>
       </section>
 
       <section class="section">
+        <h2>External Files - Complete Examples</h2>
+        
+        <h3>Example 1: REST API with External JSON</h3>
+        <pre><code>Scenario: Create user from external JSON file
+  Given user switches to "userService" API service
+  And user sets header "Content-Type" as "application/json"
+  # Store variables for replacement
+  And user saves "John Doe" as "userName"
+  And user saves "john@example.com" as "userEmail"
+  # Send request with external file (variables replaced automatically)
+  When user sends POST request to "/users" with body from file "testData/rest/createUser.json"
+  Then response status code should be 201
+  And response "name" should be "John Doe"
+  And response "email" should be "john@example.com"</code></pre>
+
+        <h3>Example 2: SOAP API with External XML</h3>
+        <pre><code>Scenario: Get user details via SOAP
+  Given user switches to "soapService" API service
+  And user sets header "Content-Type" as "text/xml"
+  # Store userId for replacement
+  And user saves "12345" as "userId"
+  # Send SOAP request with external XML file
+  When user sends SOAP request to "/soap/users" with body from file "testData/soap/getUserRequest.xml"
+  Then response status code should be 200
+  And SOAP response should not have fault
+  And SOAP xpath "//UserId" should be "12345"</code></pre>
+
+        <h3>Example 3: Query Parameters with DataTable</h3>
+        <pre><code>Scenario: Search users with multiple filters
+  When user sends GET request to "/users" with query parameters:
+    | page       | 1        |
+    | limit      | 20       |
+    | status     | active   |
+    | role       | admin    |
+    | sortBy     | name     |
+    | order      | asc      |
+  Then response status code should be 200
+  And json array "data" should have size 20</code></pre>
+
+        <h3>Example 4: Query Parameters from External File</h3>
+        <pre><code>Scenario: Search with parameters from properties file
+  # Store variables for replacement
+  Given user saves "active" as "status"
+  And user saves "admin" as "role"
+  # Load query params from file (variables replaced)
+  When user sets query parameters from file "testData/queryParams/searchParams.properties"
+  And user sends GET request to "/users"
+  Then response status code should be 200</code></pre>
+
+        <h3>Example 5: Combined External Files</h3>
+        <pre><code>Scenario: Create order with external JSON and query params
+  # Set variables
+  Given user saves "PROD123" as "productId"
+  And user saves "5" as "quantity"
+  And user saves "express" as "shipping"
+  # Load query params from JSON file
+  When user sets query parameters from json file "testData/queryParams/orderParams.json"
+  # Send POST with external JSON body
+  And user sends POST request to "/orders" with body from file "testData/rest/createOrder.json"
+  Then response status code should be 201
+  And response "productId" should be "PROD123"</code></pre>
+      </section>
+
+      <section class="section">
         <h2>Complete Example</h2>
         <h3>Feature File</h3>
         <pre><code>@API @Regression
@@ -301,6 +405,11 @@ Then json path "email" should be "${expectedEmail}"</code></pre>
           <li>✅ Use data tables for multiple similar requests</li>
           <li>✅ Clear variables between independent scenarios</li>
           <li>✅ Log responses for debugging</li>
+          <li>✅ <strong>Use external JSON/XML files for complex request bodies</strong></li>
+          <li>✅ <strong>Store test data in testData/ folder with proper structure</strong></li>
+          <li>✅ <strong>Use DataTable for query parameters (most readable)</strong></li>
+          <li>✅ <strong>Leverage ${variable} replacement in external files</strong></li>
+          <li>✅ <strong>Use properties/JSON files for reusable query parameter sets</strong></li>
         </ul>
       </section>
 

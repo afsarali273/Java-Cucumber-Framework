@@ -316,6 +316,44 @@ All reports show:
 - Failure reasons with stack traces
 - Embedded screenshots
 
+## Test Data Encryption 🔒
+
+Safely commit credentials to GitHub using Base64 encoding.
+
+### Quick Start
+```bash
+# Encrypt file (macOS/Linux)
+./encrypt-testdata.sh testData/credentials.json
+
+# Encrypt file (Windows)
+encrypt-testdata.bat testData\credentials.json
+
+# Use in tests - framework auto-decodes .encrypted files
+When user sets request body from file "testData/credentials.json.encrypted"
+```
+
+### Features
+- ✅ Base64 encoding for GitHub safety
+- ✅ Automatic decryption during test execution
+- ✅ Supports JSON, XML, SOAP, query params
+- ✅ Variable replacement: `${variableName}`
+- ✅ Works with all file-loading steps
+
+### Example
+```gherkin
+Scenario: Login with encrypted credentials
+  When user sets request body from file "testData/secure/credentials.json.encrypted"
+  And user sends POST request to "/auth/login"
+  Then response status code should be 200
+```
+
+### Documentation
+- 📄 `ENCRYPTION_GUIDE.md` - Complete guide
+- 📄 `README_ENCRYPTION.md` - Quick reference
+- 🌐 `docs/test-data-encryption.html` - HTML documentation
+
+⚠️ **Note**: Base64 is encoding, not encryption. Use for GitHub safety only. For production, use AWS Secrets Manager, Azure Key Vault, etc.
+
 ## Advanced Features
 
 ### Parallel Execution

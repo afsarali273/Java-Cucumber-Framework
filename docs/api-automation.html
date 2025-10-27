@@ -878,6 +878,58 @@ AssertUtils.assertEquals(userId, "1", "User ID should match");</code></pre>
       </section>
 
       <section class="section">
+        <h2>🔒 Encrypted Test Data (NEW)</h2>
+        <p>Encrypt sensitive credentials to safely commit to GitHub without exposing secrets.</p>
+        
+        <div class="alert alert-success">
+          <strong>✅ New Feature:</strong> Base64 encoding for test data files with automatic decryption. Safe to commit to GitHub!
+        </div>
+
+        <h3>Quick Start</h3>
+        <pre><code># Encrypt file (macOS/Linux)
+./encrypt-testdata.sh testData/credentials.json
+
+# Encrypt file (Windows)
+encrypt-testdata.bat testData\credentials.json
+
+# Use in tests - framework auto-decodes .encrypted files
+When user sets request body from file "testData/credentials.json.encrypted"</code></pre>
+
+        <h3>How It Works</h3>
+        <ul>
+          <li>✅ Files are Base64 encoded (obfuscation, not encryption)</li>
+          <li>✅ Framework automatically detects <code>.encrypted</code> extension</li>
+          <li>✅ Decodes on-the-fly during test execution</li>
+          <li>✅ Supports variable replacement: <code>${variableName}</code></li>
+          <li>✅ Works with JSON, XML, SOAP, query params</li>
+          <li>✅ Safe to commit to GitHub (bypasses security scanners)</li>
+        </ul>
+
+        <h3>Example: Encrypted Credentials</h3>
+        <pre><code>Scenario: Login with encrypted credentials
+  # Original file contains: {"username": "admin", "password": "secret123"}
+  When user sets request body from file "testData/secure/credentials.json.encrypted"
+  And user sends POST request to "/auth/login"
+  Then response status code should be 200
+  And response "token" should not be null</code></pre>
+
+        <h3>Supported Steps</h3>
+        <pre><code>When user sets request body from file "file.json.encrypted"
+When user sets request body from json file "file.json.encrypted"
+When user sets request body from xml file "file.xml.encrypted"
+When user sets SOAP envelope from file "file.xml.encrypted"
+When user sends POST request to "/api" with body from file "file.json.encrypted"
+When user sets query parameters from file "params.properties.encrypted"
+When user sets query parameters from json file "params.json.encrypted"</code></pre>
+
+        <div class="alert alert-warning">
+          <strong>⚠️ Security Note:</strong> Base64 is encoding, not encryption. Use for GitHub safety only. For production, use environment variables or secret managers (AWS Secrets Manager, Azure Key Vault, etc.).
+        </div>
+
+        <p>📖 <strong>Full Guide:</strong> See <code>ENCRYPTION_GUIDE.md</code> for complete documentation, examples, and best practices</p>
+      </section>
+
+      <section class="section">
         <h2>Best Practices</h2>
 
         <ul>

@@ -24,3 +24,10 @@ allure-results/
 
 # Screenshots
 screenshots/
+
+# Encrypted Test Data - Keep encrypted files, ignore originals
+src/test/resources/testData/secure/*.json
+src/test/resources/testData/secure/*.xml
+!src/test/resources/testData/secure/*.encrypted
+src/test/resources/testData/soap/secure/*.xml
+!src/test/resources/testData/soap/secure/*.encrypted

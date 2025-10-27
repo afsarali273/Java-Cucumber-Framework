@@ -45,7 +45,7 @@ public class CucumberHooks {
 
         // Option 1: Eager initialization (current - browsers open immediately)
         // Option 2: Lazy initialization (browsers open on first use)
-        boolean lazyInit = ConfigManager.getInstance().getBooleanProperty("driver.lazy.init", false);
+        boolean lazyInit = ConfigManager.getInstance().getBooleanProperty("driver.lazy.init", true);
         
         if (!lazyInit) {
             // Initialize drivers or clients based on tag

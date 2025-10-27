@@ -630,24 +630,42 @@ public class APISteps extends APIReusable {
     /**
      * Helper method to load file content from multiple locations.
      * Search order: 1) Absolute path, 2) testData folder, 3) Classpath
+     * Supports .encrypted files (Base64 encoded) - automatically decodes them
      */
     private String loadFileContent(String filePath) {
         try {
+            boolean isEncrypted = filePath.endsWith(".encrypted");
+            
             // Try absolute path first
             File f = new File(filePath);
             if (f.exists() && f.isFile()) {
-                return Files.readString(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);
+                String content = Files.readString(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);
+                if (isEncrypted) {
+                    content = com.automation.core.utils.EncryptionUtil.decodeString(content);
+                    LogManager.info("Decoded encrypted file: " + filePath);
+                }
+                return content;
             }
             
             // Try testData folder
             String testDataPath = "src/test/resources/testData/" + filePath;
             f = new File(testDataPath);
             if (f.exists() && f.isFile()) {
-                return Files.readString(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);
+                String content = Files.readString(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);
+                if (isEncrypted) {
+                    content = com.automation.core.utils.EncryptionUtil.decodeString(content);
+                    LogManager.info("Decoded encrypted file: " + testDataPath);
+                }
+                return content;
             }
             
             // Try classpath
-            return readClasspathResourceAsString(filePath);
+            String content = readClasspathResourceAsString(filePath);
+            if (isEncrypted) {
+                content = com.automation.core.utils.EncryptionUtil.decodeString(content);
+                LogManager.info("Decoded encrypted file from classpath: " + filePath);
+            }
+            return content;
         } catch (IOException e) {
             throw new AssertionError("Failed to load file: " + filePath + ", error: " + e.getMessage());
         }

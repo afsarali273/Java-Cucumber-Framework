@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Data & Encryption - Sands Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="test-data-encryption.html" class="nav-link active"><i class="fas fa-lock"></i>Test Data & Encryption</a></li>
+          <li class="nav-item"><a href="examples.html" class="nav-link"><i class="fas fa-code-branch"></i>Examples</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>🔒 Test Data Management & Encryption</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="alert alert-success">
+          <strong>✅ Safely commit credentials to GitHub!</strong> Encrypt sensitive test data using Base64 encoding to bypass security scanners.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>Framework provides comprehensive test data management with encryption support for safely storing credentials in version control.</p>
+        
+        <div class="card-grid">
+          <div class="card">
+            <h3>🔐 Base64 Encryption</h3>
+            <p>Encode sensitive files to bypass GitHub scanners</p>
+            <span class="badge badge-success">Auto-Decode</span>
+          </div>
+          <div class="card">
+            <h3>📁 External Files</h3>
+            <p>Load JSON/XML from testData folder</p>
+            <span class="badge badge-primary">Reusable</span>
+          </div>
+          <div class="card">
+            <h3>🔄 Variable Replacement</h3>
+            <p>Dynamic ${variableName} substitution</p>
+            <span class="badge badge-info">Flexible</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Quick Start</h2>
+        
+        <h3>1. Encrypt a File</h3>
+        <div class="code-block">
+          <pre><code># macOS/Linux
+./encrypt-testdata.sh testData/credentials.json
+
+# Windows
+encrypt-testdata.bat testData\credentials.json
+
+# Output: testData/credentials.json.encrypted</code></pre>
+        </div>
+
+        <h3>2. Use in Tests</h3>
+        <div class="code-block">
+          <pre><code>When user sets request body from file "testData/credentials.json.encrypted"</code></pre>
+        </div>
+
+        <p>Framework automatically detects <code>.encrypted</code> extension and decodes!</p>
+      </section>
+
+      <section class="section">
+        <h2>Test Data Structure</h2>
+        
+        <h3>Recommended Folder Organization</h3>
+        <div class="code-block">
+          <pre><code>src/test/resources/testData/
+├── rest/                          # REST API test data
+│   ├── createUser.json
+│   ├── updateUser.json
+│   ├── createPost.json
+│   └── createOrder.json
+├── soap/                          # SOAP API test data
+│   ├── getUserRequest.xml
+│   ├── createOrderRequest.xml
+│   └── secure/
+│       └── payment.xml.encrypted
+├── secure/                        # Encrypted credentials
+│   ├── credentials.json.encrypted
+│   ├── api-keys.json.encrypted
+│   └── tokens.json.encrypted
+├── queryParams/                   # Query parameter templates
+│   ├── searchParams.properties
+│   ├── userFilters.json
+│   └── pagination.json
+└── templates/                     # Reusable templates
+    ├── user-template.json
+    └── order-template.json</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Encryption Tools</h2>
+        
+        <h3>Shell Script (macOS/Linux)</h3>
+        <div class="code-block">
+          <pre><code>#!/bin/bash
+# encrypt-testdata.sh
+
+# Basic usage
+./encrypt-testdata.sh testData/credentials.json
+
+# Custom output
+./encrypt-testdata.sh input.json output.json.encrypted
+
+# Encrypt multiple files
+for file in testData/secure/*.json; do
+  ./encrypt-testdata.sh "$file"
+done</code></pre>
+        </div>
+
+        <h3>Batch Script (Windows)</h3>
+        <div class="code-block">
+          <pre><code>REM encrypt-testdata.bat
+
+REM Basic usage
+encrypt-testdata.bat testData\credentials.json
+
+REM Custom output
+encrypt-testdata.bat input.json output.json.encrypted
+
+REM Encrypt multiple files
+for %%f in (testData\secure\*.json) do (
+  encrypt-testdata.bat "%%f"
+)</code></pre>
+        </div>
+
+        <h3>Java Utility</h3>
+        <div class="code-block">
+          <pre><code>// Compile first
+mvn compile
+
+// Encrypt file
+java -cp target/classes com.automation.core.utils.EncryptionUtil \
+  testData/credentials.json \
+  testData/credentials.json.encrypted</code></pre>
+        </div>
+
+        <h3>Manual Base64 Encoding</h3>
+        <div class="code-block">
+          <pre><code># macOS/Linux
+base64 -i input.json -o output.json.encrypted
+
+# Windows PowerShell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("input.json")) | Out-File -Encoding ASCII "output.json.encrypted"</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Sample Encrypted Files</h2>
+        
+        <h3>Example 1: Credentials</h3>
+        <p><strong>Original:</strong> <code>testData/secure/credentials.json</code></p>
+        <div class="code-block">
+          <pre><code>{
+  "username": "admin@example.com",
+  "password": "SecureP@ssw0rd123",
+  "apiKey": "sk_live_51H7xYz2eZvKYlo2C",
+  "clientSecret": "cs_test_a1b2c3d4e5f6g7h8i9j0"
+}</code></pre>
+        </div>
+
+        <p><strong>Encrypted:</strong> <code>testData/secure/credentials.json.encrypted</code></p>
+        <div class="code-block">
+          <pre><code>ewogICJ1c2VybmFtZSI6ICJhZG1pbkBleGFtcGxlLmNvbSIsCiAgInBhc3N3b3JkIjogIlNlY3VyZVBAc3N3MHJkMTIzIiwKICAiYXBpS2V5IjogInNrX2xpdmVfNTFIN3hZejJlWnZLWWxvMkMiLAogICJjbGllbnRTZWNyZXQiOiAiY3NfdGVzdF9hMWIyYzNkNGU1ZjZnN2g4aTlqMCIKfQ==</code></pre>
+        </div>
+
+        <h3>Example 2: API Keys with Variables</h3>
+        <p><strong>Original:</strong> <code>testData/secure/api-keys.json</code></p>
+        <div class="code-block">
+          <pre><code>{
+  "apiKey": "${apiKey}",
+  "clientId": "client_12345",
+  "clientSecret": "secret_abcdef",
+  "environment": "${env}",
+  "webhookUrl": "https://webhook.example.com/${webhookId}"
+}</code></pre>
+        </div>
+
+        <h3>Example 3: SOAP Payment</h3>
+        <p><strong>Original:</strong> <code>testData/soap/secure/payment.xml</code></p>
+        <div class="code-block">
+          <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+   &lt;soapenv:Header&gt;
+      &lt;pay:AuthToken&gt;Bearer ${authToken}&lt;/pay:AuthToken&gt;
+   &lt;/soapenv:Header&gt;
+   &lt;soapenv:Body&gt;
+      &lt;pay:PaymentRequest&gt;
+         &lt;pay:CardNumber&gt;4532123456789012&lt;/pay:CardNumber&gt;
+         &lt;pay:CVV&gt;123&lt;/pay:CVV&gt;
+         &lt;pay:Amount&gt;${amount}&lt;/pay:Amount&gt;
+      &lt;/pay:PaymentRequest&gt;
+   &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Usage in Tests</h2>
+        
+        <h3>Scenario 1: Simple Encrypted File</h3>
+        <div class="code-block">
+          <pre><code>@API @Encryption
+Feature: Login with Encrypted Credentials
+
+  Scenario: Login with encrypted credentials
+    When user sets request body from file "testData/secure/credentials.json.encrypted"
+    And user sends POST request to "/auth/login"
+    Then response status code should be 200
+    And response "token" should not be null</code></pre>
+        </div>
+
+        <h3>Scenario 2: Encrypted File with Variables</h3>
+        <div class="code-block">
+          <pre><code>Scenario: API call with encrypted keys and variables
+  # Set variables for replacement
+  Given user saves "sk_live_xyz123" as "apiKey"
+  And user saves "production" as "env"
+  And user saves "webhook_abc" as "webhookId"
+  
+  # Use encrypted file (variables replaced automatically)
+  When user sets request body from file "testData/secure/api-keys.json.encrypted"
+  And user sends POST request to "/api/authenticate"
+  Then response status code should be 200
+  And response "environment" should be "production"</code></pre>
+        </div>
+
+        <h3>Scenario 3: SOAP with Encrypted Data</h3>
+        <div class="code-block">
+          <pre><code>Scenario: SOAP payment with encrypted card details
+  # Set variables
+  Given user saves "Bearer token123" as "authToken"
+  And user saves "100.00" as "amount"
+  
+  # Send SOAP request with encrypted file
+  When user sends SOAP request to "/soap/payment" with body from file "testData/soap/secure/payment.xml.encrypted"
+  Then response status code should be 200
+  And SOAP response should not have fault</code></pre>
+        </div>
+
+        <h3>Scenario 4: Combined Steps</h3>
+        <div class="code-block">
+          <pre><code>Scenario: Create user from encrypted file in one step
+  When user sends POST request to "/users" with body from file "testData/secure/credentials.json.encrypted"
+  Then response status code should be 201
+  And response "username" should be "admin@example.com"</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Supported Step Definitions</h2>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Supports .encrypted</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>user sets request body from file</code></td>
+              <td>✅</td>
+              <td><code>When user sets request body from file "file.json.encrypted"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets request body from json file</code></td>
+              <td>✅</td>
+              <td><code>When user sets request body from json file "file.json.encrypted"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets request body from xml file</code></td>
+              <td>✅</td>
+              <td><code>When user sets request body from xml file "file.xml.encrypted"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets SOAP envelope from file</code></td>
+              <td>✅</td>
+              <td><code>When user sets SOAP envelope from file "soap.xml.encrypted"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sends POST request from file</code></td>
+              <td>✅</td>
+              <td><code>When user sends POST request from file "data.json.encrypted" to "/api"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sends PUT request from file</code></td>
+              <td>✅</td>
+              <td><code>When user sends PUT request from file "update.json.encrypted" to "/api/1"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sends SOAP request from file</code></td>
+              <td>✅</td>
+              <td><code>When user sends SOAP request from file "soap.xml.encrypted" to "/soap"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets query parameters from file</code></td>
+              <td>✅</td>
+              <td><code>When user sets query parameters from file "params.properties.encrypted"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets query parameters from json file</code></td>
+              <td>✅</td>
+              <td><code>When user sets query parameters from json file "params.json.encrypted"</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Variable Replacement</h2>
+        
+        <p>All encrypted files support <code>${variableName}</code> variable replacement from ScenarioContext.</p>
+
+        <h3>How It Works</h3>
+        <ol>
+          <li>Framework loads encrypted file</li>
+          <li>Decodes Base64 content</li>
+          <li>Replaces <code>${variableName}</code> with values from ScenarioContext</li>
+          <li>Uses final content in request</li>
+        </ol>
+
+        <h3>Example Workflow</h3>
+        <div class="code-block">
+          <pre><code>Scenario: Complete workflow with variables
+  # Step 1: Get data and save to context
+  When user sends GET request to "/users/1"
+  And user saves json path "id" as "userId"
+  And user saves json path "name" as "userName"
+  
+  # Step 2: Set additional variables
+  And user saves "admin@example.com" as "userEmail"
+  And user saves "30" as "userAge"
+  
+  # Step 3: Use encrypted file with variables
+  # File contains: {"id": "${userId}", "name": "${userName}", "email": "${userEmail}", "age": ${userAge}}
+  When user sends POST request to "/users/create" with body from file "testData/secure/user-data.json.encrypted"
+  
+  Then response status code should be 201</code></pre>
+        </div>
+
+        <h3>Variable Types Supported</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Syntax</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>String</td>
+              <td><code>"${var}"</code></td>
+              <td><code>"name": "${userName}"</code></td>
+            </tr>
+            <tr>
+              <td>Number</td>
+              <td><code>${var}</code> (no quotes)</td>
+              <td><code>"age": ${userAge}</code></td>
+            </tr>
+            <tr>
+              <td>Nested</td>
+              <td>Works in objects</td>
+              <td><code>"address": {"city": "${city}"}</code></td>
+            </tr>
+            <tr>
+              <td>Arrays</td>
+              <td>Works in arrays</td>
+              <td><code>"tags": ["${tag1}", "${tag2}"]</code></td>
+            </tr>
+            <tr>
+              <td>URLs</td>
+              <td>In endpoints</td>
+              <td><code>"/users/${userId}"</code></td>
+            </tr>
+            <tr>
+              <td>XML</td>
+              <td>In XML elements</td>
+              <td><code>&lt;UserId&gt;${userId}&lt;/UserId&gt;</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Git Configuration</h2>
+        
+        <h3>.gitignore Setup</h3>
+        <div class="code-block">
+          <pre><code># Ignore original unencrypted files
+src/test/resources/testData/secure/*.json
+src/test/resources/testData/secure/*.xml
+src/test/resources/testData/soap/secure/*.xml
+
+# Keep encrypted files (safe to commit)
+!src/test/resources/testData/secure/*.encrypted
+!src/test/resources/testData/soap/secure/*.encrypted</code></pre>
+        </div>
+
+        <h3>Commit Workflow</h3>
+        <div class="code-block">
+          <pre><code># 1. Create test data file
+echo '{"username":"admin","password":"secret"}' > testData/secure/creds.json
+
+# 2. Encrypt it
+./encrypt-testdata.sh testData/secure/creds.json
+
+# 3. Delete original (optional)
+rm testData/secure/creds.json
+
+# 4. Commit encrypted file
+git add testData/secure/creds.json.encrypted
+git commit -m "Add encrypted credentials"
+git push</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Security Considerations</h2>
+        
+        <div class="alert alert-warning">
+          <strong>⚠️ Important Security Notes</strong>
+        </div>
+
+        <h3>What Base64 Encoding IS</h3>
+        <ul>
+          <li>✅ Obfuscation technique</li>
+          <li>✅ Bypasses GitHub credential scanners</li>
+          <li>✅ Safe for version control</li>
+          <li>✅ Easily reversible (by design)</li>
+        </ul>
+
+        <h3>What Base64 Encoding IS NOT</h3>
+        <ul>
+          <li>❌ Real encryption (no key required)</li>
+          <li>❌ Protection from attackers</li>
+          <li>❌ Secure for production secrets</li>
+          <li>❌ Compliance-grade security</li>
+        </ul>
+
+        <h3>Production Recommendations</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>Environment Variables</h4>
+            <pre><code>String apiKey = System.getenv("API_KEY");
+String password = System.getenv("PASSWORD");</code></pre>
+          </div>
+          <div class="card">
+            <h4>AWS Secrets Manager</h4>
+            <pre><code>// Retrieve from AWS
+SecretsManagerClient client = ...;
+GetSecretValueResponse response = ...;</code></pre>
+          </div>
+          <div class="card">
+            <h4>Azure Key Vault</h4>
+            <pre><code>// Retrieve from Azure
+SecretClient client = ...;
+KeyVaultSecret secret = ...;</code></pre>
+          </div>
+          <div class="card">
+            <h4>HashiCorp Vault</h4>
+            <pre><code>// Retrieve from Vault
+Vault vault = ...;
+LogicalResponse response = ...;</code></pre>
+          </div>
+        </div>
+
+        <h3>Use Cases</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Scenario</th>
+              <th>Use Base64?</th>
+              <th>Recommendation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Test credentials in GitHub</td>
+              <td>✅ Yes</td>
+              <td>Perfect use case</td>
+            </tr>
+            <tr>
+              <td>Sample/demo data</td>
+              <td>✅ Yes</td>
+              <td>Good for examples</td>
+            </tr>
+            <tr>
+              <td>CI/CD test data</td>
+              <td>✅ Yes</td>
+              <td>Acceptable for non-prod</td>
+            </tr>
+            <tr>
+              <td>Production secrets</td>
+              <td>❌ No</td>
+              <td>Use secret manager</td>
+            </tr>
+            <tr>
+              <td>PII/sensitive data</td>
+              <td>❌ No</td>
+              <td>Use proper encryption</td>
+            </tr>
+            <tr>
+              <td>Compliance requirements</td>
+              <td>❌ No</td>
+              <td>Use certified solutions</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Troubleshooting</h2>
+        
+        <h3>Issue: File not found</h3>
+        <div class="code-block">
+          <pre><code>Error: Failed to load file: testData/credentials.json.encrypted
+
+Solution:
+1. Check file path is correct
+2. Ensure file exists in testData folder
+3. Use absolute path if needed
+4. Verify file has .encrypted extension</code></pre>
+        </div>
+
+        <h3>Issue: Decoding failed</h3>
+        <div class="code-block">
+          <pre><code>Error: IllegalArgumentException: Illegal base64 character
+
+Solution:
+1. Re-encrypt the file using provided scripts
+2. Ensure file wasn't manually edited
+3. Check file encoding is ASCII/UTF-8
+4. Verify no extra whitespace/newlines</code></pre>
+        </div>
+
+        <h3>Issue: Variables not replaced</h3>
+        <div class="code-block">
+          <pre><code>Error: Request contains ${variableName} literal
+
+Solution:
+1. Save variables to ScenarioContext first
+2. Use correct syntax: ${variableName}
+3. Check variable name spelling
+4. Verify ScenarioContext.set() was called</code></pre>
+        </div>
+
+        <h3>Issue: GitHub still flags credentials</h3>
+        <div class="code-block">
+          <pre><code>Error: GitHub security alert on commit
+
+Solution:
+1. Ensure file has .encrypted extension
+2. Remove original file from git history
+3. Use git filter-branch or BFG Repo-Cleaner
+4. Force push after cleaning history</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Best Practices</h2>
+        
+        <ul>
+          <li>✅ Always use <code>.encrypted</code> extension for encrypted files</li>
+          <li>✅ Add original files to <code>.gitignore</code></li>
+          <li>✅ Commit only encrypted files to version control</li>
+          <li>✅ Use descriptive file names: <code>api-keys.json.encrypted</code></li>
+          <li>✅ Organize by type: <code>secure/</code>, <code>soap/secure/</code></li>
+          <li>✅ Document which variables are needed in feature files</li>
+          <li>✅ Test encrypted files locally before committing</li>
+          <li>✅ Use variable replacement for dynamic values</li>
+          <li>✅ Keep templates separate from encrypted data</li>
+          <li>✅ Review security requirements for production</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>Complete Example</h2>
+        
+        <div class="code-block">
+          <pre><code>@API @Encryption @E2E
+Feature: Complete Encrypted Test Data Workflow
+
+  Background:
+    Given user switches to "userService" API service
+    And user sets header "Content-Type" as "application/json"
+
+  Scenario: End-to-end workflow with encrypted data
+    # Step 1: Login with encrypted credentials
+    When user sets request body from file "testData/secure/credentials.json.encrypted"
+    And user sends POST request to "/auth/login"
+    Then response status code should be 200
+    When user saves json path "token" as "authToken"
+    And user saves json path "userId" as "userId"
+    
+    # Step 2: Get user profile
+    And user sets header "Authorization" as "Bearer ${authToken}"
+    And user sends GET request to "/users/${userId}"
+    Then response status code should be 200
+    When user saves json path "name" as "userName"
+    
+    # Step 3: Create order with encrypted payment
+    And user saves "100.00" as "amount"
+    And user sends SOAP request to "/soap/payment" with body from file "testData/soap/secure/payment.xml.encrypted"
+    Then response status code should be 200
+    And SOAP response should not have fault
+    
+    # Step 4: Update profile with encrypted data
+    And user saves "admin@updated.com" as "newEmail"
+    And user sends PUT request to "/users/${userId}" with body from file "testData/secure/update-profile.json.encrypted"
+    Then response status code should be 200
+    And response "email" should be "admin@updated.com"</code></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Additional Resources</h2>
+        
+        <div class="card-grid">
+          <div class="card">
+            <h3>📄 Documentation</h3>
+            <ul>
+              <li><a href="#">ENCRYPTION_GUIDE.md</a> - Complete guide</li>
+              <li><a href="#">README_ENCRYPTION.md</a> - Quick reference</li>
+              <li><a href="#">API_EXTERNAL_FILES.md</a> - External files guide</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>🔧 Tools</h3>
+            <ul>
+              <li><code>encrypt-testdata.sh</code> - macOS/Linux script</li>
+              <li><code>encrypt-testdata.bat</code> - Windows script</li>
+              <li><code>EncryptionUtil.java</code> - Java utility</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>📝 Examples</h3>
+            <ul>
+              <li><code>api_encrypted_files.feature</code> - Sample tests</li>
+              <li><code>testData/secure/</code> - Sample encrypted files</li>
+              <li><code>testData/soap/secure/</code> - SOAP examples</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>🔗 Related Pages</h3>
+            <ul>
+              <li><a href="api-automation.html">API Automation</a></li>
+              <li><a href="api-steps-reference.html">API Steps Reference</a></li>
+              <li><a href="examples.html">Test Examples</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Sands Automation Framework. Created by Afsar Ali</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
