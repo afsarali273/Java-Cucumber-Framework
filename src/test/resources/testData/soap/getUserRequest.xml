@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+                  xmlns:usr="http://example.com/user">
+   <soapenv:Header>
+      <usr:AuthToken>${authToken}</usr:AuthToken>
+   </soapenv:Header>
+   <soapenv:Body>
+      <usr:GetUserRequest>
+         <usr:UserId>${userId}</usr:UserId>
+         <usr:IncludeDetails>true</usr:IncludeDetails>
+      </usr:GetUserRequest>
+   </soapenv:Body>
+</soapenv:Envelope>

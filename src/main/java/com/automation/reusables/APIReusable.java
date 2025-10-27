@@ -220,6 +220,23 @@ public class APIReusable {
         return response;
     }
 
+    protected Response sendPostWithQueryParams(String endpoint, String body, Map<String, String> queryParams) {
+        UnifiedLogger.info("Sending POST request to: " + endpoint + " with query params: " + queryParams);
+        // Build query string
+        StringBuilder urlWithParams = new StringBuilder(endpoint);
+        if (!queryParams.isEmpty()) {
+            urlWithParams.append("?");
+            queryParams.forEach((key, value) -> urlWithParams.append(key).append("=").append(value).append("&"));
+            urlWithParams.setLength(urlWithParams.length() - 1); // Remove last &
+        }
+        response = currentService != null ? 
+            APIClient.withBaseUrl(currentService).postRequest(urlWithParams.toString(), body) : 
+            APIClient.post(urlWithParams.toString(), body);
+        UnifiedLogger.info("Response Status: " + response.getStatusCode() + " | Time: " + response.getTime() + "ms");
+        currentService = null;
+        return response;
+    }
+
     // ========== SOAP API SUPPORT ==========
     
     protected String createSoapEnvelope(String soapAction, String soapBody) {

@@ -1,0 +1,12 @@
+{
+  "name": "${userName}",
+  "email": "${userEmail}",
+  "age": ${userAge},
+  "active": true,
+  "address": {
+    "street": "${street}",
+    "city": "${city}",
+    "zipCode": "${zipCode}"
+  },
+  "roles": ["user", "admin"]
+}

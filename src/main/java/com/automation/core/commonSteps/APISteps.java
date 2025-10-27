@@ -510,21 +510,146 @@ public class APISteps extends APIReusable {
         LogManager.info("Set request body: " + requestBody);
     }
 
+    /**
+     * Load request body from external file (supports JSON/XML/text).
+     * Searches in: 1) Absolute path, 2) testData folder, 3) Classpath resources
+     * Supports variable replacement using ${variableName} syntax.
+     * 
+     * Examples:
+     *   When user sets request body from file "testData/createUser.json"
+     *   When user sets request body from file "testData/soapRequest.xml"
+     *   When user sets request body from file "/absolute/path/to/request.json"
+     */
     @When("user sets request body from file {string}")
     public void userSetsRequestBodyFromFile(String filePath) {
         String resolved = replaceVariables(filePath);
+        String content = loadFileContent(resolved);
+        requestBody = replaceVariables(content);
+        LogManager.info("Loaded and processed request body from: " + resolved);
+    }
+
+    /**
+     * Load request body from JSON file in testData folder with variable replacement.
+     * Automatically looks in src/test/resources/testData/ folder.
+     * 
+     * Examples:
+     *   When user sets request body from json file "createUser.json"
+     *   When user sets request body from json file "posts/createPost.json"
+     */
+    @When("user sets request body from json file {string}")
+    public void userSetsRequestBodyFromJsonFile(String fileName) {
+        String filePath = "testData/" + replaceVariables(fileName);
+        String content = loadFileContent(filePath);
+        requestBody = replaceVariables(content);
+        LogManager.info("Loaded JSON request body from testData: " + fileName);
+    }
+
+    /**
+     * Load request body from XML file with variable replacement (for SOAP/REST XML).
+     * 
+     * Examples:
+     *   When user sets request body from xml file "testData/soapRequest.xml"
+     *   When user sets request body from xml file "testData/restRequest.xml"
+     */
+    @When("user sets request body from xml file {string}")
+    public void userSetsRequestBodyFromXmlFile(String filePath) {
+        String resolved = replaceVariables(filePath);
+        String content = loadFileContent(resolved);
+        requestBody = replaceVariables(content);
+        LogManager.info("Loaded XML request body from: " + resolved);
+    }
+
+    /**
+     * Load SOAP envelope from XML file with variable replacement.
+     * 
+     * Examples:
+     *   When user sets SOAP envelope from file "testData/soap/getUser.xml"
+     *   When user sets SOAP envelope from file "testData/soap/createOrder.xml"
+     */
+    @When("user sets SOAP envelope from file {string}")
+    public void userSetsSoapEnvelopeFromFile(String filePath) {
+        String resolved = replaceVariables(filePath);
+        String content = loadFileContent(resolved);
+        requestBody = replaceVariables(content);
+        LogManager.info("Loaded SOAP envelope from: " + resolved);
+    }
+
+    /**
+     * Load SOAP envelope from file and send to endpoint.
+     * 
+     * Examples:
+     *   When user sends SOAP request from file "testData/soap/getUser.xml" to "/soap/userService"
+     */
+    @When("user sends SOAP request from file {string} to {string}")
+    public void userSendsSoapRequestFromFile(String filePath, String endpoint) {
+        userSetsSoapEnvelopeFromFile(filePath);
+        sendSoapRequest(replaceVariables(endpoint), "");
+    }
+
+    /**
+     * Load request body from JSON file and send POST request.
+     * 
+     * Examples:
+     *   When user sends POST request from file "testData/createUser.json" to "/users"
+     *   When user sends POST request from file "createPost.json" to "/posts"
+     */
+    @When("user sends POST request from file {string} to {string}")
+    public void userSendsPostRequestFromFile(String filePath, String endpoint) {
+        userSetsRequestBodyFromJsonFile(filePath);
+        sendPostRequest(replaceVariables(endpoint), requestBody);
+    }
+
+    /**
+     * Load request body from JSON file and send PUT request.
+     * 
+     * Examples:
+     *   When user sends PUT request from file "testData/updateUser.json" to "/users/1"
+     *   When user sends PUT request from file "updatePost.json" to "/posts/${postId}"
+     */
+    @When("user sends PUT request from file {string} to {string}")
+    public void userSendsPutRequestFromFile(String filePath, String endpoint) {
+        userSetsRequestBodyFromJsonFile(filePath);
+        sendPutRequest(replaceVariables(endpoint), requestBody);
+    }
+
+    /**
+     * Load request body from file with custom content type.
+     * 
+     * Examples:
+     *   When user sends POST request from file "testData/data.xml" to "/api/xml" with content type "application/xml"
+     */
+    @When("user sends POST request from file {string} to {string} with content type {string}")
+    public void userSendsPostRequestFromFileWithContentType(String filePath, String endpoint, String contentType) {
+        String resolved = replaceVariables(filePath);
+        String content = loadFileContent(resolved);
+        requestBody = replaceVariables(content);
+        userSetsContentType(contentType);
+        sendPostRequest(replaceVariables(endpoint), requestBody);
+    }
+
+    /**
+     * Helper method to load file content from multiple locations.
+     * Search order: 1) Absolute path, 2) testData folder, 3) Classpath
+     */
+    private String loadFileContent(String filePath) {
         try {
-            File f = new File(resolved);
+            // Try absolute path first
+            File f = new File(filePath);
             if (f.exists() && f.isFile()) {
-                requestBody = Files.readString(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);
-                LogManager.info("Loaded request body from file: " + f.getAbsolutePath());
-                return;
+                return Files.readString(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);
             }
-            // fallback to classpath
-            requestBody = readClasspathResourceAsString(resolved);
-            LogManager.info("Loaded request body from classpath resource: " + resolved);
+            
+            // Try testData folder
+            String testDataPath = "src/test/resources/testData/" + filePath;
+            f = new File(testDataPath);
+            if (f.exists() && f.isFile()) {
+                return Files.readString(Paths.get(f.getAbsolutePath()), StandardCharsets.UTF_8);
+            }
+            
+            // Try classpath
+            return readClasspathResourceAsString(filePath);
         } catch (IOException e) {
-            throw new AssertionError("Failed to load request body from file/classpath: " + resolved + ", error: " + e.getMessage());
+            throw new AssertionError("Failed to load file: " + filePath + ", error: " + e.getMessage());
         }
     }
 
@@ -546,6 +671,159 @@ public class APISteps extends APIReusable {
 
     @When("user sends GET request to {string} with query params")
     public void userSendsGETRequestWithQueryParams(String endpoint) {
+        sendGetWithQueryParams(replaceVariables(endpoint), queryParams);
+        queryParams.clear();
+    }
+
+    /**
+     * Set query parameters using Cucumber DataTable.
+     * 
+     * Example:
+     *   When user sets query parameters:
+     *     | page   | 1      |
+     *     | limit  | 10     |
+     *     | sort   | name   |
+     *     | filter | active |
+     */
+    @When("user sets query parameters:")
+    public void userSetsQueryParameters(io.cucumber.datatable.DataTable dataTable) {
+        java.util.List<java.util.List<String>> rows = dataTable.asLists(String.class);
+        for (java.util.List<String> row : rows) {
+            if (row.size() >= 2) {
+                String key = replaceVariables(row.get(0));
+                String value = replaceVariables(row.get(1));
+                queryParams.put(key, value);
+                LogManager.info("Set query param '" + key + "' = " + value);
+            }
+        }
+    }
+
+    /**
+     * Set query parameters from external properties file.
+     * File format: key=value (one per line)
+     * 
+     * Example:
+     *   When user sets query parameters from file "testData/queryParams/searchParams.properties"
+     */
+    @When("user sets query parameters from file {string}")
+    public void userSetsQueryParametersFromFile(String filePath) {
+        String resolved = replaceVariables(filePath);
+        try {
+            String content = loadFileContent(resolved);
+            String[] lines = content.split("\n");
+            for (String line : lines) {
+                line = line.trim();
+                if (!line.isEmpty() && !line.startsWith("#") && line.contains("=")) {
+                    String[] parts = line.split("=", 2);
+                    String key = replaceVariables(parts[0].trim());
+                    String value = replaceVariables(parts[1].trim());
+                    queryParams.put(key, value);
+                    LogManager.info("Set query param from file: '" + key + "' = " + value);
+                }
+            }
+        } catch (Exception e) {
+            throw new AssertionError("Failed to load query parameters from file: " + resolved + ", error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Set query parameters from JSON file.
+     * 
+     * Example:
+     *   When user sets query parameters from json file "testData/queryParams/searchParams.json"
+     */
+    @When("user sets query parameters from json file {string}")
+    public void userSetsQueryParametersFromJsonFile(String filePath) {
+        String resolved = replaceVariables(filePath);
+        try {
+            String content = loadFileContent(resolved);
+            content = replaceVariables(content);
+            JsonElement element = JsonParser.parseString(content);
+            if (element.isJsonObject()) {
+                com.google.gson.JsonObject jsonObject = element.getAsJsonObject();
+                for (String key : jsonObject.keySet()) {
+                    String value = jsonObject.get(key).getAsString();
+                    queryParams.put(key, value);
+                    LogManager.info("Set query param from JSON: '" + key + "' = " + value);
+                }
+            }
+        } catch (Exception e) {
+            throw new AssertionError("Failed to load query parameters from JSON file: " + resolved + ", error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Set query parameters using inline format: key1=value1&key2=value2
+     * 
+     * Example:
+     *   When user sets query parameters "page=1&limit=10&sort=name&filter=active"
+     */
+    @When("user sets query parameters {string}")
+    public void userSetsQueryParametersInline(String queryString) {
+        String resolved = replaceVariables(queryString);
+        String[] pairs = resolved.split("&");
+        for (String pair : pairs) {
+            if (pair.contains("=")) {
+                String[] kv = pair.split("=", 2);
+                String key = kv[0].trim();
+                String value = kv.length > 1 ? kv[1].trim() : "";
+                queryParams.put(key, value);
+                LogManager.info("Set query param: '" + key + "' = " + value);
+            }
+        }
+    }
+
+    /**
+     * Send GET request with query parameters from DataTable.
+     * 
+     * Example:
+     *   When user sends GET request to "/users" with query parameters:
+     *     | page  | 1    |
+     *     | limit | 10   |
+     */
+    @When("user sends GET request to {string} with query parameters:")
+    public void userSendsGETRequestWithQueryParametersDataTable(String endpoint, io.cucumber.datatable.DataTable dataTable) {
+        userSetsQueryParameters(dataTable);
+        sendGetWithQueryParams(replaceVariables(endpoint), queryParams);
+        queryParams.clear();
+    }
+
+    /**
+     * Send POST request with query parameters.
+     * 
+     * Example:
+     *   When user sends POST request to "/users" with query parameters:
+     *     | notify | true |
+     *     | async  | false|
+     */
+    @When("user sends POST request to {string} with query parameters:")
+    public void userSendsPOSTRequestWithQueryParameters(String endpoint, io.cucumber.datatable.DataTable dataTable) {
+        userSetsQueryParameters(dataTable);
+        sendPostWithQueryParams(replaceVariables(endpoint), requestBody, queryParams);
+        queryParams.clear();
+    }
+
+    /**
+     * Clear all query parameters.
+     * 
+     * Example:
+     *   When user clears query parameters
+     */
+    @When("user clears query parameters")
+    public void userClearsQueryParameters() {
+        queryParams.clear();
+        LogManager.info("Cleared all query parameters");
+    }
+
+    /**
+     * Send request with query parameters from file.
+     * 
+     * Example:
+     *   When user sends GET request to "/users" with query parameters from file "testData/queryParams/userSearch.properties"
+     */
+    @When("user sends GET request to {string} with query parameters from file {string}")
+    public void userSendsGETRequestWithQueryParamsFromFile(String endpoint, String filePath) {
+        userSetsQueryParametersFromFile(filePath);
         sendGetWithQueryParams(replaceVariables(endpoint), queryParams);
         queryParams.clear();
     }

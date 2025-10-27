@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+                  xmlns:ord="http://example.com/order">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ord:CreateOrderRequest>
+         <ord:CustomerId>${customerId}</ord:CustomerId>
+         <ord:OrderDate>${orderDate}</ord:OrderDate>
+         <ord:Items>
+            <ord:Item>
+               <ord:ProductId>${productId1}</ord:ProductId>
+               <ord:Quantity>${quantity1}</ord:Quantity>
+               <ord:Price>${price1}</ord:Price>
+            </ord:Item>
+            <ord:Item>
+               <ord:ProductId>${productId2}</ord:ProductId>
+               <ord:Quantity>${quantity2}</ord:Quantity>
+               <ord:Price>${price2}</ord:Price>
+            </ord:Item>
+         </ord:Items>
+         <ord:TotalAmount>${totalAmount}</ord:TotalAmount>
+         <ord:ShippingAddress>
+            <ord:Street>${shippingStreet}</ord:Street>
+            <ord:City>${shippingCity}</ord:City>
+            <ord:ZipCode>${shippingZip}</ord:ZipCode>
+         </ord:ShippingAddress>
+      </ord:CreateOrderRequest>
+   </soapenv:Body>
+</soapenv:Envelope>

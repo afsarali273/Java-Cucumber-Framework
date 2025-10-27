@@ -371,6 +371,477 @@ Response response = given()
       </section>
 
       <section class="section">
+        <h2>📁 External JSON/XML File Support</h2>
+        <p>Load request bodies from external files with automatic variable replacement for reusable test data templates.</p>
+        
+        <div class="alert alert-success">
+          <strong>✅ New Feature:</strong> Support for external JSON/XML files with <code>${variableName}</code> variable replacement for both REST and SOAP APIs.
+        </div>
+
+        <h3>File Locations</h3>
+        <p>Framework searches for files in this order:</p>
+        <ol>
+          <li><strong>Absolute path:</strong> <code>/absolute/path/to/file.json</code></li>
+          <li><strong>testData folder:</strong> <code>src/test/resources/testData/</code></li>
+          <li><strong>Classpath:</strong> Any resource on classpath</li>
+        </ol>
+
+        <h3>Recommended Structure</h3>
+        <pre><code>src/test/resources/testData/
+├── rest/
+│   ├── createUser.json
+│   ├── updateUser.json
+│   ├── createPost.json
+│   └── createProduct.xml
+└── soap/
+    ├── getUserRequest.xml
+    ├── createOrderRequest.xml
+    └── updateCustomerRequest.xml</code></pre>
+
+        <h3>Step Definitions for External Files</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>user sets request body from file</code></td>
+              <td>Load from any location</td>
+              <td><code>When user sets request body from file "testData/rest/createUser.json"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets request body from json file</code></td>
+              <td>Auto-searches testData folder</td>
+              <td><code>When user sets request body from json file "rest/createUser.json"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets request body from xml file</code></td>
+              <td>Load XML file</td>
+              <td><code>When user sets request body from xml file "testData/rest/data.xml"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets SOAP envelope from file</code></td>
+              <td>Load SOAP envelope</td>
+              <td><code>When user sets SOAP envelope from file "soap/getUserRequest.xml"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sends POST request from file</code></td>
+              <td>Load and send in one step</td>
+              <td><code>When user sends POST request from file "rest/createUser.json" to "/users"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sends PUT request from file</code></td>
+              <td>Load and send PUT</td>
+              <td><code>When user sends PUT request from file "rest/updateUser.json" to "/users/${userId}"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sends SOAP request from file</code></td>
+              <td>Load and send SOAP</td>
+              <td><code>When user sends SOAP request from file "soap/getUser.xml" to "/soap/service"</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Variable Replacement</h3>
+        <p>Use <code>${variableName}</code> syntax in JSON/XML files. Variables are automatically replaced from ScenarioContext.</p>
+
+        <h4>Example: JSON File with Variables</h4>
+        <p><strong>File:</strong> <code>testData/rest/createUser.json</code></p>
+        <pre><code>{
+  "name": "${userName}",
+  "email": "${userEmail}",
+  "age": ${userAge},
+  "active": true,
+  "address": {
+    "street": "${street}",
+    "city": "${city}",
+    "zipCode": "${zipCode}"
+  },
+  "roles": ["user", "admin"]
+}</code></pre>
+
+        <p><strong>Feature File:</strong></p>
+        <pre><code>Scenario: Create user from JSON file
+  # Set variables
+  When user saves json path "John Doe" as "userName"
+  And user saves json path "john@example.com" as "userEmail"
+  And user saves json path "30" as "userAge"
+  And user saves json path "123 Main St" as "street"
+  And user saves json path "New York" as "city"
+  And user saves json path "10001" as "zipCode"
+  
+  # Send request from file (variables auto-replaced)
+  When user sends POST request from file "rest/createUser.json" to "/users"
+  
+  Then response status code should be 201
+  And json path "name" should be "John Doe"</code></pre>
+
+        <h4>Example: SOAP XML with Variables</h4>
+        <p><strong>File:</strong> <code>testData/soap/getUserRequest.xml</code></p>
+        <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+                  xmlns:usr="http://example.com/user"&gt;
+   &lt;soapenv:Header&gt;
+      &lt;usr:AuthToken&gt;${authToken}&lt;/usr:AuthToken&gt;
+   &lt;/soapenv:Header&gt;
+   &lt;soapenv:Body&gt;
+      &lt;usr:GetUserRequest&gt;
+         &lt;usr:UserId&gt;${userId}&lt;/usr:UserId&gt;
+         &lt;usr:IncludeDetails&gt;true&lt;/usr:IncludeDetails&gt;
+      &lt;/usr:GetUserRequest&gt;
+   &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;</code></pre>
+
+        <p><strong>Feature File:</strong></p>
+        <pre><code>Scenario: Get user via SOAP
+  # Set variables
+  When user saves json path "Bearer abc123" as "authToken"
+  And user saves json path "12345" as "userId"
+  
+  # Send SOAP request from file
+  When user sends SOAP request from file "soap/getUserRequest.xml" to "/soap/userService"
+  
+  Then response status code should be 200
+  And SOAP response should not have fault</code></pre>
+
+        <h3>Complete Workflow Example</h3>
+        <pre><code>@API
+Feature: User and Post Workflow with External Files
+
+  Scenario: Complete workflow using file-based requests
+    # Step 1: Get user data
+    When user sends GET request to "/users/1"
+    Then response status code should be 200
+    When user saves json path "id" as "userId"
+    And user saves json path "name" as "userName"
+    
+    # Step 2: Create post using file
+    And user saves json path "Post by ${userName}" as "postTitle"
+    And user saves json path "Content here" as "postBody"
+    And user saves json path "test" as "tag1"
+    And user saves json path "demo" as "tag2"
+    And user saves json path "2025-01-21T10:00:00Z" as "timestamp"
+    And user sends POST request from file "rest/createPost.json" to "/posts"
+    
+    Then response status code should be 201
+    When user saves json path "id" as "postId"
+    
+    # Step 3: Update post using file
+    And user saves json path "Updated Title" as "postTitle"
+    And user sends PUT request from file "rest/createPost.json" to "/posts/${postId}"
+    
+    Then response status code should be 200
+    And json path "title" should be "Updated Title"
+    
+    # Step 4: Delete post
+    When user sends DELETE request to "/posts/${postId}"
+    Then response status code should be 200</code></pre>
+
+        <h3>Variable Replacement Features</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Syntax</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Simple values</td>
+              <td><code>${variableName}</code></td>
+              <td><code>"name": "${userName}"</code></td>
+            </tr>
+            <tr>
+              <td>Numbers</td>
+              <td><code>${number}</code> (no quotes)</td>
+              <td><code>"age": ${userAge}</code></td>
+            </tr>
+            <tr>
+              <td>Nested objects</td>
+              <td>Works in complex JSON</td>
+              <td><code>"address": { "city": "${city}" }</code></td>
+            </tr>
+            <tr>
+              <td>Arrays</td>
+              <td>Variables in arrays</td>
+              <td><code>"tags": ["${tag1}", "${tag2}"]</code></td>
+            </tr>
+            <tr>
+              <td>Dynamic endpoints</td>
+              <td>Variables in URLs</td>
+              <td><code>"/users/${userId}"</code></td>
+            </tr>
+            <tr>
+              <td>SOAP XML</td>
+              <td>Full XML support</td>
+              <td><code>&lt;UserId&gt;${userId}&lt;/UserId&gt;</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Benefits</h3>
+        <div class="card-grid">
+          <div class="card">
+            <h4>✅ Reusability</h4>
+            <p>One template, multiple tests with different data</p>
+          </div>
+          <div class="card">
+            <h4>✅ Maintainability</h4>
+            <p>Update template once, affects all tests</p>
+          </div>
+          <div class="card">
+            <h4>✅ Readability</h4>
+            <p>Cleaner feature files, data separated from logic</p>
+          </div>
+          <div class="card">
+            <h4>✅ Flexibility</h4>
+            <p>Support for REST (JSON/XML) and SOAP</p>
+          </div>
+        </div>
+
+        <div class="alert alert-info">
+          <strong>📚 Complete Documentation:</strong> See <code>/documents/API_EXTERNAL_FILES.md</code> for detailed examples, troubleshooting, and best practices.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>🔍 Query Parameters - Multiple Approaches</h2>
+        <p>Framework supports multiple ways to set query parameters for maximum flexibility and reusability.</p>
+
+        <h3>Approach 1: Individual Parameters</h3>
+        <pre><code>When user sets query param "page" as "1"
+And user sets query param "limit" as "10"
+And user sends GET request to "/users" with query params</code></pre>
+
+        <h3>Approach 2: DataTable (Recommended)</h3>
+        <pre><code>When user sets query parameters:
+  | page   | 1      |
+  | limit  | 10     |
+  | sort   | name   |
+  | order  | asc    |
+  | filter | active |
+And user sends GET request to "/users" with query params</code></pre>
+
+        <h3>Approach 3: Inline Format</h3>
+        <pre><code>When user sets query parameters "page=1&limit=10&sort=name&order=asc"
+And user sends GET request to "/users" with query params</code></pre>
+
+        <h3>Approach 4: From Properties File</h3>
+        <p><strong>File:</strong> <code>testData/queryParams/searchParams.properties</code></p>
+        <pre><code># Search Query Parameters
+page=1
+limit=10
+sort=name
+order=asc
+filter=active
+search=${searchTerm}
+category=${categoryName}</code></pre>
+
+        <p><strong>Feature File:</strong></p>
+        <pre><code>When user sets query parameters from file "testData/queryParams/searchParams.properties"
+And user sends GET request to "/users" with query params</code></pre>
+
+        <h3>Approach 5: From JSON File</h3>
+        <p><strong>File:</strong> <code>testData/queryParams/userFilters.json</code></p>
+        <pre><code>{
+  "page": "1",
+  "limit": "20",
+  "status": "active",
+  "role": "${userRole}",
+  "department": "${departmentName}",
+  "sortBy": "createdDate",
+  "order": "desc"
+}</code></pre>
+
+        <p><strong>Feature File:</strong></p>
+        <pre><code>When user saves json path "admin" as "userRole"
+And user saves json path "Engineering" as "departmentName"
+And user sets query parameters from json file "testData/queryParams/userFilters.json"
+And user sends GET request to "/users" with query params</code></pre>
+
+        <h3>All Available Step Definitions</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>user sets query param</code></td>
+              <td>Set single parameter</td>
+              <td><code>When user sets query param "page" as "1"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets query parameters:</code></td>
+              <td>Set multiple using DataTable</td>
+              <td><code>When user sets query parameters:<br>| page | 1 |</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets query parameters "..."</code></td>
+              <td>Set using inline format</td>
+              <td><code>When user sets query parameters "page=1&limit=10"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets query parameters from file</code></td>
+              <td>Load from properties file</td>
+              <td><code>When user sets query parameters from file "searchParams.properties"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sets query parameters from json file</code></td>
+              <td>Load from JSON file</td>
+              <td><code>When user sets query parameters from json file "filters.json"</code></td>
+            </tr>
+            <tr>
+              <td><code>user sends GET request to "..." with query params</code></td>
+              <td>Send GET with params</td>
+              <td><code>When user sends GET request to "/users" with query params</code></td>
+            </tr>
+            <tr>
+              <td><code>user sends GET request to "..." with query parameters:</code></td>
+              <td>Set and send in one step</td>
+              <td><code>When user sends GET request to "/users" with query parameters:<br>| page | 1 |</code></td>
+            </tr>
+            <tr>
+              <td><code>user sends POST request to "..." with query parameters:</code></td>
+              <td>POST with query params</td>
+              <td><code>When user sends POST request to "/users" with query parameters:<br>| notify | true |</code></td>
+            </tr>
+            <tr>
+              <td><code>user sends GET request to "..." with query parameters from file</code></td>
+              <td>Load from file and send</td>
+              <td><code>When user sends GET request to "/users" with query parameters from file "params.properties"</code></td>
+            </tr>
+            <tr>
+              <td><code>user clears query parameters</code></td>
+              <td>Clear all parameters</td>
+              <td><code>When user clears query parameters</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Variable Replacement in Query Parameters</h3>
+        <p>All approaches support <code>${variableName}</code> variable replacement:</p>
+        <pre><code>Scenario: Query params with variables
+  # Save variables
+  When user sends GET request to "/users/1"
+  And user saves json path "id" as "userId"
+  And user saves json path "name" as "userName"
+  
+  # Use in query params
+  When user sets query parameters:
+    | userId | ${userId}   |
+    | name   | ${userName} |
+  And user sends GET request to "/posts" with query params
+  
+  Then response status code should be 200</code></pre>
+
+        <h3>Complete Examples</h3>
+
+        <h4>Example 1: Search with Pagination</h4>
+        <pre><code>Scenario: Search users with pagination
+  When user sends GET request to "/users" with query parameters:
+    | page     | 1      |
+    | limit    | 20     |
+    | search   | John   |
+    | status   | active |
+    | sortBy   | name   |
+    | order    | asc    |
+  Then response status code should be 200
+  And json array "$" should have size 20</code></pre>
+
+        <h4>Example 2: Reusable Query Params from File</h4>
+        <pre><code>Scenario: Multiple searches using same params
+  # Search 1
+  When user saves json path "electronics" as "categoryName"
+  And user sends GET request to "/products" with query parameters from file "searchParams.properties"
+  Then response status code should be 200
+  
+  # Search 2
+  When user saves json path "books" as "categoryName"
+  And user sends GET request to "/products" with query parameters from file "searchParams.properties"
+  Then response status code should be 200</code></pre>
+
+        <h4>Example 3: Combining Multiple Sources</h4>
+        <pre><code>Scenario: Complex query with multiple sources
+  # Set base params
+  When user sets query param "page" as "1"
+  
+  # Add from DataTable
+  And user sets query parameters:
+    | limit | 10    |
+    | sort  | title |
+  
+  # Add from inline
+  And user sets query parameters "order=asc&filter=active"
+  
+  # Send request
+  And user sends GET request to "/posts" with query params
+  Then response status code should be 200</code></pre>
+
+        <h3>Comparison of Approaches</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Approach</th>
+              <th>Best For</th>
+              <th>Pros</th>
+              <th>Cons</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Individual</strong></td>
+              <td>1-2 parameters</td>
+              <td>Simple, clear</td>
+              <td>Verbose for many params</td>
+            </tr>
+            <tr>
+              <td><strong>DataTable</strong></td>
+              <td>3+ parameters</td>
+              <td>✅ Readable, organized, recommended</td>
+              <td>Slightly more syntax</td>
+            </tr>
+            <tr>
+              <td><strong>Inline</strong></td>
+              <td>Quick tests, URL-like</td>
+              <td>Compact, familiar format</td>
+              <td>Less readable for many params</td>
+            </tr>
+            <tr>
+              <td><strong>Properties File</strong></td>
+              <td>Reusable param sets</td>
+              <td>✅ Reusable, maintainable</td>
+              <td>Extra file to manage</td>
+            </tr>
+            <tr>
+              <td><strong>JSON File</strong></td>
+              <td>Complex param structures</td>
+              <td>✅ Structured, supports nesting</td>
+              <td>Extra file to manage</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="alert alert-success">
+          <strong>💡 Recommendation:</strong>
+          <ul>
+            <li>Use <strong>DataTable</strong> for most scenarios (3+ params)</li>
+            <li>Use <strong>Files</strong> for reusable param sets across tests</li>
+            <li>Use <strong>Individual</strong> for 1-2 params</li>
+            <li>Use <strong>Inline</strong> for quick ad-hoc tests</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
         <h2>SOAP API Testing</h2>
         
         <h3>SOAP Request</h3>

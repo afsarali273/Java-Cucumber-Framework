@@ -265,6 +265,148 @@
       </section>
 
       <section class="section">
+        <h2>API with External JSON/XML Files</h2>
+        <p><strong>File:</strong> api_external_files.feature</p>
+        <div class="gherkin">
+<pre><span class="tag">@API</span>
+<span class="keyword">Feature:</span> API Testing with External JSON/XML Files
+
+  <span class="keyword">Scenario:</span> Create post using external JSON file with variable replacement
+    <span class="comment"># Save variables first</span>
+    <span class="keyword">When</span> user saves json path <span class="string">"5"</span> as <span class="string">"userId"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"My Post Title"</span> as <span class="string">"postTitle"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"This is the post content"</span> as <span class="string">"postBody"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"technology"</span> as <span class="string">"tag1"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"automation"</span> as <span class="string">"tag2"</span>
+    
+    <span class="comment"># Load JSON from file (variables will be replaced)</span>
+    <span class="keyword">And</span> user sets request body from json file <span class="string">"rest/createPost.json"</span>
+    <span class="keyword">And</span> user sends POST request to <span class="string">"/posts"</span>
+    
+    <span class="keyword">Then</span> response status code should be <span class="string">201</span>
+    <span class="keyword">And</span> json path <span class="string">"title"</span> should be <span class="string">"My Post Title"</span>
+
+  <span class="keyword">Scenario:</span> Create user using external JSON file
+    <span class="comment"># Set variables</span>
+    <span class="keyword">When</span> user saves json path <span class="string">"John Doe"</span> as <span class="string">"userName"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"john.doe@example.com"</span> as <span class="string">"userEmail"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"30"</span> as <span class="string">"userAge"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"123 Main St"</span> as <span class="string">"street"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"New York"</span> as <span class="string">"city"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"10001"</span> as <span class="string">"zipCode"</span>
+    
+    <span class="comment"># Send POST request directly from file</span>
+    <span class="keyword">When</span> user sends POST request from file <span class="string">"rest/createUser.json"</span> to <span class="string">"/users"</span>
+    
+    <span class="keyword">Then</span> response status code should be <span class="string">201</span>
+
+  <span class="keyword">Scenario:</span> SOAP request using external XML file
+    <span class="comment"># Set SOAP variables</span>
+    <span class="keyword">When</span> user saves json path <span class="string">"Bearer abc123xyz"</span> as <span class="string">"authToken"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"12345"</span> as <span class="string">"userId"</span>
+    
+    <span class="comment"># Load and send SOAP request from file</span>
+    <span class="keyword">When</span> user sends SOAP request from file <span class="string">"soap/getUserRequest.xml"</span> to <span class="string">"/soap/userService"</span>
+    
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+
+  <span class="keyword">Scenario:</span> Complete workflow with file-based requests
+    <span class="comment"># Step 1: Get user data</span>
+    <span class="keyword">When</span> user sends GET request to <span class="string">"/users/1"</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+    <span class="keyword">When</span> user saves json path <span class="string">"id"</span> as <span class="string">"userId"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"name"</span> as <span class="string">"userName"</span>
+    
+    <span class="comment"># Step 2: Create post using file</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"Post by ${userName}"</span> as <span class="string">"postTitle"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"Content from user workflow"</span> as <span class="string">"postBody"</span>
+    <span class="keyword">And</span> user sends POST request from file <span class="string">"rest/createPost.json"</span> to <span class="string">"/posts"</span>
+    
+    <span class="keyword">Then</span> response status code should be <span class="string">201</span>
+    <span class="keyword">When</span> user saves json path <span class="string">"id"</span> as <span class="string">"postId"</span>
+    
+    <span class="comment"># Step 3: Update post using file</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"Updated Post Title"</span> as <span class="string">"postTitle"</span>
+    <span class="keyword">And</span> user sends PUT request from file <span class="string">"rest/createPost.json"</span> to <span class="string">"/posts/${postId}"</span>
+    
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+    <span class="keyword">And</span> json path <span class="string">"title"</span> should be <span class="string">"Updated Post Title"</span></pre>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>API Query Parameters - Multiple Approaches</h2>
+        <p><strong>File:</strong> api_query_params.feature</p>
+        <div class="gherkin">
+<pre><span class="tag">@API</span>
+<span class="keyword">Feature:</span> API Query Parameters - Multiple Approaches
+
+  <span class="keyword">Scenario:</span> Query parameters using DataTable
+    <span class="keyword">When</span> user sets query parameters:
+      <span class="table-header">| page   | 1      |</span>
+      <span class="table-cell">| limit  | 10     |</span>
+      <span class="table-cell">| sort   | title  |</span>
+      <span class="table-cell">| order  | asc    |</span>
+    <span class="keyword">And</span> user sends GET request to <span class="string">"/posts"</span> with query params
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+
+  <span class="keyword">Scenario:</span> Query parameters using inline format
+    <span class="keyword">When</span> user sets query parameters <span class="string">"page=1&limit=10&userId=1"</span>
+    <span class="keyword">And</span> user sends GET request to <span class="string">"/posts"</span> with query params
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+
+  <span class="keyword">Scenario:</span> Query parameters from properties file
+    <span class="keyword">When</span> user sets query parameters from file <span class="string">"testData/queryParams/searchParams.properties"</span>
+    <span class="keyword">And</span> user sends GET request to <span class="string">"/posts"</span> with query params
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+
+  <span class="keyword">Scenario:</span> Query parameters from JSON file with variables
+    <span class="keyword">When</span> user saves json path <span class="string">"admin"</span> as <span class="string">"userRole"</span>
+    <span class="keyword">And</span> user saves json path <span class="string">"Engineering"</span> as <span class="string">"departmentName"</span>
+    <span class="keyword">And</span> user sets query parameters from json file <span class="string">"testData/queryParams/userFilters.json"</span>
+    <span class="keyword">And</span> user sends GET request to <span class="string">"/users"</span> with query params
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+
+  <span class="keyword">Scenario:</span> Send GET with query parameters in one step
+    <span class="keyword">When</span> user sends GET request to <span class="string">"/posts"</span> with query parameters:
+      <span class="table-header">| userId | 1  |</span>
+      <span class="table-cell">| _limit | 5  |</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span>
+    <span class="keyword">And</span> json array <span class="string">"$"</span> should have size <span class="string">5</span>
+
+  <span class="keyword">Scenario:</span> Send POST with query parameters
+    <span class="keyword">When</span> user sets request body:
+      <span class="docstring">"""
+      {
+        "title": "Test Post",
+        "body": "Content",
+        "userId": 1
+      }
+      """</span>
+    <span class="keyword">And</span> user sends POST request to <span class="string">"/posts"</span> with query parameters:
+      <span class="table-header">| notify | true  |</span>
+      <span class="table-cell">| async  | false |</span>
+    <span class="keyword">Then</span> response status code should be <span class="string">201</span>
+
+  <span class="keyword">Scenario:</span> Complex query parameters with multiple sources
+    <span class="comment"># Set some params individually</span>
+    <span class="keyword">When</span> user sets query param <span class="string">"page"</span> as <span class="string">"1"</span>
+    
+    <span class="comment"># Add params from DataTable</span>
+    <span class="keyword">And</span> user sets query parameters:
+      <span class="table-header">| limit | 10    |</span>
+      <span class="table-cell">| sort  | title |</span>
+    
+    <span class="comment"># Add params from inline format</span>
+    <span class="keyword">And</span> user sets query parameters <span class="string">"order=asc&filter=active"</span>
+    
+    <span class="comment"># Send request</span>
+    <span class="keyword">And</span> user sends GET request to <span class="string">"/posts"</span> with query params
+    <span class="keyword">Then</span> response status code should be <span class="string">200</span></pre>
+        </div>
+      </section>
+
+      <section class="section">
         <h2>Data-Driven API Testing</h2>
         <p><strong>File:</strong> api_data_driven.feature</p>
         <div class="gherkin">

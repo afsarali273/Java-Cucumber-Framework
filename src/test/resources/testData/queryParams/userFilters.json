@@ -1,0 +1,9 @@
+{
+  "page": "1",
+  "limit": "20",
+  "status": "active",
+  "role": "${userRole}",
+  "department": "${departmentName}",
+  "sortBy": "createdDate",
+  "order": "desc"
+}
