@@ -1,9 +1,10 @@
-name: Create Release with Artifacts
+name: Publish to GitHub Packages
 
 on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 jobs:
   release:
@@ -22,47 +23,12 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-        
-    - name: Build with Maven
-      run: mvn clean package -DskipTests
-      
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
+        server-id: github
+        settings-path: ${{ github.workspace }}
+        # This will configure Maven to use GitHub Packages
+        # server-id must match the distributionManagement/repository id in pom.xml
+
+    - name: Publish to GitHub Packages
+      run: mvn clean deploy -DskipTests --settings ${{ github.workspace }}/settings.xml
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
-        
-    - name: Upload Main JAR
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./target/SandsAutoFramework-1.0.jar
-        asset_name: SandsAutoFramework-1.0.jar
-        asset_content_type: application/java-archive
-        
-    - name: Upload Sources JAR
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./target/SandsAutoFramework-1.0-sources.jar
-        asset_name: SandsAutoFramework-1.0-sources.jar
-        asset_content_type: application/java-archive
-        
-    - name: Upload Javadoc JAR
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./target/SandsAutoFramework-1.0-javadoc.jar
-        asset_name: SandsAutoFramework-1.0-javadoc.jar
-        asset_content_type: application/java-archive
