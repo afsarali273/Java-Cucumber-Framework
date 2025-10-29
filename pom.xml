@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.automation</groupId>
-    <artifactId>Java-Cucumber-Framework</artifactId>
-    <version>1.0.3</version>
+    <artifactId>java-cucumber-framework</artifactId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>Java-Cucumber-Framework</name>
@@ -303,7 +303,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/afsarali273/Java-Cucumber-Framework</url>
+            <url>https://maven.pkg.github.com/afsarali273/java-cucumber-framework</url>
         </repository>
     </distributionManagement>
 
