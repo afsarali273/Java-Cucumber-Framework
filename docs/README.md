@@ -11,6 +11,8 @@ This directory contains the complete documentation for the Sands Automation Fram
 - **api-automation.html** - REST and SOAP API testing guide
 - **mobile-automation.html** - Android and iOS automation guide
 - **desktop-automation.html** - Windows desktop automation guide
+- **mainframe-automation.html** - Mainframe 3270 terminal automation guide
+- **remote-execution.html** - LambdaTest and AWS Device Farm cloud execution
 - **configuration.html** - Configuration management guide
 - **reporting.html** - Reporting and logging guide
 - **utilities.html** - Utility classes and helpers
@@ -121,6 +123,8 @@ docs/
 ├── api-automation.html    # API automation guide
 ├── mobile-automation.html # Mobile automation guide
 ├── desktop-automation.html# Desktop automation guide
+├── mainframe-automation.html # Mainframe automation guide
+├── remote-execution.html  # Remote/cloud execution guide
 ├── configuration.html     # Configuration guide
 ├── reporting.html         # Reporting guide
 ├── utilities.html         # Utilities documentation

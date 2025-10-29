@@ -63,6 +63,17 @@ public class DriverManager {
 
     private static void initializeSeleniumDriver() {
         ConfigManager config = ConfigManager.getInstance();
+        String remoteProvider = config.getProperty("remote.provider", "").trim();
+        
+        // Check if remote execution is enabled
+        if (!remoteProvider.isEmpty() && !"none".equalsIgnoreCase(remoteProvider)) {
+            WebDriver driver = RemoteDriverManager.initializeRemoteSeleniumDriver();
+            seleniumDriver.set(driver);
+            activeSeleniumDrivers.add(driver);
+            return;
+        }
+        
+        // Local execution
         String browser = config.getBrowser();
         boolean headless = config.isHeadless();
 
@@ -169,6 +180,16 @@ public class DriverManager {
 
     private static void initializeAppiumDriver() {
         ConfigManager config = ConfigManager.getInstance();
+        String remoteProvider = config.getProperty("remote.provider", "").trim();
+        
+        // Check if remote execution is enabled (AWS Device Farm)
+        if (!remoteProvider.isEmpty() && !"none".equalsIgnoreCase(remoteProvider)) {
+            AppiumDriver driver = RemoteDriverManager.initializeRemoteMobileDriver();
+            appiumDriver.set(driver);
+            return;
+        }
+        
+        // Local execution
         String platformName = config.getGlobalProperty("mobile.platformName", "Android");
         String deviceName = config.getGlobalProperty("mobile.deviceName", "emulator-5554");
         String appiumServerUrl = config.getGlobalProperty("mobile.appiumServerUrl", "http://127.0.0.1:4723/wd/hub");

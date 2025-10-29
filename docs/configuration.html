@@ -26,6 +26,7 @@
           <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
           <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
           <li class="nav-item"><a href="mainframe-automation.html" class="nav-link"><i class="fas fa-server"></i>Mainframe Automation</a></li>
+          <li class="nav-item"><a href="remote-execution.html" class="nav-link"><i class="fas fa-server"></i>Mainframe Automation</a></li>
           <li class="nav-item"><a href="configuration.html" class="nav-link active"><i class="fas fa-cog"></i>Configuration</a></li>
           <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
           <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
@@ -558,6 +559,105 @@ mainframe.port=23</code></pre>
             <li>EHLLAPI DLL (pcshll32.dll) in system PATH</li>
             <li>Terminal emulator session configured and running</li>
           </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Remote/Cloud Execution Configuration</h2>
+        <p>Run tests on LambdaTest (web) or AWS Device Farm (mobile) without local infrastructure.</p>
+        
+        <h3>Local Execution (Default)</h3>
+        <div class="code-block">
+          <pre><code># Leave empty or set to none for local execution
+remote.provider=
+# OR
+remote.provider=none</code></pre>
+        </div>
+
+        <h3>LambdaTest Configuration (Web)</h3>
+        <div class="code-block">
+          <pre><code># Enable LambdaTest
+remote.provider=lambdatest
+
+# Credentials (REQUIRED)
+lambdatest.username=your_username
+lambdatest.accessKey=your_access_key
+
+# Grid URL
+lambdatest.gridUrl=https://hub.lambdatest.com/wd/hub
+
+# Browser & Platform
+browser=chrome
+lambdatest.browserVersion=latest
+lambdatest.platform=Windows 10
+
+# Test Metadata
+lambdatest.build=Sands Framework Build
+lambdatest.project=Sands Automation
+lambdatest.testName=
+
+# Features
+lambdatest.video=true
+lambdatest.visual=false
+lambdatest.network=false
+lambdatest.console=false</code></pre>
+        </div>
+
+        <h3>AWS Device Farm Configuration (Mobile)</h3>
+        <div class="code-block">
+          <pre><code># Enable AWS Device Farm
+remote.provider=aws
+# OR
+remote.provider=devicefarm
+
+# Framework type
+framework.type=mobile
+
+# Device Farm URL (REQUIRED)
+aws.devicefarm.url=https://appium-us-west-2.devicefarm.aws.amazon.com/wd/hub
+
+# Platform
+mobile.platformName=Android
+
+# Device & App (REQUIRED)
+aws.devicefarm.deviceName=Samsung Galaxy S21
+aws.devicefarm.app=arn:aws:devicefarm:us-west-2:123456789012:upload:xxxxx
+
+# Android specific
+mobile.appPackage=com.example.android
+mobile.appActivity=com.example.android.MainActivity
+mobile.automationName=UiAutomator2
+
+# iOS specific
+# mobile.platformName=iOS
+# mobile.bundleId=com.example.ios</code></pre>
+        </div>
+
+        <h3>Quick Switch Commands</h3>
+        <div class="code-block">
+          <pre><code># macOS/Linux
+./switch-execution-mode.sh local
+./switch-execution-mode.sh lambdatest
+./switch-execution-mode.sh aws
+
+# Windows
+switch-execution-mode.bat local
+switch-execution-mode.bat lambdatest
+switch-execution-mode.bat aws</code></pre>
+        </div>
+
+        <h3>Runtime Override</h3>
+        <div class="code-block">
+          <pre><code># Override at runtime
+mvn test -Dremote.provider=lambdatest
+mvn test -Dremote.provider=aws
+
+# With parallel execution
+mvn test -Dremote.provider=lambdatest -Dparallel.execution=true -Dthread.count=5</code></pre>
+        </div>
+
+        <div class="alert alert-info">
+          <strong>Learn More:</strong> See <a href="remote-execution.html">Remote Execution Guide</a> for complete setup instructions.
         </div>
       </section>
 

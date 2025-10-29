@@ -25,6 +25,7 @@
           <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
           <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
           <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="remote-execution.html" class="nav-link"><i class="fas fa-cloud"></i>Remote Execution</a></li>
           <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
           <li class="nav-item"><a href="hooks.html" class="nav-link"><i class="fas fa-link"></i>Hooks</a></li>
           <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
@@ -799,6 +800,172 @@
               </marker>
             </defs>
           </svg>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Remote Execution & Cross-Platform Architecture</h2>
+        <p>Framework supports local and cloud execution with cross-browser and cross-device capabilities.</p>
+        
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 12px; margin: 30px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+          <h3 style="color: #ffffff; text-align: center; margin-bottom: 25px; font-size: 24px;">
+            ☁️ Remote Execution & Cross-Platform Support
+          </h3>
+          <div style="background: #ffffff; padding: 25px; border-radius: 8px; overflow-x: auto;">
+            <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 1400px; height: auto;">
+              <!-- Title -->
+              <text x="700" y="30" font-size="24" font-weight="bold" text-anchor="middle" fill="#2c3e50">Driver Manager - Local & Remote Execution</text>
+              
+              <!-- Test Execution Layer -->
+              <rect x="550" y="60" width="300" height="80" fill="#3498db" stroke="#2980b9" stroke-width="3" rx="8"/>
+              <text x="700" y="90" font-size="18" font-weight="bold" text-anchor="middle" fill="#ffffff">Test Execution</text>
+              <text x="700" y="115" font-size="14" text-anchor="middle" fill="#ffffff">Cucumber Features + Step Definitions</text>
+              
+              <!-- Arrow -->
+              <path d="M 700 140 L 700 180" stroke="#2c3e50" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+              
+              <!-- DriverManager -->
+              <rect x="550" y="180" width="300" height="100" fill="#e74c3c" stroke="#c0392b" stroke-width="3" rx="8"/>
+              <text x="700" y="210" font-size="20" font-weight="bold" text-anchor="middle" fill="#ffffff">DriverManager</text>
+              <text x="700" y="235" font-size="14" text-anchor="middle" fill="#ffffff">Check: remote.provider</text>
+              <text x="700" y="260" font-size="13" text-anchor="middle" fill="#ffffff">(empty/none = local | lambdatest | aws)</text>
+              
+              <!-- Decision Arrows -->
+              <path d="M 550 230 L 350 230 L 350 320" stroke="#2c3e50" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+              <text x="450" y="220" font-size="14" font-weight="bold" fill="#2c3e50">Local</text>
+              
+              <path d="M 850 230 L 1050 230 L 1050 320" stroke="#2c3e50" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+              <text x="950" y="220" font-size="14" font-weight="bold" fill="#2c3e50">Remote</text>
+              
+              <!-- Local Execution Branch -->
+              <rect x="50" y="320" width="600" height="80" fill="#16a085" stroke="#138d75" stroke-width="3" rx="8"/>
+              <text x="350" y="350" font-size="18" font-weight="bold" text-anchor="middle" fill="#ffffff">Local Execution</text>
+              <text x="350" y="375" font-size="14" text-anchor="middle" fill="#ffffff">Selenium | Playwright | Appium (Local)</text>
+              
+              <!-- Remote Execution Branch -->
+              <rect x="750" y="320" width="600" height="80" fill="#9b59b6" stroke="#8e44ad" stroke-width="3" rx="8"/>
+              <text x="1050" y="350" font-size="18" font-weight="bold" text-anchor="middle" fill="#ffffff">RemoteDriverManager</text>
+              <text x="1050" y="375" font-size="14" text-anchor="middle" fill="#ffffff">LambdaTest | AWS Device Farm</text>
+              
+              <!-- Local Browsers -->
+              <rect x="50" y="450" width="180" height="380" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2" rx="5"/>
+              <text x="140" y="480" font-size="16" font-weight="bold" text-anchor="middle" fill="#2c3e50">Web Browsers</text>
+              
+              <rect x="70" y="500" width="140" height="50" fill="#3498db" stroke="#2980b9" stroke-width="2" rx="5"/>
+              <text x="140" y="530" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">Chrome</text>
+              
+              <rect x="70" y="560" width="140" height="50" fill="#e67e22" stroke="#d35400" stroke-width="2" rx="5"/>
+              <text x="140" y="590" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">Firefox</text>
+              
+              <rect x="70" y="620" width="140" height="50" fill="#3498db" stroke="#2980b9" stroke-width="2" rx="5"/>
+              <text x="140" y="650" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">Edge</text>
+              
+              <rect x="70" y="680" width="140" height="50" fill="#95a5a6" stroke="#7f8c8d" stroke-width="2" rx="5"/>
+              <text x="140" y="710" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">Safari</text>
+              
+              <rect x="70" y="740" width="140" height="50" fill="#9b59b6" stroke="#8e44ad" stroke-width="2" rx="5"/>
+              <text x="140" y="770" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">WebKit</text>
+              
+              <!-- Local Mobile -->
+              <rect x="250" y="450" width="180" height="380" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2" rx="5"/>
+              <text x="340" y="480" font-size="16" font-weight="bold" text-anchor="middle" fill="#2c3e50">Mobile Devices</text>
+              
+              <rect x="270" y="500" width="140" height="80" fill="#27ae60" stroke="#229954" stroke-width="2" rx="5"/>
+              <text x="340" y="530" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">Android</text>
+              <text x="340" y="550" font-size="12" text-anchor="middle" fill="#ffffff">Emulator</text>
+              <text x="340" y="565" font-size="12" text-anchor="middle" fill="#ffffff">Real Device</text>
+              
+              <rect x="270" y="590" width="140" height="80" fill="#34495e" stroke="#2c3e50" stroke-width="2" rx="5"/>
+              <text x="340" y="620" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">iOS</text>
+              <text x="340" y="640" font-size="12" text-anchor="middle" fill="#ffffff">Simulator</text>
+              <text x="340" y="655" font-size="12" text-anchor="middle" fill="#ffffff">Real Device</text>
+              
+              <rect x="270" y="680" width="140" height="110" fill="#7f8c8d" stroke="#34495e" stroke-width="2" rx="5"/>
+              <text x="340" y="710" font-size="13" font-weight="bold" text-anchor="middle" fill="#ffffff">Appium Server</text>
+              <text x="340" y="730" font-size="11" text-anchor="middle" fill="#ffffff">localhost:4723</text>
+              <text x="340" y="750" font-size="11" text-anchor="middle" fill="#ffffff">UiAutomator2</text>
+              <text x="340" y="770" font-size="11" text-anchor="middle" fill="#ffffff">XCUITest</text>
+              
+              <!-- Local Desktop -->
+              <rect x="450" y="450" width="180" height="380" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2" rx="5"/>
+              <text x="540" y="480" font-size="16" font-weight="bold" text-anchor="middle" fill="#2c3e50">Desktop Apps</text>
+              
+              <rect x="470" y="500" width="140" height="80" fill="#3498db" stroke="#2980b9" stroke-width="2" rx="5"/>
+              <text x="540" y="530" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">Windows</text>
+              <text x="540" y="550" font-size="12" text-anchor="middle" fill="#ffffff">WinAppDriver</text>
+              <text x="540" y="565" font-size="12" text-anchor="middle" fill="#ffffff">WPF/WinForms</text>
+              
+              <rect x="470" y="590" width="140" height="80" fill="#34495e" stroke="#2c3e50" stroke-width="2" rx="5"/>
+              <text x="540" y="620" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">Mainframe</text>
+              <text x="540" y="640" font-size="12" text-anchor="middle" fill="#ffffff">EHLLAPI</text>
+              <text x="540" y="655" font-size="12" text-anchor="middle" fill="#ffffff">3270 Terminal</text>
+              
+              <!-- LambdaTest Cloud -->
+              <rect x="770" y="450" width="280" height="380" fill="#e8f5e9" stroke="#4caf50" stroke-width="3" rx="5"/>
+              <text x="910" y="480" font-size="18" font-weight="bold" text-anchor="middle" fill="#2c3e50">☁️ LambdaTest</text>
+              <text x="910" y="500" font-size="13" text-anchor="middle" fill="#666">(Web Automation)</text>
+              
+              <rect x="790" y="520" width="240" height="60" fill="#4caf50" stroke="#388e3c" stroke-width="2" rx="5"/>
+              <text x="910" y="545" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">3000+ Browser/OS</text>
+              <text x="910" y="565" font-size="12" text-anchor="middle" fill="#ffffff">Chrome | Firefox | Edge | Safari</text>
+              
+              <rect x="790" y="590" width="240" height="60" fill="#2196f3" stroke="#1976d2" stroke-width="2" rx="5"/>
+              <text x="910" y="615" font-size="13" font-weight="bold" text-anchor="middle" fill="#ffffff">Operating Systems</text>
+              <text x="910" y="635" font-size="11" text-anchor="middle" fill="#ffffff">Windows | macOS | Linux</text>
+              
+              <rect x="790" y="660" width="240" height="60" fill="#ff9800" stroke="#f57c00" stroke-width="2" rx="5"/>
+              <text x="910" y="685" font-size="13" font-weight="bold" text-anchor="middle" fill="#ffffff">Features</text>
+              <text x="910" y="705" font-size="11" text-anchor="middle" fill="#ffffff">Video | Screenshots | Logs</text>
+              
+              <rect x="790" y="730" width="240" height="60" fill="#9c27b0" stroke="#7b1fa2" stroke-width="2" rx="5"/>
+              <text x="910" y="755" font-size="13" font-weight="bold" text-anchor="middle" fill="#ffffff">Parallel Execution</text>
+              <text x="910" y="775" font-size="11" text-anchor="middle" fill="#ffffff">Thread-Safe Sessions</text>
+              
+              <!-- AWS Device Farm -->
+              <rect x="1070" y="450" width="280" height="380" fill="#fff3e0" stroke="#ff9800" stroke-width="3" rx="5"/>
+              <text x="1210" y="480" font-size="18" font-weight="bold" text-anchor="middle" fill="#2c3e50">☁️ AWS Device Farm</text>
+              <text x="1210" y="500" font-size="13" text-anchor="middle" fill="#666">(Mobile Automation)</text>
+              
+              <rect x="1090" y="520" width="240" height="60" fill="#ff9800" stroke="#f57c00" stroke-width="2" rx="5"/>
+              <text x="1210" y="545" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">Real Devices</text>
+              <text x="1210" y="565" font-size="12" text-anchor="middle" fill="#ffffff">Android | iOS</text>
+              
+              <rect x="1090" y="590" width="240" height="60" fill="#4caf50" stroke="#388e3c" stroke-width="2" rx="5"/>
+              <text x="1210" y="615" font-size="13" font-weight="bold" text-anchor="middle" fill="#ffffff">Device Models</text>
+              <text x="1210" y="635" font-size="11" text-anchor="middle" fill="#ffffff">Samsung | iPhone | Pixel</text>
+              
+              <rect x="1090" y="660" width="240" height="60" fill="#2196f3" stroke="#1976d2" stroke-width="2" rx="5"/>
+              <text x="1210" y="685" font-size="13" font-weight="bold" text-anchor="middle" fill="#ffffff">Features</text>
+              <text x="1210" y="705" font-size="11" text-anchor="middle" fill="#ffffff">Video | Logs | Performance</text>
+              
+              <rect x="1090" y="730" width="240" height="60" fill="#9c27b0" stroke="#7b1fa2" stroke-width="2" rx="5"/>
+              <text x="1210" y="755" font-size="13" font-weight="bold" text-anchor="middle" fill="#ffffff">Parallel Execution</text>
+              <text x="1210" y="775" font-size="11" text-anchor="middle" fill="#ffffff">Multiple Devices</text>
+              
+              <!-- Configuration Box -->
+              <rect x="50" y="850" width="1300" height="40" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2" rx="5"/>
+              <text x="700" y="875" font-size="14" font-weight="bold" text-anchor="middle" fill="#2c3e50">Configuration: remote.provider = (empty/none = local | lambdatest | aws)</text>
+              
+              <!-- Arrow marker -->
+              <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                  <polygon points="0 0, 10 3, 0 6" fill="#2c3e50" />
+                </marker>
+              </defs>
+            </svg>
+          </div>
+          
+          <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+            <p style="color: #ffffff; margin: 0; font-size: 14px; line-height: 1.8;">
+              <strong>💡 Key Benefits:</strong><br/>
+              ✅ <strong>Zero Code Changes:</strong> Switch between local and cloud via config.properties<br/>
+              ✅ <strong>Cross-Browser:</strong> Chrome, Firefox, Edge, Safari, WebKit support<br/>
+              ✅ <strong>Cross-Device:</strong> Android, iOS, Windows, Mainframe<br/>
+              ✅ <strong>Thread-Safe:</strong> Parallel execution on local and cloud<br/>
+              ✅ <strong>Cloud Benefits:</strong> 3000+ browser/OS combinations, real mobile devices<br/>
+              ✅ <strong>Unified Reporting:</strong> Same reports for local and cloud execution
+            </p>
+          </div>
         </div>
       </section>
 

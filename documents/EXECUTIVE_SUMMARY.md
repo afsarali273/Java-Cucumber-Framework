@@ -64,6 +64,9 @@ This document provides a comprehensive overview of our automation capabilities, 
 | **🗳️ Mainframe Systems** | 30 mins | 2-3 hours | 2-3 hours | 1 week |
 | **☕ Java Swing Apps** | 1.5 hours | 6-8 hours | 6-8 hours | 3 weeks |
 | **📱 Mobile Apps** | 45 mins | 3-4 hours | 4-5 hours | 2 weeks |
+| **☁️ Cloud Execution** | 0 mins* | 0 mins* | 0 mins* | 1 day |
+
+*Same as local execution - zero code changes required
 
 **Definitions:**
 - **Simple Test Case**: Login, basic navigation, single form submission
@@ -84,7 +87,8 @@ This document provides a comprehensive overview of our automation capabilities, 
 | **Maintenance Effort** | 8 hours/week | 2 hours/week | **75% reduction** |
 | **Onboarding Time** | 4 weeks | 1 week | **75% faster** |
 | **Test Reliability** | 70% | 95% | **25% improvement** |
-| **Parallel Execution** | Not supported | 3-5 threads | **3-5x faster** |
+| **Parallel Execution** | Not supported | 3-5 threads local | **3-5x faster** |
+| **Cloud Execution** | Not available | LambdaTest/AWS | **Unlimited scale** |
 | **Report Generation** | Manual | Automatic | **100% automated** |
 | **Cross-Project Reuse** | 0% | 85% | **Infinite ROI** |
 
@@ -270,6 +274,13 @@ Assuming average QA salary of $80,000/year ($40/hour):
 - Automated testing reduces **human error**
 - Consistent test execution ensures **reliability**
 - Comprehensive reports enable **data-driven decisions**
+
+#### **6. Cloud Execution**
+- Run tests on **3000+ browser/OS combinations** (LambdaTest)
+- Test on **real mobile devices** (AWS Device Farm)
+- **Zero infrastructure** maintenance
+- **Unlimited parallel** execution
+- **Zero code changes** to switch between local and cloud
 
 ---
 

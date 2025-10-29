@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remote Execution - Sands Framework</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+  
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🚀 Sands Framework</h1>
+        <p>Enterprise Automation</p>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+          <li class="nav-item"><a href="getting-started.html" class="nav-link"><i class="fas fa-rocket"></i>Getting Started</a></li>
+          <li class="nav-item"><a href="architecture.html" class="nav-link"><i class="fas fa-sitemap"></i>Architecture</a></li>
+          <li class="nav-item"><a href="web-automation.html" class="nav-link"><i class="fas fa-globe"></i>Web Automation</a></li>
+          <li class="nav-item"><a href="api-automation.html" class="nav-link"><i class="fas fa-code"></i>API Automation</a></li>
+          <li class="nav-item"><a href="test-data-encryption.html" class="nav-link"><i class="fas fa-lock"></i>Test Data & Encryption</a></li>
+          <li class="nav-item"><a href="mobile-automation.html" class="nav-link"><i class="fas fa-mobile-alt"></i>Mobile Automation</a></li>
+          <li class="nav-item"><a href="desktop-automation.html" class="nav-link"><i class="fas fa-desktop"></i>Desktop Automation</a></li>
+          <li class="nav-item"><a href="mainframe-automation.html" class="nav-link"><i class="fas fa-server"></i>Mainframe Automation</a></li>
+          <li class="nav-item"><a href="remote-execution.html" class="nav-link active"><i class="fas fa-cloud"></i>Remote Execution</a></li>
+          <li class="nav-item"><a href="test-runners.html" class="nav-link"><i class="fas fa-play-circle"></i>Test Runners</a></li>
+          <li class="nav-item"><a href="configuration.html" class="nav-link"><i class="fas fa-cog"></i>Configuration</a></li>
+          <li class="nav-item"><a href="reporting.html" class="nav-link"><i class="fas fa-chart-bar"></i>Reporting</a></li>
+          <li class="nav-item"><a href="utilities.html" class="nav-link"><i class="fas fa-tools"></i>Utilities</a></li>
+          <li class="nav-item"><a href="examples.html" class="nav-link"><i class="fas fa-code-branch"></i>Examples</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="header">
+        <h1>☁️ Remote Execution</h1>
+        <div class="header-actions">
+          <input type="text" id="search-box" class="search-box" placeholder="Search...">
+          <button id="theme-toggle" class="theme-toggle">🌙</button>
+        </div>
+      </header>
+
+      <section class="section">
+        <h2>Overview</h2>
+        <p>Run tests on cloud platforms without local infrastructure. Supports <strong>LambdaTest</strong> for web and <strong>AWS Device Farm</strong> for mobile.</p>
+        
+        <div class="alert alert-info">
+          <strong>Zero Code Changes:</strong> Switch between local and cloud execution by updating config.properties only.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Supported Providers</h2>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon">🌐</div>
+            <h3>LambdaTest</h3>
+            <p>Web automation on 3000+ browser/OS combinations</p>
+            <span class="badge badge-success">Web</span>
+          </div>
+          <div class="card">
+            <div class="card-icon">📱</div>
+            <h3>AWS Device Farm</h3>
+            <p>Mobile automation on real Android/iOS devices</p>
+            <span class="badge badge-info">Mobile</span>
+          </div>
+          <div class="card">
+            <div class="card-icon">💻</div>
+            <h3>Local</h3>
+            <p>Run tests on your machine (default)</p>
+            <span class="badge badge-primary">Default</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Quick Start</h2>
+        
+        <h3>1. Local Execution (Default)</h3>
+        <pre><code class="language-properties"># config.properties
+remote.provider=
+# OR
+remote.provider=none</code></pre>
+        <pre><code class="language-bash">mvn clean test</code></pre>
+
+        <h3>2. LambdaTest (Web)</h3>
+        <pre><code class="language-properties"># config.properties
+remote.provider=lambdatest
+lambdatest.username=your_username
+lambdatest.accessKey=your_access_key</code></pre>
+        <pre><code class="language-bash">mvn clean test -Dcucumber.filter.tags="@UI"</code></pre>
+
+        <h3>3. AWS Device Farm (Mobile)</h3>
+        <pre><code class="language-properties"># config.properties
+remote.provider=aws
+aws.devicefarm.url=https://appium-us-west-2.devicefarm.aws.amazon.com/wd/hub
+aws.devicefarm.app=arn:aws:devicefarm:us-west-2:123456789012:upload:xxxxx</code></pre>
+        <pre><code class="language-bash">mvn clean test -Dcucumber.filter.tags="@Mobile"</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>LambdaTest Setup</h2>
+        
+        <h3>Step 1: Get Credentials</h3>
+        <ol>
+          <li>Sign up at <a href="https://www.lambdatest.com/" target="_blank">LambdaTest</a></li>
+          <li>Go to <strong>Profile → Account Settings → Password & Security</strong></li>
+          <li>Copy your <strong>Username</strong> and <strong>Access Key</strong></li>
+        </ol>
+
+        <h3>Step 2: Configure Properties</h3>
+        <pre><code class="language-properties"># Enable LambdaTest
+remote.provider=lambdatest
+
+# Credentials
+lambdatest.username=your_username
+lambdatest.accessKey=your_access_key
+
+# Browser & Platform
+browser=chrome
+lambdatest.browserVersion=latest
+lambdatest.platform=Windows 10
+
+# Test Metadata
+lambdatest.build=Sands Framework Build
+lambdatest.project=Sands Automation
+
+# Features
+lambdatest.video=true
+lambdatest.visual=false
+lambdatest.network=false
+lambdatest.console=false</code></pre>
+
+        <h3>Step 3: Run Tests</h3>
+        <pre><code class="language-bash"># Run all UI tests
+mvn clean test -Dcucumber.filter.tags="@UI"
+
+# Override browser
+mvn test -Dbrowser=firefox
+
+# Parallel execution
+mvn test -Dparallel.execution=true -Dthread.count=5</code></pre>
+
+        <h3>Step 4: View Results</h3>
+        <p>Dashboard: <a href="https://automation.lambdatest.com/" target="_blank">https://automation.lambdatest.com/</a></p>
+        <ul>
+          <li>View videos, screenshots, logs</li>
+          <li>Network logs and console logs</li>
+          <li>Download test artifacts</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>AWS Device Farm Setup</h2>
+        
+        <h3>Step 1: Upload App</h3>
+        <ol>
+          <li>Go to <a href="https://console.aws.amazon.com/devicefarm/" target="_blank">AWS Device Farm Console</a></li>
+          <li>Create a new project</li>
+          <li>Upload your app (.apk for Android, .ipa for iOS)</li>
+          <li>Note the app ARN</li>
+        </ol>
+
+        <h3>Step 2: Create Test Run</h3>
+        <ol>
+          <li>Create a new test run</li>
+          <li>Select <strong>Appium Java TestNG</strong> as framework</li>
+          <li>Select devices</li>
+          <li>Copy the <strong>Appium endpoint URL</strong></li>
+        </ol>
+
+        <h3>Step 3: Configure Properties</h3>
+        <pre><code class="language-properties"># Enable AWS Device Farm
+remote.provider=aws
+
+# Framework type
+framework.type=mobile
+
+# Device Farm URL
+aws.devicefarm.url=https://appium-us-west-2.devicefarm.aws.amazon.com/wd/hub
+
+# Platform
+mobile.platformName=Android
+
+# Device & App
+aws.devicefarm.deviceName=Samsung Galaxy S21
+aws.devicefarm.app=arn:aws:devicefarm:us-west-2:123456789012:upload:xxxxx
+
+# Android specific
+mobile.appPackage=com.example.android
+mobile.appActivity=com.example.android.MainActivity</code></pre>
+
+        <h3>Step 4: Run Tests</h3>
+        <pre><code class="language-bash">mvn clean test -Dcucumber.filter.tags="@Mobile"</code></pre>
+
+        <h3>Step 5: View Results</h3>
+        <p>Dashboard: <a href="https://console.aws.amazon.com/devicefarm/" target="_blank">AWS Device Farm Console</a></p>
+        <ul>
+          <li>View videos and screenshots</li>
+          <li>Device logs and performance metrics</li>
+          <li>Download test artifacts</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>Parallel Execution</h2>
+        <p>Both LambdaTest and AWS Device Farm support parallel execution:</p>
+        
+        <pre><code class="language-properties"># Enable parallel execution
+parallel.execution=true
+thread.count=5
+
+# Each thread gets its own remote session
+remote.provider=lambdatest</code></pre>
+
+        <pre><code class="language-bash">mvn test -Dparallel.execution=true -Dthread.count=5</code></pre>
+
+        <div class="alert alert-success">
+          <strong>Thread-Safe:</strong> Each thread creates an isolated remote session. No cross-thread interference.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Helper Scripts</h2>
+        <p>Quickly switch between execution modes:</p>
+
+        <h3>macOS/Linux</h3>
+        <pre><code class="language-bash"># Switch to local
+./switch-execution-mode.sh local
+
+# Switch to LambdaTest
+./switch-execution-mode.sh lambdatest
+
+# Switch to AWS Device Farm
+./switch-execution-mode.sh aws
+
+# Check current mode
+./switch-execution-mode.sh status</code></pre>
+
+        <h3>Windows</h3>
+        <pre><code class="language-bash"># Switch to local
+switch-execution-mode.bat local
+
+# Switch to LambdaTest
+switch-execution-mode.bat lambdatest
+
+# Switch to AWS Device Farm
+switch-execution-mode.bat aws</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>Configuration Reference</h2>
+        
+        <h3>Remote Provider</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Values</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>remote.provider</code></td>
+              <td>empty, none, lambdatest, aws</td>
+              <td>Execution mode (empty/none = local)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>LambdaTest Properties</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>lambdatest.username</code></td>
+              <td>✓</td>
+              <td>LambdaTest username</td>
+            </tr>
+            <tr>
+              <td><code>lambdatest.accessKey</code></td>
+              <td>✓</td>
+              <td>LambdaTest access key</td>
+            </tr>
+            <tr>
+              <td><code>lambdatest.browserVersion</code></td>
+              <td></td>
+              <td>Browser version (default: latest)</td>
+            </tr>
+            <tr>
+              <td><code>lambdatest.platform</code></td>
+              <td></td>
+              <td>OS platform (default: Windows 10)</td>
+            </tr>
+            <tr>
+              <td><code>lambdatest.build</code></td>
+              <td></td>
+              <td>Build name</td>
+            </tr>
+            <tr>
+              <td><code>lambdatest.project</code></td>
+              <td></td>
+              <td>Project name</td>
+            </tr>
+            <tr>
+              <td><code>lambdatest.video</code></td>
+              <td></td>
+              <td>Record video (default: true)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>AWS Device Farm Properties</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>aws.devicefarm.url</code></td>
+              <td>✓</td>
+              <td>Appium endpoint URL</td>
+            </tr>
+            <tr>
+              <td><code>aws.devicefarm.app</code></td>
+              <td>✓</td>
+              <td>App ARN from Device Farm</td>
+            </tr>
+            <tr>
+              <td><code>aws.devicefarm.deviceName</code></td>
+              <td></td>
+              <td>Device name</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Comparison</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Local</th>
+              <th>LambdaTest</th>
+              <th>AWS Device Farm</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Setup</td>
+              <td>Easy</td>
+              <td>Medium</td>
+              <td>Complex</td>
+            </tr>
+            <tr>
+              <td>Cost</td>
+              <td>Free</td>
+              <td>Paid</td>
+              <td>Paid</td>
+            </tr>
+            <tr>
+              <td>Browsers</td>
+              <td>Limited</td>
+              <td>3000+</td>
+              <td>N/A</td>
+            </tr>
+            <tr>
+              <td>Devices</td>
+              <td>Emulators</td>
+              <td>N/A</td>
+              <td>Real Devices</td>
+            </tr>
+            <tr>
+              <td>Parallel</td>
+              <td>Limited</td>
+              <td>High</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td>Debugging</td>
+              <td>Easy</td>
+              <td>Medium</td>
+              <td>Hard</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section">
+        <h2>Troubleshooting</h2>
+        
+        <h3>Tests still running locally</h3>
+        <div class="alert alert-warning">
+          <strong>Solution:</strong> Check <code>remote.provider</code> is set correctly (not empty, not "none")
+        </div>
+
+        <h3>Authentication failed (LambdaTest)</h3>
+        <div class="alert alert-warning">
+          <strong>Solution:</strong> Verify username and access key from LambdaTest dashboard
+        </div>
+
+        <h3>Connection timeout (AWS Device Farm)</h3>
+        <div class="alert alert-warning">
+          <strong>Solution:</strong> Ensure Device Farm URL is from active test run
+        </div>
+
+        <h3>Parallel execution not working</h3>
+        <div class="alert alert-warning">
+          <strong>Solution:</strong> Verify <code>parallel.execution=true</code> and <code>thread.count</code> is set
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Best Practices</h2>
+        <ul>
+          <li>Use environment variables for credentials</li>
+          <li>Tag tests appropriately (@UI, @Mobile)</li>
+          <li>Set meaningful test names</li>
+          <li>Enable video only for failures</li>
+          <li>Use build numbers for tracking</li>
+          <li>Test with single thread first</li>
+          <li>Monitor cloud usage and costs</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>Example Configurations</h2>
+        <p>See example configuration files:</p>
+        <ul>
+          <li><code>config-lambdatest-example.properties</code> - LambdaTest template</li>
+          <li><code>config-aws-devicefarm-example.properties</code> - AWS Device Farm template</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>Additional Resources</h2>
+        <ul>
+          <li>📄 <a href="../REMOTE_EXECUTION_GUIDE.md">Complete Setup Guide</a></li>
+          <li>📄 <a href="../REMOTE_EXECUTION_SUMMARY.md">Quick Summary</a></li>
+          <li>🌐 <a href="https://www.lambdatest.com/support/docs/" target="_blank">LambdaTest Documentation</a></li>
+          <li>🌐 <a href="https://docs.aws.amazon.com/devicefarm/" target="_blank">AWS Device Farm Documentation</a></li>
+        </ul>
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 Sands Automation Framework. Created by Afsar Ali</p>
+        <p>Licensed under Apache License 2.0</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

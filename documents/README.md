@@ -501,7 +501,14 @@ Each application test project imports the framework as a **JAR dependency**:
 - Properties-based configuration
 - Environment-specific settings
 - Runtime parameter override
-- Cloud testing support
+- Remote execution (LambdaTest, AWS Device Farm)
+
+### ☁️ Cloud Execution
+- LambdaTest for web (3000+ browser/OS)
+- AWS Device Farm for mobile (real devices)
+- Zero code changes to switch
+- Parallel execution on cloud
+- Unified reporting
 
 ### 🛡️ Robust Assertions
 - Hard and soft assertions
@@ -740,6 +747,7 @@ Comprehensive HTML documentation available in `docs/` folder:
 - **[Mobile Automation](docs/mobile-automation.html)** - Appium setup
 - **[Desktop Automation](docs/desktop-automation.html)** - WinAppDriver
 - **[Mainframe Automation](docs/mainframe-automation.html)** - EHLLAPI
+- **[Remote Execution](docs/remote-execution.html)** - LambdaTest & AWS Device Farm
 - **[Configuration](docs/configuration.html)** - All settings explained
 - **[Reporting](docs/reporting.html)** - Report types and usage
 - **[API Reference](docs/api-reference.html)** - Complete API docs
@@ -788,7 +796,8 @@ For issues, questions, or feature requests:
 - [ ] Performance testing integration
 - [ ] Database validation utilities
 - [ ] Email/SMS validation
-- [ ] Cloud provider integrations (AWS, Azure, GCP)
+- [x] Cloud provider integrations (LambdaTest, AWS Device Farm)
+- [ ] Additional cloud providers (BrowserStack, Sauce Labs)
 
 ---
 

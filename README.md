@@ -5,10 +5,11 @@ Enterprise-grade automation framework supporting Selenium, Playwright, Mobile, D
 ## Features
 
 - **Multi-Framework Support**: Selenium, Playwright, Mobile (Appium), Desktop (WinAppDriver), API
+- **Cloud Execution**: LambdaTest (web) and AWS Device Farm (mobile) support
 - **Unified Logging**: Single logger for all reports (ExtentReports, CustomReporter, Allure, Logs)
 - **BDD with Cucumber**: Behavior-driven development with Gherkin syntax
 - **TestNG/Modular Support**: Traditional TestNG test execution
-- **Parallel Execution**: Thread-safe parallel test execution
+- **Parallel Execution**: Thread-safe parallel test execution (local & cloud)
 - **Comprehensive Configuration**: Highly configurable via properties files
 - **Advanced Assertions**: Playwright native assertions + custom assertions
 - **Multiple Reports**: ExtentReports, CustomReporter, Allure, Cucumber HTML
@@ -393,13 +394,32 @@ video.recording=true
 video.path=test-output/videos
 ```
 
-### Cloud Testing
+### Remote/Cloud Testing 🌐
+
+Run tests on **LambdaTest** (web) or **AWS Device Farm** (mobile):
+
 ```properties
-cloud.enabled=true
-cloud.provider=browserstack
-cloud.username=your_username
-cloud.accessKey=your_key
+# Local execution (default)
+remote.provider=
+
+# LambdaTest for web
+remote.provider=lambdatest
+lambdatest.username=your_username
+lambdatest.accessKey=your_access_key
+
+# AWS Device Farm for mobile
+remote.provider=aws
+aws.devicefarm.url=https://appium-us-west-2.devicefarm.aws.amazon.com/wd/hub
 ```
+
+**Benefits:**
+- ✅ 3000+ browser/OS combinations (LambdaTest)
+- ✅ Real mobile devices (AWS Device Farm)
+- ✅ Parallel execution on cloud
+- ✅ Video recording & detailed logs
+- ✅ No local infrastructure needed
+
+📖 **Complete Guide**: See [REMOTE_EXECUTION_GUIDE.md](REMOTE_EXECUTION_GUIDE.md)
 
 ## Thread Safety
 
@@ -435,6 +455,9 @@ All components are thread-safe:
 ## Change Log
 
 ### Latest Updates (2025-01-21)
+- ✅ Added LambdaTest integration for web automation
+- ✅ Added AWS Device Farm integration for mobile automation
+- ✅ Added RemoteDriverManager for cloud execution
 - ✅ Added UnifiedLogger for all reports
 - ✅ Added ExtentReports integration
 - ✅ Added ScenarioContext for data sharing

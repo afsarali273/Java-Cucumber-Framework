@@ -140,6 +140,24 @@ Complete documentation suite for the Sands Automation Framework, designed for st
 
 ---
 
+### 8️⃣ **REMOTE_EXECUTION_GUIDE.md** - Cloud Execution
+**Audience:** QA engineers, DevOps team  
+**Purpose:** LambdaTest and AWS Device Farm setup  
+**Contents:**
+- Remote execution overview
+- LambdaTest configuration (web)
+- AWS Device Farm configuration (mobile)
+- Parallel execution on cloud
+- Helper scripts for mode switching
+- Configuration reference
+- Troubleshooting guide
+- Best practices
+
+**Read Time:** 30 minutes  
+**Key Takeaway:** Zero code changes to run tests on cloud, 3000+ browser/OS combinations
+
+---
+
 ## 🎯 Quick Navigation by Role
 
 ### For **Executives / Higher Management**
@@ -219,7 +237,8 @@ Complete documentation suite for the Sands Automation Framework, designed for st
 | SOFTWARE_INSTALLATION.md | 12 | 4,000 | 2-3 hours | Technical |
 | TEST_EXAMPLES.md | 20 | 8,000 | 60 mins | QA Engineers |
 | TEST_EXAMPLES_PART2.md | 15 | 6,000 | 60 mins | QA Engineers |
-| **TOTAL** | **125** | **47,000** | **6-7 hours** | **All** |
+| REMOTE_EXECUTION_GUIDE.md | 12 | 4,500 | 30 mins | QA/DevOps |
+| **TOTAL** | **137** | **51,500** | **7-8 hours** | **All** |
 
 ---
 
@@ -263,6 +282,12 @@ Complete documentation suite for the Sands Automation Framework, designed for st
 
 ### "What are the best practices?"
 → **TEST_EXAMPLES_PART2.md** (Best Practices Examples section)
+
+### "How do I run tests on cloud?"
+→ **REMOTE_EXECUTION_GUIDE.md** (LambdaTest/AWS Device Farm sections)
+
+### "How do I test on multiple browsers?"
+→ **REMOTE_EXECUTION_GUIDE.md** (Cross-browser testing section)
 
 ---
 
