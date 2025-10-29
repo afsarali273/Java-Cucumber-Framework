@@ -2,6 +2,7 @@ package com.automation.core.commonSteps;
 
 import com.automation.core.config.ConfigManager;
 import com.automation.core.context.ScenarioContext;
+import com.automation.core.driver.DriverManager;
 import com.automation.core.logging.LogManager;
 import com.automation.keywords.UIKeywords;
 import io.cucumber.java.en.*;
@@ -845,6 +846,380 @@ public class UISteps {
         }
     }
 
+    /**
+     * Example: Then element "#message" text should not be empty
+     */
+    @Then("element {string} text should not be empty")
+    public void elementTextShouldNotBeEmpty(String locator) {
+        String actual = UIKeywords.getTextFromElement(replaceVariables(locator));
+        if (actual == null || actual.trim().isEmpty()) {
+            throw new AssertionError("Expected element text to not be empty: " + locator);
+        }
+    }
+
+    /**
+     * Example: Then element "#message" text should be empty
+     */
+    @Then("element {string} text should be empty")
+    public void elementTextShouldBeEmpty(String locator) {
+        String actual = UIKeywords.getTextFromElement(replaceVariables(locator));
+        if (actual != null && !actual.trim().isEmpty()) {
+            throw new AssertionError("Expected element text to be empty but was: '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then element "#username" text should start with "User:"
+     */
+    @Then("element {string} text should start with {string}")
+    public void elementTextShouldStartWith(String locator, String prefix) {
+        String actual = UIKeywords.getTextFromElement(replaceVariables(locator));
+        if (!actual.startsWith(replaceVariables(prefix))) {
+            throw new AssertionError("Expected text to start with '" + prefix + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then element "#filename" text should end with ".pdf"
+     */
+    @Then("element {string} text should end with {string}")
+    public void elementTextShouldEndWith(String locator, String suffix) {
+        String actual = UIKeywords.getTextFromElement(replaceVariables(locator));
+        if (!actual.endsWith(replaceVariables(suffix))) {
+            throw new AssertionError("Expected text to end with '" + suffix + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then element "#error" should not contain text "success"
+     */
+    @Then("element {string} should not contain text {string}")
+    public void elementShouldNotContainText(String locator, String text) {
+        String actual = UIKeywords.getTextFromElement(replaceVariables(locator));
+        if (actual != null && actual.contains(replaceVariables(text))) {
+            throw new AssertionError("Expected element not to contain '" + text + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then page should not contain text "Error"
+     */
+    @Then("page should not contain text {string}")
+    public void pageShouldNotContainText(String text) {
+        boolean present = UIKeywords.isTextPresent(replaceVariables(text));
+        if (present) throw new AssertionError("Expected page to not contain text: " + text);
+    }
+
+    /**
+     * Example: Then element "#link" attribute "href" should contain "example.com"
+     */
+    @Then("element {string} attribute {string} should contain {string}")
+    public void elementAttributeShouldContain(String locator, String attribute, String expected) {
+        String actual = UIKeywords.getAttribute(replaceVariables(locator), replaceVariables(attribute));
+        if (actual == null || !actual.contains(replaceVariables(expected))) {
+            throw new AssertionError("Expected attribute '" + attribute + "' to contain '" + expected + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then element "#button" attribute "disabled" should not exist
+     */
+    @Then("element {string} attribute {string} should not exist")
+    public void elementAttributeShouldNotExist(String locator, String attribute) {
+        String actual = UIKeywords.getAttribute(replaceVariables(locator), replaceVariables(attribute));
+        if (actual != null) {
+            throw new AssertionError("Expected attribute '" + attribute + "' to not exist but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then element "#input" attribute "value" should not be empty
+     */
+    @Then("element {string} attribute {string} should not be empty")
+    public void elementAttributeShouldNotBeEmpty(String locator, String attribute) {
+        String actual = UIKeywords.getAttribute(replaceVariables(locator), replaceVariables(attribute));
+        if (actual == null || actual.trim().isEmpty()) {
+            throw new AssertionError("Expected attribute '" + attribute + "' to not be empty");
+        }
+    }
+
+    /**
+     * Example: Then element "#box" css "background-color" should contain "rgb"
+     */
+    @Then("element {string} css {string} should contain {string}")
+    public void elementCssShouldContain(String locator, String property, String expected) {
+        String actual = UIKeywords.getCssValue(replaceVariables(locator), replaceVariables(property));
+        if (actual == null || !actual.contains(replaceVariables(expected))) {
+            throw new AssertionError("Expected css '" + property + "' to contain '" + expected + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then element count of ".item" should be less than 10
+     */
+    @Then("element count of {string} should be less than {int}")
+    public void elementCountShouldBeLessThan(String locator, int expected) {
+        int actual = UIKeywords.getElementCount(replaceVariables(locator));
+        if (actual >= expected) {
+            throw new AssertionError("Expected element count < " + expected + " but got " + actual);
+        }
+    }
+
+    /**
+     * Example: Then element count of ".item" should be greater than or equal to 5
+     */
+    @Then("element count of {string} should be greater than or equal to {int}")
+    public void elementCountShouldBeGreaterThanOrEqual(String locator, int expected) {
+        int actual = UIKeywords.getElementCount(replaceVariables(locator));
+        if (actual < expected) {
+            throw new AssertionError("Expected element count >= " + expected + " but got " + actual);
+        }
+    }
+
+    /**
+     * Example: Then element count of ".item" should be less than or equal to 20
+     */
+    @Then("element count of {string} should be less than or equal to {int}")
+    public void elementCountShouldBeLessThanOrEqual(String locator, int expected) {
+        int actual = UIKeywords.getElementCount(replaceVariables(locator));
+        if (actual > expected) {
+            throw new AssertionError("Expected element count <= " + expected + " but got " + actual);
+        }
+    }
+
+    /**
+     * Example: Then element count of ".item" should not be 0
+     */
+    @Then("element count of {string} should not be {int}")
+    public void elementCountShouldNotBe(String locator, int expected) {
+        int actual = UIKeywords.getElementCount(replaceVariables(locator));
+        if (actual == expected) {
+            throw new AssertionError("Expected element count to not be " + expected);
+        }
+    }
+
+    /**
+     * Example: Then element "#button" should be focused
+     */
+    @Then("element {string} should be focused")
+    public void elementShouldBeFocused(String locator) {
+        if (ConfigManager.isPlaywright()) {
+            boolean focused = DriverManager.getPlaywrightPage().locator(replaceVariables(locator)).evaluate("el => el === document.activeElement").toString().equals("true");
+            if (!focused) throw new AssertionError("Expected element to be focused: " + locator);
+        } else {
+            org.openqa.selenium.WebElement element = DriverManager.getSeleniumDriver().findElement(org.openqa.selenium.By.cssSelector(replaceVariables(locator)));
+            org.openqa.selenium.WebElement activeElement = DriverManager.getSeleniumDriver().switchTo().activeElement();
+            if (!element.equals(activeElement)) {
+                throw new AssertionError("Expected element to be focused: " + locator);
+            }
+        }
+    }
+
+    /**
+     * Example: Then element "#hidden" should be hidden
+     */
+    @Then("element {string} should be hidden")
+    public void elementShouldBeHidden(String locator) {
+        boolean visible = UIKeywords.isElementVisible(replaceVariables(locator));
+        if (visible) throw new AssertionError("Expected element to be hidden: " + locator);
+    }
+
+    /**
+     * Example: Then element "#button" should be clickable
+     */
+    @Then("element {string} should be clickable")
+    public void elementShouldBeClickable(String locator) {
+        boolean visible = UIKeywords.isElementVisible(replaceVariables(locator));
+        boolean enabled = UIKeywords.isElementEnabled(replaceVariables(locator));
+        if (!visible || !enabled) {
+            throw new AssertionError("Expected element to be clickable (visible and enabled): " + locator);
+        }
+    }
+
+    /**
+     * Example: Then element "#button" should not be clickable
+     */
+    @Then("element {string} should not be clickable")
+    public void elementShouldNotBeClickable(String locator) {
+        boolean visible = UIKeywords.isElementVisible(replaceVariables(locator));
+        boolean enabled = UIKeywords.isElementEnabled(replaceVariables(locator));
+        if (visible && enabled) {
+            throw new AssertionError("Expected element to not be clickable: " + locator);
+        }
+    }
+
+    /**
+     * Example: Then current url should start with "https://"
+     */
+    @Then("current url should start with {string}")
+    public void currentUrlShouldStartWith(String prefix) {
+        String actual = UIKeywords.getCurrentURL();
+        if (!actual.startsWith(replaceVariables(prefix))) {
+            throw new AssertionError("Expected URL to start with '" + prefix + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then current url should end with "/dashboard"
+     */
+    @Then("current url should end with {string}")
+    public void currentUrlShouldEndWith(String suffix) {
+        String actual = UIKeywords.getCurrentURL();
+        if (!actual.endsWith(replaceVariables(suffix))) {
+            throw new AssertionError("Expected URL to end with '" + suffix + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then current url should not contain "error"
+     */
+    @Then("current url should not contain {string}")
+    public void currentUrlShouldNotContain(String text) {
+        String actual = UIKeywords.getCurrentURL();
+        if (actual.contains(replaceVariables(text))) {
+            throw new AssertionError("Expected URL to not contain '" + text + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then current url should match regex "https://.*\\.example\\.com/.*"
+     */
+    @Then("current url should match regex {string}")
+    public void currentUrlShouldMatchRegex(String regex) {
+        String actual = UIKeywords.getCurrentURL();
+        if (!actual.matches(replaceVariables(regex))) {
+            throw new AssertionError("Expected URL to match regex '" + regex + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then page title should not be empty
+     */
+    @Then("page title should not be empty")
+    public void pageTitleShouldNotBeEmpty() {
+        String actual = UIKeywords.getPageTitle();
+        if (actual == null || actual.trim().isEmpty()) {
+            throw new AssertionError("Expected page title to not be empty");
+        }
+    }
+
+    /**
+     * Example: Then page title should start with "Dashboard"
+     */
+    @Then("page title should start with {string}")
+    public void pageTitleShouldStartWith(String prefix) {
+        String actual = UIKeywords.getPageTitle();
+        if (!actual.startsWith(replaceVariables(prefix))) {
+            throw new AssertionError("Expected page title to start with '" + prefix + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then page title should end with "- MyApp"
+     */
+    @Then("page title should end with {string}")
+    public void pageTitleShouldEndWith(String suffix) {
+        String actual = UIKeywords.getPageTitle();
+        if (!actual.endsWith(replaceVariables(suffix))) {
+            throw new AssertionError("Expected page title to end with '" + suffix + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then page title should not contain "Error"
+     */
+    @Then("page title should not contain {string}")
+    public void pageTitleShouldNotContain(String text) {
+        String actual = UIKeywords.getPageTitle();
+        if (actual.contains(replaceVariables(text))) {
+            throw new AssertionError("Expected page title to not contain '" + text + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then page title should match regex ".*Dashboard.*"
+     */
+    @Then("page title should match regex {string}")
+    public void pageTitleShouldMatchRegex(String regex) {
+        String actual = UIKeywords.getPageTitle();
+        if (!actual.matches(replaceVariables(regex))) {
+            throw new AssertionError("Expected page title to match regex '" + regex + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then alert text should contain "confirm"
+     */
+    @Then("alert text should contain {string}")
+    public void alertTextShouldContain(String expected) {
+        String actual = UIKeywords.getAlertText();
+        if (!actual.contains(replaceVariables(expected))) {
+            throw new AssertionError("Expected alert text to contain '" + expected + "' but was '" + actual + "'");
+        }
+    }
+
+    /**
+     * Example: Then alert should be present
+     */
+    @Then("alert should be present")
+    public void alertShouldBePresent() {
+        if (ConfigManager.isPlaywright()) {
+            LogManager.info("Playwright handles alerts via dialog events");
+        } else {
+            try {
+                DriverManager.getSeleniumDriver().switchTo().alert();
+            } catch (org.openqa.selenium.NoAlertPresentException e) {
+                throw new AssertionError("Expected alert to be present");
+            }
+        }
+    }
+
+    /**
+     * Example: Then radio button "#option1" should be selected
+     */
+    @Then("radio button {string} should be selected")
+    public void radioButtonShouldBeSelected(String locator) {
+        boolean selected = UIKeywords.isCheckboxChecked(replaceVariables(locator));
+        if (!selected) throw new AssertionError("Expected radio button to be selected: " + locator);
+    }
+
+    /**
+     * Example: Then radio button "#option2" should not be selected
+     */
+    @Then("radio button {string} should not be selected")
+    public void radioButtonShouldNotBeSelected(String locator) {
+        boolean selected = UIKeywords.isCheckboxChecked(replaceVariables(locator));
+        if (selected) throw new AssertionError("Expected radio button to not be selected: " + locator);
+    }
+
+    /**
+     * Example: Then dropdown "#country" should have option "USA"
+     */
+    @Then("dropdown {string} should have option {string}")
+    public void dropdownShouldHaveOption(String locator, String option) {
+        if (ConfigManager.isPlaywright()) {
+            String optionLocator = replaceVariables(locator) + " option:has-text(\"" + replaceVariables(option) + "\")";
+            boolean exists = DriverManager.getPlaywrightPage().locator(optionLocator).count() > 0;
+            if (!exists) throw new AssertionError("Expected dropdown to have option: " + option);
+        } else {
+            org.openqa.selenium.support.ui.Select select = new org.openqa.selenium.support.ui.Select(
+                DriverManager.getSeleniumDriver().findElement(org.openqa.selenium.By.cssSelector(replaceVariables(locator))));
+            boolean found = select.getOptions().stream().anyMatch(opt -> opt.getText().equals(replaceVariables(option)));
+            if (!found) throw new AssertionError("Expected dropdown to have option: " + option);
+        }
+    }
+
+    /**
+     * Example: Then selected option in dropdown "#country" should contain "United"
+     */
+    @Then("selected option in dropdown {string} should contain {string}")
+    public void selectedOptionShouldContain(String locator, String expected) {
+        String actual = UIKeywords.getSelectedDropdownOption(replaceVariables(locator));
+        if (!actual.contains(replaceVariables(expected))) {
+            throw new AssertionError("Expected selected option to contain '" + expected + "' but was '" + actual + "'");
+        }
+    }
+
     // ------------------- Close Tab/Window -------------------
 
     /**
@@ -886,6 +1261,155 @@ public class UISteps {
     @When("right click element {string}")
     public void rightClickElement(String locator) {
         UIKeywords.rightClick(replaceVariables(locator));
+    }
+
+    // ------------------- Advanced Element Operations -------------------
+
+    @When("click {string} with javascript")
+    public void clickWithJS(String locator) {
+        UIKeywords.clickWithJS(replaceVariables(locator));
+    }
+
+    @When("click {string} if visible")
+    public void clickIfVisible(String locator) {
+        UIKeywords.clickIfVisible(replaceVariables(locator));
+    }
+
+    @When("type {string} into {string} without clearing")
+    public void typeWithoutClear(String text, String locator) {
+        UIKeywords.typeWithoutClear(replaceVariables(locator), replaceVariables(text));
+    }
+
+    @When("focus element {string}")
+    public void focusElement(String locator) {
+        UIKeywords.focusElement(replaceVariables(locator));
+    }
+
+    @When("highlight element {string}")
+    public void highlightElement(String locator) {
+        UIKeywords.highlightElement(replaceVariables(locator));
+    }
+
+    // ------------------- Text & Content Operations -------------------
+
+    @When("save input value of {string} as {string}")
+    public void saveInputValue(String locator, String variableName) {
+        String value = UIKeywords.getInputValue(replaceVariables(locator));
+        ScenarioContext.set(variableName, value);
+        LogManager.info("Saved input value as '" + variableName + "' = " + value);
+    }
+
+    @Then("input value of {string} should be {string}")
+    public void inputValueShouldBe(String locator, String expected) {
+        String actual = UIKeywords.getInputValue(replaceVariables(locator));
+        if (!replaceVariables(expected).equals(actual)) {
+            throw new AssertionError("Expected input value '" + expected + "' but got '" + actual + "'");
+        }
+    }
+
+    // ------------------- Window Operations -------------------
+
+    @When("maximize window")
+    public void maximizeWindow() {
+        UIKeywords.maximizeWindow();
+    }
+
+    @When("set window size to {int}x{int}")
+    public void setWindowSize(int width, int height) {
+        UIKeywords.setWindowSize(width, height);
+    }
+
+    // ------------------- Cookie Operations -------------------
+
+    @When("add cookie {string} with value {string}")
+    public void addCookie(String name, String value) {
+        UIKeywords.addCookie(replaceVariables(name), replaceVariables(value));
+    }
+
+    @When("delete all cookies")
+    public void deleteAllCookies() {
+        UIKeywords.deleteAllCookies();
+    }
+
+
+    // ------------------- Advanced Scroll Operations -------------------
+
+    @When("scroll by {int} pixels horizontally and {int} pixels vertically")
+    public void scrollByPixels(int x, int y) {
+        UIKeywords.scrollByPixels(x, y);
+    }
+
+    @When("scroll {string} into center")
+    public void scrollElementIntoCenter(String locator) {
+        UIKeywords.scrollElementIntoCenter(replaceVariables(locator));
+    }
+
+    // ------------------- Keyboard Operations -------------------
+
+    @When("press keyboard key {string}")
+    public void pressKeyboardKey(String key) {
+        UIKeywords.pressKeyboardKey(replaceVariables(key));
+    }
+
+    @When("press enter key")
+    public void pressEnter() {
+        UIKeywords.pressEnter();
+    }
+
+    @When("press escape key")
+    public void pressEscape() {
+        UIKeywords.pressEscape();
+    }
+
+    @When("press tab key")
+    public void pressTab() {
+        UIKeywords.pressTab();
+    }
+
+    // ------------------- Element State Assertions -------------------
+
+    @Then("element {string} should be editable")
+    public void elementShouldBeEditable(String locator) {
+        boolean editable = UIKeywords.isElementEditable(replaceVariables(locator));
+        if (!editable) throw new AssertionError("Expected element to be editable: " + locator);
+    }
+
+    // ------------------- Dropdown Advanced -------------------
+
+    @Then("dropdown {string} should have {int} options")
+    public void dropdownShouldHaveOptionsCount(String locator, int expected) {
+        int actual = UIKeywords.getDropdownOptionsCount(replaceVariables(locator));
+        if (actual != expected) {
+            throw new AssertionError("Expected dropdown to have " + expected + " options but got " + actual);
+        }
+    }
+
+    // ------------------- File Upload -------------------
+
+    @When("upload multiple files {string} to {string}")
+    public void uploadMultipleFiles(String filePaths, String locator) {
+        String[] paths = replaceVariables(filePaths).split(",");
+        for (int i = 0; i < paths.length; i++) {
+            paths[i] = paths[i].trim();
+        }
+        UIKeywords.uploadMultipleFiles(replaceVariables(locator), paths);
+    }
+
+    // ------------------- Element Information -------------------
+
+    @When("save tag name of {string} as {string}")
+    public void saveTagName(String locator, String variableName) {
+        String tagName = UIKeywords.getElementTagName(replaceVariables(locator));
+        ScenarioContext.set(variableName, tagName);
+        LogManager.info("Saved tag name as '" + variableName + "' = " + tagName);
+    }
+
+    @Then("tag name of {string} should be {string}")
+    public void tagNameShouldBe(String locator, String expected) {
+        String actual = UIKeywords.getElementTagName(replaceVariables(locator));
+        if (!replaceVariables(expected).equalsIgnoreCase(actual)) {
+            throw new AssertionError("Expected tag name '" + expected + "' but got '" + actual + "'");
+        }
     }
 
     // ------------------- Utilities -------------------

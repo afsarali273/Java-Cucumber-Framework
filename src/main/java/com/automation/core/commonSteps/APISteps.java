@@ -1,4 +1,4 @@
-package com.automation.stepdefinitions;
+package com.automation.core.commonSteps;
 
 import com.automation.core.logging.LogManager;
 import com.automation.reusables.APIReusable;

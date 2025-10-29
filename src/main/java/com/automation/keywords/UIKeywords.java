@@ -780,4 +780,452 @@ public class UIKeywords {
         }
         UnifiedLogger.info("Waited for frame available: " + locator);
     }
+
+    // ------------------- Advanced Element Operations -------------------
+
+    public static void clickWithJS(String locator) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            WebElement element = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator));
+            ((org.openqa.selenium.JavascriptExecutor) DriverManager.getSeleniumDriver()).executeScript("arguments[0].click();", element);
+        } else {
+            DriverManager.getPlaywrightPage().evaluate(
+                    "locator => { const el = document.querySelector(locator); if (el) el.click(); }",
+                    locator
+            );
+
+
+        }
+        UnifiedLogger.info("Clicked with JS: " + locator);
+    }
+
+    public static void clickIfVisible(String locator) {
+        if (isElementVisible(locator)) {
+            clickElement(locator);
+        } else {
+            UnifiedLogger.info("Element not visible, skipping click: " + locator);
+        }
+    }
+
+    public static void typeWithoutClear(String locator, String text) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator)).sendKeys(text);
+        } else {
+            DriverManager.getPlaywrightPage().type(locator, text);
+        }
+        UnifiedLogger.info("Typed without clear: " + text + " into " + locator);
+    }
+
+    public static void clearText(String locator) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator)).clear();
+        } else {
+            DriverManager.getPlaywrightPage().fill(locator, "");
+        }
+        UnifiedLogger.info("Cleared text: " + locator);
+    }
+
+    public static void focusElement(String locator) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            WebElement element = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator));
+            ((org.openqa.selenium.JavascriptExecutor) DriverManager.getSeleniumDriver()).executeScript("arguments[0].focus();", element);
+        } else {
+            DriverManager.getPlaywrightPage().focus(locator);
+        }
+        UnifiedLogger.info("Focused element: " + locator);
+    }
+
+
+    public static void highlightElement(String locator) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            WebElement element = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator));
+            ((org.openqa.selenium.JavascriptExecutor) DriverManager.getSeleniumDriver())
+                .executeScript("arguments[0].style.border='3px solid red'", element);
+        } else {
+            DriverManager.getPlaywrightPage().evaluate(
+                    "locator => { const el = document.querySelector(locator); if (el) el.style.border = '3px solid red'; }",
+                    locator
+            );
+
+        }
+        UnifiedLogger.info("Highlighted element: " + locator);
+    }
+
+    public static void removeHighlight(String locator) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            WebElement element = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator));
+            ((org.openqa.selenium.JavascriptExecutor) DriverManager.getSeleniumDriver())
+                .executeScript("arguments[0].style.border=''", element);
+        } else {
+            DriverManager.getPlaywrightPage().evaluate(
+                    "locator => { const el = document.querySelector(locator); if (el) el.style.border = ''; }",
+                    locator
+            );
+        }
+        UnifiedLogger.info("Removed highlight: " + locator);
+    }
+
+    // ------------------- Text & Content Operations -------------------
+
+    public static String getInnerHTML(String locator) {
+        String html;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            html = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator)).getAttribute("innerHTML");
+        } else {
+            html = DriverManager.getPlaywrightPage().innerHTML(locator);
+        }
+        UnifiedLogger.info("Got innerHTML from: " + locator);
+        return html;
+    }
+
+    public static String getInnerText(String locator) {
+        String text;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            text = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator)).getAttribute("innerText");
+        } else {
+            text = DriverManager.getPlaywrightPage().innerText(locator);
+        }
+        UnifiedLogger.info("Got innerText from: " + locator);
+        return text;
+    }
+
+    public static String getInputValue(String locator) {
+        String value;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            value = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator)).getAttribute("value");
+        } else {
+            value = DriverManager.getPlaywrightPage().inputValue(locator);
+        }
+        UnifiedLogger.info("Got input value from: " + locator + " = " + value);
+        return value;
+    }
+
+    public static String getPageSource() {
+        String source;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            source = DriverManager.getSeleniumDriver().getPageSource();
+        } else {
+            source = DriverManager.getPlaywrightPage().content();
+        }
+        UnifiedLogger.info("Retrieved page source");
+        return source;
+    }
+
+    // ------------------- Window & Tab Operations -------------------
+
+    public static void maximizeWindow() {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().manage().window().maximize();
+        } else {
+            DriverManager.getPlaywrightPage().setViewportSize(1920, 1080);
+        }
+        UnifiedLogger.info("Maximized window");
+    }
+
+    public static void setWindowSize(int width, int height) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().manage().window().setSize(new org.openqa.selenium.Dimension(width, height));
+        } else {
+            DriverManager.getPlaywrightPage().setViewportSize(width, height);
+        }
+        UnifiedLogger.info("Set window size: " + width + "x" + height);
+    }
+
+    public static String getWindowHandle() {
+        String handle = "";
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            handle = DriverManager.getSeleniumDriver().getWindowHandle();
+        }
+        UnifiedLogger.info("Got window handle: " + handle);
+        return handle;
+    }
+
+    public static java.util.Set<String> getAllWindowHandles() {
+        java.util.Set<String> handles = new java.util.HashSet<>();
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            handles = DriverManager.getSeleniumDriver().getWindowHandles();
+        }
+        UnifiedLogger.info("Got all window handles: " + handles.size());
+        return handles;
+    }
+
+    public static void switchToWindow(String windowHandle) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().switchTo().window(windowHandle);
+        }
+        UnifiedLogger.info("Switched to window: " + windowHandle);
+    }
+
+    public static void closeCurrentWindow() {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().close();
+        } else {
+            DriverManager.getPlaywrightPage().close();
+        }
+        UnifiedLogger.info("Closed current window");
+    }
+
+    // ------------------- Cookie Operations -------------------
+
+    public static void addCookie(String name, String value) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().manage().addCookie(new org.openqa.selenium.Cookie(name, value));
+        } else {
+            DriverManager.getPlaywrightPage().context().addCookies(java.util.Arrays.asList(
+                new com.microsoft.playwright.options.Cookie(name, value).setUrl(DriverManager.getPlaywrightPage().url())));
+        }
+        UnifiedLogger.info("Added cookie: " + name + " = " + value);
+    }
+
+    public static String getCookie(String name) {
+        String value = "";
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            org.openqa.selenium.Cookie cookie = DriverManager.getSeleniumDriver().manage().getCookieNamed(name);
+            value = cookie != null ? cookie.getValue() : "";
+        } else {
+            java.util.List<com.microsoft.playwright.options.Cookie> cookies = DriverManager.getPlaywrightPage().context().cookies();
+            value = cookies.stream().filter(c -> c.name.equals(name)).findFirst().map(c -> c.value).orElse("");
+        }
+        UnifiedLogger.info("Got cookie: " + name + " = " + value);
+        return value;
+    }
+
+    public static void deleteAllCookies() {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().manage().deleteAllCookies();
+        } else {
+            DriverManager.getPlaywrightPage().context().clearCookies();
+        }
+        UnifiedLogger.info("Deleted all cookies");
+    }
+
+    public static void deleteCookie(String name) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            DriverManager.getSeleniumDriver().manage().deleteCookieNamed(name);
+        } else {
+            java.util.List<com.microsoft.playwright.options.Cookie> cookies = DriverManager.getPlaywrightPage().context().cookies();
+            cookies.stream().filter(c -> !c.name.equals(name)).forEach(c -> 
+                DriverManager.getPlaywrightPage().context().addCookies(java.util.Arrays.asList(c)));
+        }
+        UnifiedLogger.info("Deleted cookie: " + name);
+    }
+
+    // ------------------- Scroll Operations -------------------
+
+    public static void scrollByPixels(int x, int y) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            ((org.openqa.selenium.JavascriptExecutor) DriverManager.getSeleniumDriver())
+                .executeScript("window.scrollBy(" + x + "," + y + ");");
+        } else {
+            DriverManager.getPlaywrightPage().evaluate("(x, y) => { window.scrollBy(x, y); }");
+        }
+        UnifiedLogger.info("Scrolled by pixels: x=" + x + ", y=" + y);
+    }
+
+    public static void scrollToCoordinates(int x, int y) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            ((org.openqa.selenium.JavascriptExecutor) DriverManager.getSeleniumDriver())
+                .executeScript("window.scrollTo(" + x + "," + y + ");");
+        } else {
+            DriverManager.getPlaywrightPage().evaluate("(x, y) => { window.scrollTo(x, y); }");
+        }
+        UnifiedLogger.info("Scrolled to coordinates: x=" + x + ", y=" + y);
+    }
+
+    public static void scrollElementIntoCenter(String locator) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            WebElement element = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator));
+            ((org.openqa.selenium.JavascriptExecutor) DriverManager.getSeleniumDriver())
+                .executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+        } else {
+            DriverManager.getPlaywrightPage().locator(locator).evaluate("el => el.scrollIntoView({block: 'center'})");
+        }
+        UnifiedLogger.info("Scrolled element into center: " + locator);
+    }
+
+    // ------------------- Keyboard Actions -------------------
+
+    public static void pressKeyboardKey(String key) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.interactions.Actions(DriverManager.getSeleniumDriver())
+                .sendKeys(org.openqa.selenium.Keys.valueOf(key.toUpperCase())).perform();
+        } else {
+            DriverManager.getPlaywrightPage().keyboard().press(key);
+        }
+        UnifiedLogger.info("Pressed keyboard key: " + key);
+    }
+
+    public static void typeText(String text) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.interactions.Actions(DriverManager.getSeleniumDriver()).sendKeys(text).perform();
+        } else {
+            DriverManager.getPlaywrightPage().keyboard().type(text);
+        }
+        UnifiedLogger.info("Typed text: " + text);
+    }
+
+    public static void pressEnter() {
+        pressKeyboardKey("Enter");
+    }
+
+    public static void pressEscape() {
+        pressKeyboardKey("Escape");
+    }
+
+    public static void pressTab() {
+        pressKeyboardKey("Tab");
+    }
+
+    // ------------------- Mouse Actions -------------------
+
+    public static void clickAtCoordinates(int x, int y) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.interactions.Actions(DriverManager.getSeleniumDriver())
+                .moveByOffset(x, y).click().perform();
+        } else {
+            DriverManager.getPlaywrightPage().mouse().click(x, y);
+        }
+        UnifiedLogger.info("Clicked at coordinates: x=" + x + ", y=" + y);
+    }
+
+    public static void moveMouseToCoordinates(int x, int y) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.interactions.Actions(DriverManager.getSeleniumDriver())
+                .moveByOffset(x, y).perform();
+        } else {
+            DriverManager.getPlaywrightPage().mouse().move(x, y);
+        }
+        UnifiedLogger.info("Moved mouse to coordinates: x=" + x + ", y=" + y);
+    }
+
+    // ------------------- Element State Checks -------------------
+
+    public static boolean isElementDisabled(String locator) {
+        return !isElementEnabled(locator);
+    }
+
+    public static boolean isElementHidden(String locator) {
+        return !isElementVisible(locator);
+    }
+
+    public static boolean isElementEditable(String locator) {
+        boolean editable;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            WebElement element = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator));
+            editable = element.isEnabled() && !"true".equals(element.getAttribute("readonly"));
+        } else {
+            editable = DriverManager.getPlaywrightPage().isEditable(locator);
+        }
+        UnifiedLogger.info("Element editable: " + editable);
+        return editable;
+    }
+
+    public static boolean isElementFocused(String locator) {
+        boolean focused;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            WebElement element = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator));
+            WebElement activeElement = DriverManager.getSeleniumDriver().switchTo().activeElement();
+            focused = element.equals(activeElement);
+        } else {
+            focused = DriverManager.getPlaywrightPage().locator(locator)
+                .evaluate("el => el === document.activeElement").toString().equals("true");
+        }
+        UnifiedLogger.info("Element focused: " + focused);
+        return focused;
+    }
+
+    // ------------------- Dropdown Advanced Operations -------------------
+
+    public static java.util.List<String> getAllDropdownOptions(String locator) {
+        java.util.List<String> options = new java.util.ArrayList<>();
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            org.openqa.selenium.support.ui.Select select = new org.openqa.selenium.support.ui.Select(
+                DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator)));
+            options = select.getOptions().stream().map(WebElement::getText).collect(java.util.stream.Collectors.toList());
+        } else {
+            int count = DriverManager.getPlaywrightPage().locator(locator + " option").count();
+            for (int i = 0; i < count; i++) {
+                options.add(DriverManager.getPlaywrightPage().locator(locator + " option").nth(i).textContent());
+            }
+        }
+        UnifiedLogger.info("Got all dropdown options: " + options.size());
+        return options;
+    }
+
+    public static int getDropdownOptionsCount(String locator) {
+        return getAllDropdownOptions(locator).size();
+    }
+
+    public static void deselectAllDropdownOptions(String locator) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            org.openqa.selenium.support.ui.Select select = new org.openqa.selenium.support.ui.Select(
+                DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator)));
+            select.deselectAll();
+        }
+        UnifiedLogger.info("Deselected all dropdown options: " + locator);
+    }
+
+    // ------------------- File Operations -------------------
+
+    public static void uploadMultipleFiles(String locator, String... filePaths) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            String allPaths = String.join("\n", filePaths);
+            DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator)).sendKeys(allPaths);
+        } else {
+            java.nio.file.Path[] paths = java.util.Arrays.stream(filePaths)
+                .map(java.nio.file.Paths::get).toArray(java.nio.file.Path[]::new);
+            DriverManager.getPlaywrightPage().setInputFiles(locator, paths);
+        }
+        UnifiedLogger.info("Uploaded multiple files: " + filePaths.length);
+    }
+
+    // ------------------- Wait for Conditions -------------------
+
+    public static void waitForElementToBeStale(String locator, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            WebElement element = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator));
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf(element));
+        }
+        UnifiedLogger.info("Waited for element to be stale: " + locator);
+    }
+
+    public static void waitForElementAttributeToBe(String locator, String attribute, String value, int seconds) {
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            new org.openqa.selenium.support.ui.WebDriverWait(DriverManager.getSeleniumDriver(), java.time.Duration.ofSeconds(seconds))
+                .until(org.openqa.selenium.support.ui.ExpectedConditions.attributeToBe(By.cssSelector(locator), attribute, value));
+        } else {
+            long end = System.currentTimeMillis() + seconds * 1000;
+            while (System.currentTimeMillis() < end) {
+                String attrValue = DriverManager.getPlaywrightPage().getAttribute(locator, attribute);
+                if (value.equals(attrValue)) break;
+                try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+            }
+        }
+        UnifiedLogger.info("Waited for attribute '" + attribute + "' to be '" + value + "' in: " + locator);
+    }
+
+    // ------------------- Utility Methods -------------------
+
+    public static void sleep(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+            UnifiedLogger.info("Slept for " + milliseconds + " ms");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public static String getElementTagName(String locator) {
+        String tagName;
+        if ("selenium".equalsIgnoreCase(getFrameworkType())) {
+            tagName = DriverManager.getSeleniumDriver().findElement(By.cssSelector(locator)).getTagName();
+        } else {
+            tagName = DriverManager.getPlaywrightPage().locator(locator).evaluate("el => el.tagName").toString().toLowerCase();
+        }
+        UnifiedLogger.info("Got tag name: " + tagName);
+        return tagName;
+    }
+
+
+
 }
