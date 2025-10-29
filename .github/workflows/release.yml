@@ -23,12 +23,23 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-        server-id: github
-        settings-path: ${{ github.workspace }}
-        # This will configure Maven to use GitHub Packages
-        # server-id must match the distributionManagement/repository id in pom.xml
+
+    - name: Configure Maven settings
+      run: |
+        mkdir -p ~/.m2
+        cat > ~/.m2/settings.xml << EOF
+        <settings>
+          <servers>
+            <server>
+              <id>github</id>
+              <username>${{ github.actor }}</username>
+              <password>${{ secrets.GITHUB_TOKEN }}</password>
+            </server>
+          </servers>
+        </settings>
+        EOF
 
     - name: Publish to GitHub Packages
-      run: mvn clean deploy -DskipTests --settings ${{ github.workspace }}/settings.xml
+      run: mvn clean deploy -DskipTests
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
