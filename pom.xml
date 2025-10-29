@@ -6,7 +6,7 @@
 
     <groupId>com.automation</groupId>
     <artifactId>SandsAutoFramework</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>SandsAutoFramework</name>
