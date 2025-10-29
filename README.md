@@ -419,7 +419,7 @@ aws.devicefarm.url=https://appium-us-west-2.devicefarm.aws.amazon.com/wd/hub
 - ✅ Video recording & detailed logs
 - ✅ No local infrastructure needed
 
-📖 **Complete Guide**: See [REMOTE_EXECUTION_GUIDE.md](REMOTE_EXECUTION_GUIDE.md)
+📖 **Complete Guide**: See [REMOTE_EXECUTION_GUIDE.md](documents/REMOTE_EXECUTION_GUIDE.md)
 
 ## Thread Safety
 
