@@ -11,12 +11,12 @@
 
     <name>SandsAutoFramework</name>
     <description>Enterprise-grade automation framework supporting Selenium, Playwright, and API testing</description>
-    <url>https://github.com/YOUR_GITHUB_USERNAME/SandsAutoFramework</url>
+    <url>https://github.com/afsarali273/Java-Cucumber-Framework</url>
 
     <scm>
-        <connection>scm:git:git://github.com/YOUR_GITHUB_USERNAME/SandsAutoFramework.git</connection>
-        <developerConnection>scm:git:ssh://github.com:YOUR_GITHUB_USERNAME/SandsAutoFramework.git</developerConnection>
-        <url>https://github.com/YOUR_GITHUB_USERNAME/SandsAutoFramework</url>
+        <connection>scm:git:git://github.com/afsarali273/Java-Cucumber-Framework.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:afsarali273/Java-Cucumber-Framework.git</developerConnection>
+        <url>https://github.com/afsarali273/Java-Cucumber-Framework</url>
     </scm>
 
     <properties>
@@ -303,7 +303,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/YOUR_GITHUB_USERNAME/SandsAutoFramework</url>
+            <url>https://maven.pkg.github.com/afsarali273/Java-Cucumber-Framework</url>
         </repository>
     </distributionManagement>
 
