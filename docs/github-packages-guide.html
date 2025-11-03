@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Packages Guide - Sands Automation Framework</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        header p { font-size: 1.2em; opacity: 0.9; }
+        nav { background: white; padding: 15px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        nav a { color: #667eea; text-decoration: none; font-weight: 600; transition: color 0.3s; }
+        nav a:hover { color: #764ba2; }
+        .content { background: white; padding: 30px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { color: #667eea; margin: 30px 0 20px 0; padding-bottom: 10px; border-bottom: 3px solid #667eea; }
+        h3 { color: #764ba2; margin: 25px 0 15px 0; }
+        h4 { color: #555; margin: 20px 0 10px 0; }
+        pre { background: #2d2d2d; color: #f8f8f2; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 15px 0; border-left: 4px solid #667eea; }
+        code { font-family: 'Courier New', monospace; font-size: 0.9em; }
+        .inline-code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; color: #e83e8c; }
+        .step { background: #f8f9fa; padding: 20px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #28a745; }
+        .step-number { background: #28a745; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+        .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .success { background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .error { background: #f8d7da; border-left: 4px solid #dc3545; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .info { background: #d1ecf1; border-left: 4px solid #17a2b8; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        ul, ol { margin: 15px 0 15px 30px; }
+        li { margin: 8px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border: 1px solid #ddd; }
+        th { background: #667eea; color: white; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.85em; font-weight: bold; margin: 0 5px; }
+        .badge-success { background: #28a745; color: white; }
+        .badge-danger { background: #dc3545; color: white; }
+        .badge-warning { background: #ffc107; color: #333; }
+        .badge-info { background: #17a2b8; color: white; }
+        footer { text-align: center; padding: 30px; color: #666; margin-top: 40px; }
+        .command-box { background: #1e1e1e; color: #dcdcdc; padding: 15px; border-radius: 6px; margin: 10px 0; font-family: monospace; position: relative; }
+        .copy-btn { position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 0.85em; }
+        .copy-btn:hover { background: #764ba2; }
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            nav ul { flex-direction: column; align-items: center; }
+            .container { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚀 GitHub Packages Guide</h1>
+        <p>Publishing & Consuming Sands Automation Framework</p>
+    </header>
+
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="#publishing">📦 Publishing</a></li>
+                <li><a href="#consuming">📥 Consuming</a></li>
+                <li><a href="#example">💡 Example</a></li>
+                <li><a href="#troubleshooting">🔧 Troubleshooting</a></li>
+                <li><a href="#best-practices">✨ Best Practices</a></li>
+            </ul>
+        </nav>
+
+        <!-- Publishing Section -->
+        <div class="content" id="publishing">
+            <h2>📦 Publishing to GitHub Packages</h2>
+
+            <div class="step">
+                <div class="step-number">Step 1</div>
+                <h3>Create GitHub Personal Access Token (PAT)</h3>
+                <ol>
+                    <li>Go to GitHub → <strong>Settings</strong> (your profile settings)</li>
+                    <li>Navigate to <strong>Developer settings</strong> → <strong>Personal access tokens</strong> → <strong>Tokens (classic)</strong></li>
+                    <li>Click <strong>Generate new token</strong> → <strong>Generate new token (classic)</strong></li>
+                    <li>Configure the token:
+                        <ul>
+                            <li><strong>Note</strong>: <span class="inline-code">Maven Package Publishing</span></li>
+                            <li><strong>Expiration</strong>: Choose duration (90 days, 1 year, or no expiration)</li>
+                            <li><strong>Select scopes</strong>:
+                                <ul>
+                                    <li><span class="badge badge-success">✓</span> <span class="inline-code">write:packages</span> - Upload packages</li>
+                                    <li><span class="badge badge-success">✓</span> <span class="inline-code">read:packages</span> - Download packages</li>
+                                    <li><span class="badge badge-success">✓</span> <span class="inline-code">repo</span> - Full control (if private repo)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Click <strong>Generate token</strong></li>
+                    <li><span class="badge badge-danger">IMPORTANT</span> Copy the token immediately!</li>
+                </ol>
+            </div>
+
+            <div class="step">
+                <div class="step-number">Step 2</div>
+                <h3>Add PAT to Repository Secrets</h3>
+                <ol>
+                    <li>Go to your repository → <strong>Settings</strong> → <strong>Secrets and variables</strong> → <strong>Actions</strong></li>
+                    <li>Click <strong>New repository secret</strong></li>
+                    <li>Add secret:
+                        <ul>
+                            <li><strong>Name</strong>: <span class="inline-code">PAT_TOKEN</span></li>
+                            <li><strong>Secret</strong>: Paste your PAT token</li>
+                        </ul>
+                    </li>
+                    <li>Click <strong>Add secret</strong></li>
+                </ol>
+            </div>
+
+            <div class="step">
+                <div class="step-number">Step 3</div>
+                <h3>Configure pom.xml</h3>
+                <div class="warning">
+                    <strong>⚠️ Critical Rule:</strong> The <span class="inline-code">artifactId</span> must contain <strong>only lowercase letters, digits, or hyphens</strong>. Uppercase letters will cause a 422 error!
+                </div>
+                <pre><code>&lt;groupId&gt;com.automation&lt;/groupId&gt;
+&lt;artifactId&gt;java-cucumber-framework&lt;/artifactId&gt;
+&lt;version&gt;1.0.0&lt;/version&gt;
+
+&lt;distributionManagement&gt;
+    &lt;repository&gt;
+        &lt;id&gt;github&lt;/id&gt;
+        &lt;name&gt;GitHub Packages&lt;/name&gt;
+        &lt;url&gt;https://maven.pkg.github.com/afsarali273/java-cucumber-framework&lt;/url&gt;
+    &lt;/repository&gt;
+&lt;/distributionManagement&gt;</code></pre>
+            </div>
+
+            <div class="step">
+                <div class="step-number">Step 4</div>
+                <h3>Publish the Package</h3>
+                
+                <h4>Option A: Using Git Tags (Recommended)</h4>
+                <div class="command-box">
+git add .<br>
+git commit -m "Release version 1.0.0"<br>
+git push<br>
+<br>
+git tag v1.0.0<br>
+git push origin v1.0.0
+                </div>
+
+                <h4>Option B: Manual Workflow Trigger</h4>
+                <ol>
+                    <li>Go to <strong>Actions</strong> tab in your repository</li>
+                    <li>Select <strong>Publish to GitHub Packages</strong> workflow</li>
+                    <li>Click <strong>Run workflow</strong></li>
+                </ol>
+
+                <h4>Option C: Local Publishing</h4>
+                <div class="command-box">
+mvn clean deploy -DskipTests
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">Step 5</div>
+                <h3>Verify Package Publication</h3>
+                <ol>
+                    <li>Go to your repository on GitHub</li>
+                    <li>Click <strong>Packages</strong> (right sidebar)</li>
+                    <li>You should see <span class="inline-code">java-cucumber-framework</span> package listed</li>
+                </ol>
+                <div class="success">
+                    <strong>✓ Success!</strong> Your package is now published and ready to use!
+                </div>
+            </div>
+        </div>
+
+        <!-- Consuming Section -->
+        <div class="content" id="consuming">
+            <h2>📥 Consuming in Downstream Projects</h2>
+
+            <div class="step">
+                <div class="step-number">Step 1</div>
+                <h3>Create PAT for Consuming</h3>
+                <p>Create a PAT with <span class="badge badge-info">read:packages</span> scope (follow Step 1 from Publishing section)</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">Step 2</div>
+                <h3>Configure Maven Settings</h3>
+                <p>Create or update <span class="inline-code">~/.m2/settings.xml</span>:</p>
+                <pre><code>&lt;settings&gt;
+  &lt;servers&gt;
+    &lt;server&gt;
+      &lt;id&gt;github&lt;/id&gt;
+      &lt;username&gt;YOUR_GITHUB_USERNAME&lt;/username&gt;
+      &lt;password&gt;YOUR_PAT_TOKEN&lt;/password&gt;
+    &lt;/server&gt;
+  &lt;/servers&gt;
+&lt;/settings&gt;</code></pre>
+            </div>
+
+            <div class="step">
+                <div class="step-number">Step 3</div>
+                <h3>Add Repository to pom.xml</h3>
+                <pre><code>&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;github&lt;/id&gt;
+        &lt;name&gt;GitHub Packages&lt;/name&gt;
+        &lt;url&gt;https://maven.pkg.github.com/afsarali273/java-cucumber-framework&lt;/url&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;</code></pre>
+            </div>
+
+            <div class="step">
+                <div class="step-number">Step 4</div>
+                <h3>Add Framework Dependency</h3>
+                <pre><code>&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.automation&lt;/groupId&gt;
+        &lt;artifactId&gt;java-cucumber-framework&lt;/artifactId&gt;
+        &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+            </div>
+
+            <div class="step">
+                <div class="step-number">Step 5</div>
+                <h3>Build Your Project</h3>
+                <div class="command-box">
+mvn clean install
+                </div>
+                <div class="success">
+                    <strong>✓ Done!</strong> Maven will automatically download the framework from GitHub Packages.
+                </div>
+            </div>
+        </div>
+
+        <!-- Example Section -->
+        <div class="content" id="example">
+            <h2>💡 Complete Example Project</h2>
+
+            <h3>Project Structure</h3>
+            <pre><code>my-automation-project/
+├── pom.xml
+├── src/
+│   └── test/
+│       ├── java/
+│       │   └── com/mycompany/tests/
+│       │       └── LoginTest.java
+│       └── resources/
+│           └── features/
+│               └── login.feature
+└── .github/
+    └── workflows/
+        └── test.yml</code></pre>
+
+            <h3>Sample pom.xml</h3>
+            <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.mycompany&lt;/groupId&gt;
+    &lt;artifactId&gt;my-automation-tests&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+
+    &lt;repositories&gt;
+        &lt;repository&gt;
+            &lt;id&gt;github&lt;/id&gt;
+            &lt;url&gt;https://maven.pkg.github.com/afsarali273/java-cucumber-framework&lt;/url&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.automation&lt;/groupId&gt;
+            &lt;artifactId&gt;java-cucumber-framework&lt;/artifactId&gt;
+            &lt;version&gt;1.0.0&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
+
+            <h3>Sample Test Class</h3>
+            <pre><code>package com.mycompany.tests;
+
+import com.automation.keywords.UIKeywords;
+import org.testng.annotations.Test;
+
+public class LoginTest {
+    @Test
+    public void testLogin() {
+        UIKeywords.openBrowser();
+        UIKeywords.navigateToURL("https://example.com");
+        UIKeywords.enterText("#username", "testuser");
+        UIKeywords.enterText("#password", "password123");
+        UIKeywords.clickElement("#loginBtn");
+        UIKeywords.closeBrowser();
+    }
+}</code></pre>
+        </div>
+
+        <!-- Troubleshooting Section -->
+        <div class="content" id="troubleshooting">
+            <h2>🔧 Troubleshooting</h2>
+
+            <h3>Error: 422 Unprocessable Entity</h3>
+            <div class="error">
+                <strong>Cause:</strong> artifactId contains uppercase letters or version already exists
+            </div>
+            <div class="success">
+                <strong>Solution:</strong>
+                <pre><code>&lt;!-- ❌ Wrong --&gt;
+&lt;artifactId&gt;Java-Cucumber-Framework&lt;/artifactId&gt;
+
+&lt;!-- ✓ Correct --&gt;
+&lt;artifactId&gt;java-cucumber-framework&lt;/artifactId&gt;</code></pre>
+            </div>
+
+            <h3>Error: 401 Unauthorized</h3>
+            <div class="error">
+                <strong>Cause:</strong> Invalid or missing PAT token
+            </div>
+            <div class="success">
+                <strong>Solution:</strong>
+                <ul>
+                    <li>Verify PAT token has correct scopes</li>
+                    <li>Check token hasn't expired</li>
+                    <li>Ensure <span class="inline-code">~/.m2/settings.xml</span> has correct credentials</li>
+                </ul>
+            </div>
+
+            <h3>Error: Could not find artifact</h3>
+            <div class="error">
+                <strong>Cause:</strong> Repository not configured or package doesn't exist
+            </div>
+            <div class="success">
+                <strong>Solution:</strong>
+                <ul>
+                    <li>Add repository to <span class="inline-code">pom.xml</span></li>
+                    <li>Verify package exists on GitHub</li>
+                    <li>Check version number is correct</li>
+                </ul>
+            </div>
+
+            <h3>Debug Commands</h3>
+            <div class="command-box">
+# Run with debug logging<br>
+mvn clean install -X<br>
+<br>
+# Clear Maven cache<br>
+rm -rf ~/.m2/repository/com/automation/java-cucumber-framework<br>
+<br>
+# View dependency tree<br>
+mvn dependency:tree
+            </div>
+        </div>
+
+        <!-- Best Practices Section -->
+        <div class="content" id="best-practices">
+            <h2>✨ Best Practices</h2>
+
+            <h3>Version Management</h3>
+            <table>
+                <tr>
+                    <th>Practice</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>Semantic Versioning</td>
+                    <td>Use MAJOR.MINOR.PATCH format</td>
+                    <td><span class="badge badge-success">✓ Recommended</span></td>
+                </tr>
+                <tr>
+                    <td>Increment Versions</td>
+                    <td>Always increment for each release</td>
+                    <td><span class="badge badge-success">✓ Required</span></td>
+                </tr>
+                <tr>
+                    <td>SNAPSHOT Versions</td>
+                    <td>Use for development builds</td>
+                    <td><span class="badge badge-info">Optional</span></td>
+                </tr>
+                <tr>
+                    <td>Reuse Versions</td>
+                    <td>Never reuse version numbers</td>
+                    <td><span class="badge badge-danger">✗ Forbidden</span></td>
+                </tr>
+            </table>
+
+            <h3>Security</h3>
+            <ul>
+                <li><span class="badge badge-success">✓</span> Use PAT tokens with minimal required scopes</li>
+                <li><span class="badge badge-success">✓</span> Set token expiration dates</li>
+                <li><span class="badge badge-success">✓</span> Store tokens in GitHub Secrets</li>
+                <li><span class="badge badge-success">✓</span> Rotate tokens regularly</li>
+                <li><span class="badge badge-danger">✗</span> Never commit tokens to repository</li>
+            </ul>
+
+            <h3>CI/CD</h3>
+            <ul>
+                <li><span class="badge badge-success">✓</span> Automate publishing with GitHub Actions</li>
+                <li><span class="badge badge-success">✓</span> Publish on tagged releases only</li>
+                <li><span class="badge badge-success">✓</span> Run tests before publishing</li>
+                <li><span class="badge badge-success">✓</span> Generate sources/javadoc JARs</li>
+            </ul>
+        </div>
+
+        <!-- Quick Reference -->
+        <div class="content">
+            <h2>📚 Quick Reference</h2>
+
+            <h3>Publishing Commands</h3>
+            <div class="command-box">
+# Tag and publish<br>
+git tag v1.0.0 && git push origin v1.0.0<br>
+<br>
+# Local publish<br>
+mvn clean deploy -DskipTests<br>
+<br>
+# Build only<br>
+mvn clean install -DskipTests
+            </div>
+
+            <h3>Consuming Commands</h3>
+            <div class="command-box">
+# Download dependencies<br>
+mvn dependency:resolve<br>
+<br>
+# Update dependencies<br>
+mvn clean install -U<br>
+<br>
+# View dependency tree<br>
+mvn dependency:tree
+            </div>
+
+            <h3>Important URLs</h3>
+            <table>
+                <tr>
+                    <th>Resource</th>
+                    <th>URL</th>
+                </tr>
+                <tr>
+                    <td>Repository</td>
+                    <td><a href="https://github.com/afsarali273/Java-Cucumber-Framework" target="_blank">github.com/afsarali273/Java-Cucumber-Framework</a></td>
+                </tr>
+                <tr>
+                    <td>Packages</td>
+                    <td><a href="https://github.com/afsarali273/Java-Cucumber-Framework/packages" target="_blank">Packages Page</a></td>
+                </tr>
+                <tr>
+                    <td>Maven URL</td>
+                    <td>https://maven.pkg.github.com/afsarali273/java-cucumber-framework</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>Sands Automation Framework</strong> | Version 1.0.0</p>
+        <p>Last Updated: January 2025</p>
+        <p>📖 <a href="../README.md">Documentation</a> | 🐛 <a href="https://github.com/afsarali273/Java-Cucumber-Framework/issues">Report Issues</a></p>
+    </footer>
+</body>
+</html>
